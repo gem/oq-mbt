@@ -6,6 +6,12 @@ from IPython.display import display, clear_output
 from IPython.core.getipython import get_ipython
 
 from ipywidgets import widgets
+
+# from mtk_comm import (g_message, mtk_comm.GEM_MATRIPY_HOME, GEM_MATRIPY_SFX)
+import mtk_comm
+
+from project import Project
+
 #text = widgets.Text()
 #display(text)
 
@@ -15,43 +21,7 @@ from ipywidgets import widgets
 #text.on_submit(handle_submit)
 # from IPython.display import display
 
-#
-#  GLOBALS
-#
-# projects path
-GEM_MATRIPY_HOME = None
-GEM_MATRIPY_SFX = '_mbt'
-
-# message text widget handle
-g_message = None
-g_project = None
-
-
-def g_project_set(value):
-    global g_project
-
-    if g_project is None:
-        return
-    g_project.value = 'Project: ' + value
-
-
-def load_project(name):
-    global g_message
-
-    prjdir = os.path.join(GEM_MATRIPY_HOME,
-                          name)
-
-    if not os.path.isdir(prjdir) and g_message:
-        g_message.value = "'%s' project not exists" % name
-        return
-
-    if not os.path.isfile(os.path.join(prjdir, 'project.json')):
-        # all parts must be initialized with defaults and 
-        # the json file must be created
-        pass
-    else:
-        # here the loading of project
-        pass
+g_prj = None
 
 
 class NewProjectMenu(object):
@@ -66,22 +36,24 @@ class NewProjectMenu(object):
 
     @staticmethod
     def _create_cb(btn):
+        global g_prj
         name = btn._gem_context.text.value
-        newdir = os.path.join(GEM_MATRIPY_HOME,
+        newdir = os.path.join(mtk_comm.GEM_MATRIPY_HOME,
                               name
-                              + GEM_MATRIPY_SFX)
+                              + mtk_comm.GEM_MATRIPY_SFX)
         if os.path.isdir(newdir):
-            g_message.value = "'%s' project already exists" % name
+            mtk_comm.g_message.value = "'%s' project already exists" % name
             return
 
         try:
             os.mkdir(newdir)
         except:
-            g_message.value = "'%s' project creation failed" % name
+            mtk_comm.g_message.value = "'%s' project creation failed" % name
             return
 
-        g_message.value = "'%s' project created" % name
-        g_project_set(name)
+        mtk_comm.g_message.value = "'%s' project created" % name
+        g_prj.title_set(name)
+        g_prj.show()
         btn._gem_context.destroy()
         del btn._gem_context
 
@@ -91,10 +63,8 @@ class NewProjectMenu(object):
         btn._gem_context.destroy()
         del btn._gem_context
 
-    def __init__(self, siblings, *args):
-        global g_message
-
-        g_message.value = ''
+    def __init__(self, siblings, box, *args):
+        mtk_comm.g_message.value = ''
         for sibling in siblings:
             if sibling == type(self).__name__:
                 continue
@@ -116,7 +86,7 @@ class NewProjectMenu(object):
         self.box = widgets.Box(children=[self.text, self.create, self.close],
                                border_style="solid", border_width="1px",
                                border_radius="8px", width="400px")
-        display(self.box)
+        box.children = (self.box,)
         self._instance._is_inited = True
 
     @classmethod
@@ -150,8 +120,11 @@ class LoadProjectMenu(object):
 
     @staticmethod
     def _load_cb(btn):
-        load_project(btn._gem_context.ddown.value)
-        g_project_set(btn._gem_context.ddown.value[:-4])
+        global g_prj
+
+        g_prj.load(btn._gem_context.ddown.value)
+        g_prj.show()
+
         btn._gem_context.destroy()
         del btn._gem_context
 
@@ -161,10 +134,8 @@ class LoadProjectMenu(object):
         btn._gem_context.destroy()
         del btn._gem_context
 
-    def __init__(self, siblings, *args):
-        global g_message
-
-        g_message.value = ''
+    def __init__(self, siblings, box, *args):
+        mtk_comm.g_message.value = ''
         for sibling in siblings:
             if sibling == type(self).__name__:
                 continue
@@ -182,10 +153,10 @@ class LoadProjectMenu(object):
         self.close._gem_context = self
         self.close.on_click(self._close_cb)
 
-        for (_, all_dirs, _) in os.walk(GEM_MATRIPY_HOME):
+        for (_, all_dirs, _) in os.walk(mtk_comm.GEM_MATRIPY_HOME):
             break
 
-        prjs = [x for x in all_dirs if x.endswith(GEM_MATRIPY_SFX)]
+        prjs = [x for x in all_dirs if x.endswith(mtk_comm.GEM_MATRIPY_SFX)]
         prjs_items = {}
         for prj in prjs:
             prjs_items[prj[:-4]] = prj
@@ -198,7 +169,7 @@ class LoadProjectMenu(object):
         self.box = widgets.Box(children=[self.ddown, self.load, self.close],
                                border_style="solid", border_width="1px",
                                border_radius="8px", width="400px")
-        display(self.box)
+        box.children = (self.box,)
         self._instance._is_inited = True
 
     @classmethod
@@ -220,66 +191,61 @@ class LoadProjectMenu(object):
         self.instance_reset()
 
 
-def ExportProject(siblings, btn):
+def ExportProject(siblings, box, btn):
     for sibling in siblings:
         getattr(getattr(sys.modules[__name__], sibling),
                 "instance_reset")()
 
+
 def main():
-    global GEM_MATRIPY_HOME, g_message, g_project
-    # display(HTML('''<script>
-    # code_show=true;
-    # function code_toggle() {
-    #  if (code_show){
-    #  $('div.input').hide();
-    #  } else {
-    #  $('div.input').show();
-    #  }
-    #  code_show = !code_show
-    # }
-    # $( document ).ready(code_toggle);
-    # </script>
-    # <a href="javascript:code_toggle()">Source toggle.</a>''')) 
+    global g_prj
+    display(HTML('''<script>
+    code_show=true;
+    function code_toggle() {
+     if (code_show){
+     $('div.input').hide();
+     } else {
+     $('div.input').show();
+     }
+     code_show = !code_show
+    }
+    $( document ).ready(code_toggle);
+    </script>
+    <a href="javascript:code_toggle()">Source toggle.</a>''')) 
 
     if 'GEM_MATRIPY_HOME' in os.environ:
-        GEM_MATRIPY_HOME = os.environ['GEM_MATRIPY_HOME']
+        mtk_comm.GEM_MATRIPY_HOME = os.environ['GEM_MATRIPY_HOME']
     else:
         from os.path import expanduser
-        GEM_MATRIPY_HOME = expanduser("~") + '/.matripyoska'
-        os.environ['GEM_MATRIPY_HOME'] = GEM_MATRIPY_HOME
+        mtk_comm.GEM_MATRIPY_HOME = expanduser("~") + '/.matripyoska'
+        os.environ['GEM_MATRIPY_HOME'] = mtk_comm.GEM_MATRIPY_HOME
 
-    if not os.access(GEM_MATRIPY_HOME, os.W_OK):
-        print "Projects directory [%s] access denied." % GEM_MATRIPY_HOME
+    if not os.access(mtk_comm.GEM_MATRIPY_HOME, os.W_OK):
+        print "Projects directory [%s] access denied." % mtk_comm.GEM_MATRIPY_HOME
         raise os.PermissionError
 
-    g_project = widgets.HTML(read_only=True, width="800px",
-                             value="Project: none", height="2em")
-    display(g_project)
-
     # message widget
-    g_message = widgets.HTML(read_only=True, width="800px",
+    mtk_comm.g_message = widgets.HTML(read_only=True, width="800px",
                              height="2em")
-    display(g_message)
+    display(mtk_comm.g_message)
 
     prj_siblings = ['NewProjectMenu', 'LoadProjectMenu']
 
+    menubox = widgets.Box(children=[])
+
     new_prj = widgets.Button(description='New Project', margin="4px")
-    new_prj.on_click(lambda x: NewProjectMenu(prj_siblings, x))
+    new_prj.on_click(lambda btn: NewProjectMenu(prj_siblings, menubox, btn))
 
     load_prj = widgets.Button(description='Load Project', margin="4px")
-    load_prj.on_click(lambda x: LoadProjectMenu(prj_siblings, x))
+    load_prj.on_click(lambda btn: LoadProjectMenu(prj_siblings, menubox, btn))
 
     export_prj = widgets.Button(description='Export Project', margin="4px")
-    export_prj.on_click(lambda x: ExportProject(prj_siblings, x))
+    export_prj.on_click(lambda btn: ExportProject(prj_siblings, menubox, btn))
 
     box = widgets.HBox(children=[new_prj, load_prj, export_prj])
-    # box.layout.border = '3px solid red'
-    display(box)
 
+    vbox = widgets.VBox(children=[box, menubox])
+    display(vbox)
 
-    models_box = widgets.HBox(children=[])
-
-    project_box = widgets.HBox(title="the project", children=[models_box])
-    display(project_box)
-
+    g_prj = Project()
 

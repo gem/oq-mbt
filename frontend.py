@@ -52,6 +52,7 @@ class NewProjectMenu(object):
             return
 
         mtk_comm.g_message.value = "'%s' project created" % name
+        g_prj.clean()
         g_prj.title_set(name)
         g_prj.show()
         btn._gem_context.destroy()
@@ -82,7 +83,6 @@ class NewProjectMenu(object):
         self.close = widgets.Button(description='Close', margin="8px")
         self.close._gem_context = self
         self.close.on_click(self._close_cb)
-        # self.close.on_click(self._close_cb)
         self.box = widgets.Box(children=[self.text, self.create, self.close],
                                border_style="solid", border_width="1px",
                                border_radius="8px", width="400px")
@@ -191,7 +191,7 @@ class LoadProjectMenu(object):
         self.instance_reset()
 
 
-def ExportProject(siblings, box, btn):
+def SaveProject(siblings, box, btn):
     for sibling in siblings:
         getattr(getattr(sys.modules[__name__], sibling),
                 "instance_reset")()
@@ -239,13 +239,12 @@ def main():
     load_prj = widgets.Button(description='Load Project', margin="4px")
     load_prj.on_click(lambda btn: LoadProjectMenu(prj_siblings, menubox, btn))
 
-    export_prj = widgets.Button(description='Export Project', margin="4px")
-    export_prj.on_click(lambda btn: ExportProject(prj_siblings, menubox, btn))
+    export_prj = widgets.Button(description='Save Project', margin="4px")
+    export_prj.on_click(lambda btn: SaveProject(prj_siblings, menubox, btn))
 
     box = widgets.HBox(children=[new_prj, load_prj, export_prj])
 
     vbox = widgets.VBox(children=[box, menubox])
     display(vbox)
 
-    g_prj = Project()
-
+    g_prj = Project([], [])

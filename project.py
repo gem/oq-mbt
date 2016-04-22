@@ -6,17 +6,65 @@ from ipywidgets import widgets
 
 import mtk_comm
 from mtk_comm import Bunch, accordion_title_find
+from resources import Resource_kv
+
+#
+#  TODO
+#
+# save project
+# load project
 
 
 class Project(object):
-    def __init__(self):
+    def __init__(self, resources, models):
 
-        # RESOURCES
+        #
+        #  RESOURCES
+        #
+        self.resources = resources
         self.res_label = widgets.HTML(value="Resources:")
-        self.res_contbox = widgets.HBox(children=[])
+        self.res_contbox = widgets.VBox(children=[])
 
         def res_addkv_cb(btn):
-            print "res_addkv_cb"
+            # print "res_addkv_cb fired"
+            def res_addkv_add(btn):
+                parent_ctx = btn._gem_ctx._parent_ctx
+                if parent_ctx.resource_find(btn._gem_ctx.name.value) > -1:
+                    mtk_comm.g_message.value = ("resource '%s' already exists"
+                                                % btn._gem_ctx.name.value)
+                    return False
+
+                res_kv = Resource_kv(btn._gem_ctx.name.value,
+                                     btn._gem_ctx.value.value)
+                res_kv.parent_set(parent_ctx)
+                parent_ctx.resource_add(res_kv)
+                # print "res_addkv_add fired"
+
+            def res_addkv_close(btn):
+                btn._gem_ctx.res_mgmt.children = []
+
+            title = widgets.HTML(value="New parameter")
+            name = widgets.Text(description="Name: ")
+            value = widgets.Text(description="Value: ")
+
+            add = widgets.Button(description='Add', margin="8px")
+            add._gem_ctx = Bunch(name=name, value=value,
+                                 _parent_ctx=btn._gem_ctx)
+            add.on_click(res_addkv_add)
+
+            close = widgets.Button(description='Close', margin="8px")
+            close._gem_ctx = btn._gem_ctx
+            close.on_click(res_addkv_close)
+
+            btnbox = widgets.HBox(children=[add, close])
+
+            box = widgets.Box(children=[title, name, value, btnbox],
+                              border_style="solid", border_width="1px",
+                              border_radius="8px", padding="8px",
+                              width="400px")
+
+            btn._gem_ctx.res_mgmt.children = [box]
+
         self.res_addkv = widgets.Button(description='Add parameter',
                                         margin="8px")
         self.res_addkv._gem_ctx = self
@@ -34,11 +82,10 @@ class Project(object):
 
         self.res_mgmt = widgets.VBox(children=[])
 
-
-
-
-
+        #
         # MODELS
+        #
+        self.models = models
         self.models_label = widgets.HTML(value="Models:")
         # ATTENTION: buggy accordion implementation force us to destroy and recreate it
         #            for each modification (UGLY)!
@@ -56,18 +103,12 @@ class Project(object):
                 # TODO: here create of model object and add to the project models array
 
                 # TODO: retrieve UI for new model and add to the accordion
-                new_model = widgets.HTML(value="CONTENT: " + btn._gem_ctx.name.value)
-                sz = len(parent_ctx.models_cont.children)
-                children_new = parent_ctx.models_cont.children + (new_model,)
-                new_acc = widgets.Accordion(children=children_new, width=800)
-                for i in range(0, sz):
-                    new_acc.set_title(i, parent_ctx.models_cont.get_title(i))
-                new_acc.set_title(sz, btn._gem_ctx.name.value)
-
-                parent_ctx.models_contbox.children = [new_acc]
-                del(parent_ctx.models_cont)
-                parent_ctx.models_cont = new_acc
-                parent_ctx.models_mgmt.children = []
+                #res_kv = Resource_kv(btn._gem_ctx.name.value,
+                #                     btn._gem_ctx.value.value)
+                #res_kv.parent_set(parent_ctx)
+                # FOLLOW Resource rules for model
+                model = widgets.HTML(value="CONTENT: " + btn._gem_ctx.name.value)
+                parent_ctx.model_add(model, btn._gem_ctx.name.value)
 
             def model_close(btn):
                 btn._gem_ctx.models_mgmt.children = []
@@ -87,10 +128,10 @@ class Project(object):
 
             box = widgets.Box(children=[title, name, btnbox],
                               border_style="solid", border_width="1px",
-                              border_radius="8px", padding="8px", width="400px")
+                              border_radius="8px", padding="8px",
+                              width="400px")
 
             btn._gem_ctx.models_mgmt.children = [box]
-
 
         self.models_add = widgets.Button(description='Add model', margin="8px")
         self.models_add._gem_ctx = self
@@ -110,6 +151,41 @@ class Project(object):
         display(self.project_box)
         self.project_box.visible = False
 
+    def resource_find(self, name):
+        for i, res in enumerate(self.resources):
+            print "[%s] [%s]" % (res.key_get(), name)
+            if res.key_get() == name:
+                return i
+        return -1
+
+    def resource_add(self, resource):
+        # print "resource_add fired"
+        self.resources.append(resource)
+        self.res_contbox.children = (self.res_contbox.children +
+                                     (resource.widget_get(),))
+        self.res_mgmt.children = []
+
+    def resource_del(self, resource):
+        new_children = tuple([x for x in self.res_contbox.children
+                              if x != resource.widget_get()])
+        self.res_contbox.children = new_children
+        self.resources.remove(resource)
+        del resource
+        print "resource_del fired"
+
+    def model_add(self, model, title):
+        sz = len(self.models_cont.children)
+        children_new = self.models_cont.children + (model,)
+        new_acc = widgets.Accordion(children=children_new, width=800)
+        for i in range(0, sz):
+            new_acc.set_title(i, self.models_cont.get_title(i))
+        new_acc.set_title(sz, title)
+
+        self.models_contbox.children = [new_acc]
+        del(self.models_cont)
+        self.models_cont = new_acc
+        self.models_mgmt.children = []
+
     def load(self, name):
         self.clean()
         prjdir = os.path.join(mtk_comm.GEM_MATRIPY_HOME, name)
@@ -128,6 +204,14 @@ class Project(object):
         self.title_set(name[:-4])
 
     def clean(self):
+        # resources
+        self.res_contbox.children = []
+
+        for item in self.resources:
+            del item
+        self.resources = []
+
+        # models
         new_acc = widgets.Accordion(children=[], width=800)
 
         self.models_contbox.children = [new_acc]

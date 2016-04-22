@@ -7,15 +7,19 @@ from ipywidgets import widgets
 import mtk_comm
 from mtk_comm import Bunch, accordion_title_find
 from resources import Resource_kv
+from serial import Dictable
 
 #
 #  TODO
 #
 # save project
+#   lanciare update se esiste su tutte le subclassi
 # load project
 
 
-class Project(object):
+class Project(Dictable):
+    __public__ = ["resources", "models"]
+
     def __init__(self, resources, models):
 
         #
@@ -201,7 +205,7 @@ class Project(object):
         else:
             # here the loading of project
             pass
-        self.title_set(name[:-4])
+        self.title_set(prjdir, name[:-4])
 
     def clean(self):
         # resources
@@ -218,7 +222,9 @@ class Project(object):
         del(self.models_cont)
         self.models_cont = new_acc
 
-    def title_set(self, name):
+    def title_set(self, folder, name):
+        self.title = name
+        self.folder = folder
         self.project_label.value = "Project: " + name
 
     def show(self):

@@ -1,7 +1,9 @@
 from ipywidgets import widgets
+from serial import Dictable
 
+class Resource_kv(Dictable):
+    __public__ = ["key", "value"]
 
-class Resource_kv(object):
     def __init__(self, key, value):
         self.key = key
         self.value = value

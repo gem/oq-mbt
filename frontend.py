@@ -2,9 +2,8 @@ import os
 import sys
 import gc
 from IPython.display import HTML
-from IPython.display import display, clear_output
-from IPython.core.getipython import get_ipython
-
+from IPython.display import display
+import json
 from ipywidgets import widgets
 
 # from mtk_comm import (g_message, mtk_comm.GEM_MATRIPY_HOME, GEM_MATRIPY_SFX)
@@ -53,7 +52,7 @@ class NewProjectMenu(object):
 
         mtk_comm.g_message.value = "'%s' project created" % name
         g_prj.clean()
-        g_prj.title_set(name)
+        g_prj.title_set(folder, name)
         g_prj.show()
         btn._gem_context.destroy()
         del btn._gem_context
@@ -192,6 +191,10 @@ class LoadProjectMenu(object):
 
 
 def SaveProject(siblings, box, btn):
+    filename = os.path.join(g_prj.folder, 'project.json')
+    with open(filename, "w") as outfile:
+        json.dump(g_prj.to_dict(), outfile, sort_keys=True, indent=4)
+
     for sibling in siblings:
         getattr(getattr(sys.modules[__name__], sibling),
                 "instance_reset")()

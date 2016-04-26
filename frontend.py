@@ -209,56 +209,54 @@ def SaveProject(siblings, box, btn):
                 "instance_reset")()
 
 
-def main():
-    global g_prj, g_prjbox
-    display(HTML('''<script>
-    code_show=true;
-    function code_toggle() {
-     if (code_show){
-     $('div.input').hide();
-     } else {
-     $('div.input').show();
-     }
-     code_show = !code_show
-    }
-    $( document ).ready(code_toggle);
-    </script>
-    <a href="javascript:code_toggle()">Source toggle.</a>''')) 
+class Frontend():
 
-    if 'GEM_MATRIPY_HOME' in os.environ:
-        mtk_comm.GEM_MATRIPY_HOME = os.environ['GEM_MATRIPY_HOME']
-    else:
-        from os.path import expanduser
-        mtk_comm.GEM_MATRIPY_HOME = expanduser("~") + '/.matripyoska'
-        os.environ['GEM_MATRIPY_HOME'] = mtk_comm.GEM_MATRIPY_HOME
+    def __init__(self):
+        global g_prj, g_prjbox
 
-    if not os.access(mtk_comm.GEM_MATRIPY_HOME, os.W_OK):
-        print "Projects directory [%s] access denied." % mtk_comm.GEM_MATRIPY_HOME
-        raise os.PermissionError
+        mtk_comm.init()
 
-    # message widget
-    mtk_comm.g_message = widgets.HTML(read_only=True, width="800px",
-                             height="2em")
-    display(mtk_comm.g_message)
+        self.prj_siblings = ['NewProjectMenu', 'LoadProjectMenu']
 
-    prj_siblings = ['NewProjectMenu', 'LoadProjectMenu']
+        self.menubox = widgets.Box(children=[])
 
-    menubox = widgets.Box(children=[])
+        self.new_prj = widgets.Button(description='New Project', margin="4px")
+        self.new_prj.on_click(lambda btn: NewProjectMenu(
+            self.prj_siblings, self.menubox, btn))
 
-    new_prj = widgets.Button(description='New Project', margin="4px")
-    new_prj.on_click(lambda btn: NewProjectMenu(prj_siblings, menubox, btn))
+        self.load_prj = widgets.Button(description='Load Project',
+                                       margin="4px")
+        self.load_prj.on_click(lambda btn: LoadProjectMenu(self.prj_siblings,
+                                                           self.menubox, btn))
 
-    load_prj = widgets.Button(description='Load Project', margin="4px")
-    load_prj.on_click(lambda btn: LoadProjectMenu(prj_siblings, menubox, btn))
+        self.export_prj = widgets.Button(description='Save Project',
+                                         margin="4px")
+        self.export_prj.on_click(lambda btn: SaveProject(self.prj_siblings,
+                                                         self.menubox, btn))
 
-    export_prj = widgets.Button(description='Save Project', margin="4px")
-    export_prj.on_click(lambda btn: SaveProject(prj_siblings, menubox, btn))
+        self.box = widgets.HBox(children=[self.new_prj, self.load_prj,
+                                          self.export_prj])
 
-    box = widgets.HBox(children=[new_prj, load_prj, export_prj])
+        self.vbox = widgets.VBox(children=[self.box, self.menubox])
 
-    vbox = widgets.VBox(children=[box, menubox])
-    display(vbox)
+        g_prjbox = widgets.Box(children=[])
 
-    g_prjbox = widgets.Box(children=[])
-    display(g_prjbox)
+    def show(self):
+        global g_prjbox
 
+        display(HTML('''<script>
+        code_show=true;
+        function code_toggle() {
+         if (code_show){
+         $('div.input').hide();
+         } else {
+         $('div.input').show();
+         }
+         code_show = !code_show
+        }
+        $( document ).ready(code_toggle);
+        </script>
+        <a href="javascript:code_toggle()">Source toggle.</a>'''))
+        display(mtk_comm.g_message)
+        display(self.vbox)
+        display(g_prjbox)

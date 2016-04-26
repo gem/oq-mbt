@@ -14,7 +14,6 @@ from serial import Dictable
 #  TODO
 #
 # objectify resources to be reused in project as in each model
-# create a frontend class
 # add exteral items (with md5 checks)
 
 

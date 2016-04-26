@@ -1,12 +1,22 @@
 import json
+import pprint
 
-get_class = lambda x: globals()[x]
+_Metacls__registry = {}
 
+class Metacls(type):
+    __registry = {}
+    def __new__(mcs, name, bases, dict):
+        global __registry
+        ret = type.__new__(mcs, name, bases, dict)
+        __registry[name] = ret
+        return ret
 
 class Dictable(object):
+    __metaclass__ = Metacls
+
     @staticmethod
     def from_dict(dct):
-        cls = get_class(dct['__class__'])
+        cls = _Metacls__registry[dct['__class__']]
         
         # print "from_dict: %s" % cls.__name__
         if '__public__' not in vars(cls):
@@ -26,10 +36,14 @@ class Dictable(object):
     def to_dict(self):
         return Dictable.serialize(self)
 
+    def sync_dom(self):
+        pass
+
     @staticmethod
     def serialize(obj):
         ret = None
         if isinstance(obj, Dictable):
+            obj.sync_dom()
             ret = {'__class__': obj.__class__.__name__}
             for i in obj.__public__:
                 ret[i] = Dictable.serialize(getattr(obj, i))

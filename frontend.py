@@ -21,7 +21,7 @@ from project import Project
 # from IPython.display import display
 
 g_prj = None
-
+g_prjbox = None
 
 class NewProjectMenu(object):
     _instance = None
@@ -35,8 +35,8 @@ class NewProjectMenu(object):
 
     @staticmethod
     def _create_cb(btn):
-        global g_prj
-        name = btn._gem_context.text.value
+        global g_prj, g_prjbox
+        name = btn._gem_ctx.text.value
         newdir = os.path.join(mtk_comm.GEM_MATRIPY_HOME,
                               name
                               + mtk_comm.GEM_MATRIPY_SFX)
@@ -51,17 +51,18 @@ class NewProjectMenu(object):
             return
 
         mtk_comm.g_message.value = "'%s' project created" % name
-        g_prj.clean()
-        g_prj.title_set(folder, name)
-        g_prj.show()
-        btn._gem_context.destroy()
-        del btn._gem_context
+        g_prj = Project([], [])
+        g_prj.title_set(newdir, name)
+        if g_prjbox is not None:
+            g_prjbox.children = [g_prj.widget_get()]
+        btn._gem_ctx.destroy()
+        del btn._gem_ctx
 
     @staticmethod
     def _close_cb(btn):
         # print "close_cb"
-        btn._gem_context.destroy()
-        del btn._gem_context
+        btn._gem_ctx.destroy()
+        del btn._gem_ctx
 
     def __init__(self, siblings, box, *args):
         mtk_comm.g_message.value = ''
@@ -76,11 +77,11 @@ class NewProjectMenu(object):
 
         self.text = widgets.Text(description='Name: ', margin="8px")
         self.create = widgets.Button(description='Create', margin="8px")
-        self.create._gem_context = self
+        self.create._gem_ctx = self
         self.create.on_click(self._create_cb)
 
         self.close = widgets.Button(description='Close', margin="8px")
-        self.close._gem_context = self
+        self.close._gem_ctx = self
         self.close.on_click(self._close_cb)
         self.box = widgets.Box(children=[self.text, self.create, self.close],
                                border_style="solid", border_width="1px",
@@ -119,19 +120,25 @@ class LoadProjectMenu(object):
 
     @staticmethod
     def _load_cb(btn):
-        global g_prj
+        global g_prj, g_prjbox
 
-        g_prj.load(btn._gem_context.ddown.value)
-        g_prj.show()
+        if g_prj:
+            g_prj.clean()
+            del g_prj
 
-        btn._gem_context.destroy()
-        del btn._gem_context
+        g_prj = Project.load(btn._gem_ctx.ddown.value)
+        # print g_prjbox
+        if g_prjbox is not None:
+            g_prjbox.children = [g_prj.widget_get()]
+
+        btn._gem_ctx.destroy()
+        del btn._gem_ctx
 
     @staticmethod
     def _close_cb(btn):
         # print "close_cb"
-        btn._gem_context.destroy()
-        del btn._gem_context
+        btn._gem_ctx.destroy()
+        del btn._gem_ctx
 
     def __init__(self, siblings, box, *args):
         mtk_comm.g_message.value = ''
@@ -145,11 +152,11 @@ class LoadProjectMenu(object):
             return
 
         self.load = widgets.Button(description='Load', margin="8px")
-        self.load._gem_context = self
+        self.load._gem_ctx = self
         self.load.on_click(self._load_cb)
 
         self.close = widgets.Button(description='Close', margin="8px")
-        self.close._gem_context = self
+        self.close._gem_ctx = self
         self.close.on_click(self._close_cb)
 
         for (_, all_dirs, _) in os.walk(mtk_comm.GEM_MATRIPY_HOME):
@@ -195,13 +202,15 @@ def SaveProject(siblings, box, btn):
     with open(filename, "w") as outfile:
         json.dump(g_prj.to_dict(), outfile, sort_keys=True, indent=4)
 
+        mtk_comm.g_message.value = "'%s' project saved correctly" % filename
+
     for sibling in siblings:
         getattr(getattr(sys.modules[__name__], sibling),
                 "instance_reset")()
 
 
 def main():
-    global g_prj
+    global g_prj, g_prjbox
     display(HTML('''<script>
     code_show=true;
     function code_toggle() {
@@ -250,4 +259,6 @@ def main():
     vbox = widgets.VBox(children=[box, menubox])
     display(vbox)
 
-    g_prj = Project([], [])
+    g_prjbox = widgets.Box(children=[])
+    display(g_prjbox)
+

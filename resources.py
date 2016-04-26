@@ -1,6 +1,7 @@
 from ipywidgets import widgets
 from serial import Dictable
 
+
 class Resource_kv(Dictable):
     __public__ = ["key", "value"]
 
@@ -38,5 +39,5 @@ class Resource_kv(Dictable):
     def widget_get(self):
         return (self.widget)
 
-    def update(self):
+    def sync_dom(self):
         self.value = self.wid_kv.value

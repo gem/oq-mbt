@@ -3,6 +3,7 @@ from IPython.display import display, clear_output
 from IPython.core.getipython import get_ipython
 
 from ipywidgets import widgets
+import json
 
 import mtk_comm
 from mtk_comm import Bunch, accordion_title_find
@@ -12,9 +13,9 @@ from serial import Dictable
 #
 #  TODO
 #
-# save project
-#   lanciare update se esiste su tutte le subclassi
-# load project
+# objectify resources to be reused in project as in each model
+# create a frontend class
+# add exteral items (with md5 checks)
 
 
 class Project(Dictable):
@@ -26,8 +27,12 @@ class Project(Dictable):
         #  RESOURCES
         #
         self.resources = resources
-        self.res_label = widgets.HTML(value="Resources:")
-        self.res_contbox = widgets.VBox(children=[])
+        self.res_label = widgets.HTML(value="Resources:",font_weight="bold")
+        children = []
+        for item in resources:
+            children.append(item.widget_get())
+            item.parent_set(self)
+        self.res_contbox = widgets.VBox(children=children)
 
         def res_addkv_cb(btn):
             # print "res_addkv_cb fired"
@@ -90,7 +95,7 @@ class Project(Dictable):
         # MODELS
         #
         self.models = models
-        self.models_label = widgets.HTML(value="Models:")
+        self.models_label = widgets.HTML(value="Models:", font_weight="bold")
         # ATTENTION: buggy accordion implementation force us to destroy and recreate it
         #            for each modification (UGLY)!
         self.models_cont = widgets.Accordion(children=[], width=800)
@@ -143,7 +148,8 @@ class Project(Dictable):
 
         self.models_mgmt = widgets.VBox(children=[])
 
-        self.project_label = widgets.HTML(value="Project: ")
+        self.project_label = widgets.HTML(value="Project: ",
+                                          font_weight="bold")
         self.models_contbox = widgets.Box(children=[self.models_cont])
         self.project_box = widgets.VBox(
             children=[self.project_label,
@@ -151,13 +157,13 @@ class Project(Dictable):
                       self.res_btns, self.res_mgmt,
 
                       self.models_label, self.models_contbox,
-                      self.models_add, self.models_mgmt])
-        display(self.project_box)
-        self.project_box.visible = False
+                      self.models_add, self.models_mgmt],
+            border_style="solid", border_width="1px", padding="8px",
+            border_radius="4px")
 
     def resource_find(self, name):
         for i, res in enumerate(self.resources):
-            print "[%s] [%s]" % (res.key_get(), name)
+            # print "[%s] [%s]" % (res.key_get(), name)
             if res.key_get() == name:
                 return i
         return -1
@@ -170,12 +176,12 @@ class Project(Dictable):
         self.res_mgmt.children = []
 
     def resource_del(self, resource):
+        # print "resource_del fired"
         new_children = tuple([x for x in self.res_contbox.children
                               if x != resource.widget_get()])
         self.res_contbox.children = new_children
         self.resources.remove(resource)
         del resource
-        print "resource_del fired"
 
     def model_add(self, model, title):
         sz = len(self.models_cont.children)
@@ -190,22 +196,28 @@ class Project(Dictable):
         self.models_cont = new_acc
         self.models_mgmt.children = []
 
-    def load(self, name):
-        self.clean()
+    @classmethod
+    def load(cls, name):
         prjdir = os.path.join(mtk_comm.GEM_MATRIPY_HOME, name)
 
         if not os.path.isdir(prjdir) and mtk_comm.g_message:
             mtk_comm.g_message.value = "'%s' project not exists" % name
-            return
+            return None
 
-        if not os.path.isfile(os.path.join(prjdir, 'project.json')):
+        filename = os.path.join(prjdir, 'project.json')
+        if os.path.isfile(filename):
+            # here the loading of project
+            with open(filename, "r") as infile:
+                prj = Dictable.deserialize(json.load(infile))
+        else:
             # all parts must be initialized with defaults and 
             # the json file must be created
-            pass
-        else:
-            # here the loading of project
-            pass
-        self.title_set(prjdir, name[:-4])
+            prj = Project([], [])
+        prj.title_set(prjdir, name[:-4])
+        return prj
+
+    def widget_get(self):
+        return self.project_box
 
     def clean(self):
         # resources
@@ -226,6 +238,3 @@ class Project(Dictable):
         self.title = name
         self.folder = folder
         self.project_label.value = "Project: " + name
-
-    def show(self):
-        self.project_box.visible = True

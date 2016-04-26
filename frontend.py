@@ -10,6 +10,8 @@ from ipywidgets import widgets
 import mtk_comm
 from mtk_comm import message_set, message_show
 
+from resources import Resources
+from models import Models
 from project import Project
 
 #text = widgets.Text()
@@ -44,7 +46,7 @@ class NewProjectMenu(object):
             return
 
         message_set("'%s' project created" % name)
-        g_prj = Project([], [])
+        g_prj = Project(Resources([]), Models([]))
         g_prj.title_set(newdir, name)
         if g_prjbox is not None:
             g_prjbox.children = [g_prj.widget_get()]

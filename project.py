@@ -1,12 +1,9 @@
 import os
-from IPython.display import display, clear_output
-from IPython.core.getipython import get_ipython
-
-from ipywidgets import widgets
 import json
+from ipywidgets import widgets
 
 import mtk_comm
-from mtk_comm import Bunch, accordion_title_find
+from mtk_comm import Bunch, accordion_title_find, message_set
 from resources import Resource_kv
 from serial import Dictable
 
@@ -38,8 +35,8 @@ class Project(Dictable):
             def res_addkv_add(btn):
                 parent_ctx = btn._gem_ctx._parent_ctx
                 if parent_ctx.resource_find(btn._gem_ctx.name.value) > -1:
-                    mtk_comm.g_message.value = ("resource '%s' already exists"
-                                                % btn._gem_ctx.name.value)
+                    message_set("resource '%s' already exists"
+                               % btn._gem_ctx.name.value)
                     return False
 
                 res_kv = Resource_kv(btn._gem_ctx.name.value,
@@ -104,8 +101,8 @@ class Project(Dictable):
                 parent_ctx = btn._gem_ctx._parent_ctx
                 if accordion_title_find(parent_ctx.models_cont,
                                         btn._gem_ctx.name.value) > -1:
-                    mtk_comm.g_message.value = ("model '%s' already exists" %
-                                                btn._gem_ctx.name.value)
+                    message_set("model '%s' already exists" %
+                               btn._gem_ctx.name.value)
                     return False
 
                 # TODO: here create of model object and add to the project models array
@@ -199,8 +196,8 @@ class Project(Dictable):
     def load(cls, name):
         prjdir = os.path.join(mtk_comm.GEM_MATRIPY_HOME, name)
 
-        if not os.path.isdir(prjdir) and mtk_comm.g_message:
-            mtk_comm.g_message.value = "'%s' project not exists" % name
+        if not os.path.isdir(prjdir):
+            message_set("'%s' project not exists" % name)
             return None
 
         filename = os.path.join(prjdir, 'project.json')

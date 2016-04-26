@@ -18,6 +18,15 @@ class Bunch(object):
         vars(self).update(kw)
 
 
+def message_set(msg):
+    if g_message is not None:
+        g_message.value = msg
+
+
+def message_show():
+    display(g_message)
+
+
 def accordion_title_find(accord, name):
     for i in range(0, len(accord.children)):
         if accord.get_title(i) == name:

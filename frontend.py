@@ -8,6 +8,7 @@ from ipywidgets import widgets
 
 # from mtk_comm import (g_message, mtk_comm.GEM_MATRIPY_HOME, GEM_MATRIPY_SFX)
 import mtk_comm
+from mtk_comm import message_set, message_show
 
 from project import Project
 
@@ -33,16 +34,16 @@ class NewProjectMenu(object):
                               name
                               + mtk_comm.GEM_MATRIPY_SFX)
         if os.path.isdir(newdir):
-            mtk_comm.g_message.value = "'%s' project already exists" % name
+            message_set("'%s' project already exists" % name)
             return
 
         try:
             os.mkdir(newdir)
         except:
-            mtk_comm.g_message.value = "'%s' project creation failed" % name
+            message_set("'%s' project creation failed" % name)
             return
 
-        mtk_comm.g_message.value = "'%s' project created" % name
+        message_set("'%s' project created" % name)
         g_prj = Project([], [])
         g_prj.title_set(newdir, name)
         if g_prjbox is not None:
@@ -57,7 +58,7 @@ class NewProjectMenu(object):
 
     def __init__(self, frontend):
         self.frontend = frontend
-        mtk_comm.g_message.value = ''
+        message_set('')
         self.text = widgets.Text(description='Name: ', margin="8px")
         self.create = widgets.Button(description='Create', margin="8px")
         self.create._gem_ctx = self
@@ -99,7 +100,7 @@ class LoadProjectMenu(object):
 
     def __init__(self, frontend):
         self.frontend = frontend
-        mtk_comm.g_message.value = ''
+        message_set('')
         self.load = widgets.Button(description='Load', margin="8px")
         self.load._gem_ctx = self
         self.load.on_click(self._load_cb)
@@ -164,9 +165,7 @@ class Frontend():
             filename = os.path.join(g_prj.folder, 'project.json')
             with open(filename, "w") as outfile:
                 json.dump(g_prj.to_dict(), outfile, sort_keys=True, indent=4)
-
-                mtk_comm.g_message.value = (
-                    "'%s' project saved correctly" % filename)
+                message_set("'%s' project saved correctly" % filename)
 
         self.save_prj.on_click(save_prj_cb)
 
@@ -197,6 +196,6 @@ class Frontend():
         $( document ).ready(code_toggle);
         </script>
         <a href="javascript:code_toggle()">Source toggle.</a>'''))
-        display(mtk_comm.g_message)
+        message_show()
         display(self.vbox)
         display(g_prjbox)

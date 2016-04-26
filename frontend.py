@@ -23,16 +23,8 @@ from project import Project
 g_prj = None
 g_prjbox = None
 
+
 class NewProjectMenu(object):
-    _instance = None
-
-    def __new__(cls, *args, **kargv):
-        if cls._instance is None:
-            cls._instance = object.__new__(cls, *args, **kargv)
-            cls._instance._is_inited = False
-            cls._instance.box = None
-        return cls._instance
-
     @staticmethod
     def _create_cb(btn):
         global g_prj, g_prjbox
@@ -55,26 +47,17 @@ class NewProjectMenu(object):
         g_prj.title_set(newdir, name)
         if g_prjbox is not None:
             g_prjbox.children = [g_prj.widget_get()]
-        btn._gem_ctx.destroy()
+        btn._gem_ctx.frontend.menubox_set(())
         del btn._gem_ctx
 
     @staticmethod
     def _close_cb(btn):
-        # print "close_cb"
-        btn._gem_ctx.destroy()
+        btn._gem_ctx.frontend.menubox_set(())
         del btn._gem_ctx
 
-    def __init__(self, siblings, box, *args):
+    def __init__(self, frontend):
+        self.frontend = frontend
         mtk_comm.g_message.value = ''
-        for sibling in siblings:
-            if sibling == type(self).__name__:
-                continue
-            getattr(getattr(sys.modules[__name__], sibling),
-                    "instance_reset")()
-
-        if self._instance._is_inited:
-            return
-
         self.text = widgets.Text(description='Name: ', margin="8px")
         self.create = widgets.Button(description='Create', margin="8px")
         self.create._gem_ctx = self
@@ -86,38 +69,12 @@ class NewProjectMenu(object):
         self.box = widgets.Box(children=[self.text, self.create, self.close],
                                border_style="solid", border_width="1px",
                                border_radius="8px", width="400px")
-        box.children = (self.box,)
-        self._instance._is_inited = True
 
-    @classmethod
-    def instance_set(cls, value):
-        cls._instance = value
-
-    @classmethod
-    def instance_reset(cls):
-        if cls._instance is not None:
-            if cls._instance.box is not None:
-                cls._instance.box.close()
-                cls._instance.box = None
-            cls._instance = None
-
-    def destroy(self):
-        if self.box is not None:
-            self.box.close()
-            self.box = None
-        self.instance_reset()
+    def widget_get(self):
+        return self.box
 
 
 class LoadProjectMenu(object):
-    _instance = None
-
-    def __new__(cls, *args, **kargv):
-        if cls._instance is None:
-            cls._instance = object.__new__(cls, *args, **kargv)
-            cls._instance._is_inited = False
-            cls._instance.box = None
-        return cls._instance
-
     @staticmethod
     def _load_cb(btn):
         global g_prj, g_prjbox
@@ -131,26 +88,18 @@ class LoadProjectMenu(object):
         if g_prjbox is not None:
             g_prjbox.children = [g_prj.widget_get()]
 
-        btn._gem_ctx.destroy()
+        btn._gem_ctx.frontend.menubox_set(())
         del btn._gem_ctx
 
     @staticmethod
     def _close_cb(btn):
         # print "close_cb"
-        btn._gem_ctx.destroy()
+        btn._gem_ctx.frontend.menubox_set(())
         del btn._gem_ctx
 
-    def __init__(self, siblings, box, *args):
+    def __init__(self, frontend):
+        self.frontend = frontend
         mtk_comm.g_message.value = ''
-        for sibling in siblings:
-            if sibling == type(self).__name__:
-                continue
-            getattr(getattr(sys.modules[__name__], sibling),
-                    "instance_reset")()
-
-        if self._instance._is_inited:
-            return
-
         self.load = widgets.Button(description='Load', margin="8px")
         self.load._gem_ctx = self
         self.load.on_click(self._load_cb)
@@ -175,38 +124,9 @@ class LoadProjectMenu(object):
         self.box = widgets.Box(children=[self.ddown, self.load, self.close],
                                border_style="solid", border_width="1px",
                                border_radius="8px", width="400px")
-        box.children = (self.box,)
-        self._instance._is_inited = True
 
-    @classmethod
-    def instance_set(cls, value):
-        cls._instance = value
-
-    @classmethod
-    def instance_reset(cls):
-        if cls._instance is not None:
-            if cls._instance.box is not None:
-                cls._instance.box.close()
-                cls._instance.box = None
-            cls._instance = None
-
-    def destroy(self):
-        if self.box is not None:
-            self.box.close()
-            self.box = None
-        self.instance_reset()
-
-
-def SaveProject(siblings, box, btn):
-    filename = os.path.join(g_prj.folder, 'project.json')
-    with open(filename, "w") as outfile:
-        json.dump(g_prj.to_dict(), outfile, sort_keys=True, indent=4)
-
-        mtk_comm.g_message.value = "'%s' project saved correctly" % filename
-
-    for sibling in siblings:
-        getattr(getattr(sys.modules[__name__], sibling),
-                "instance_reset")()
+    def widget_get(self):
+        return self.box
 
 
 class Frontend():
@@ -216,30 +136,50 @@ class Frontend():
 
         mtk_comm.init()
 
-        self.prj_siblings = ['NewProjectMenu', 'LoadProjectMenu']
-
         self.menubox = widgets.Box(children=[])
 
         self.new_prj = widgets.Button(description='New Project', margin="4px")
-        self.new_prj.on_click(lambda btn: NewProjectMenu(
-            self.prj_siblings, self.menubox, btn))
+        self.new_prj._gem_ctx = self
+
+        def new_prj_cb(btn):
+            new_prj = NewProjectMenu(btn._gem_ctx)
+            btn._gem_ctx.menubox_set((new_prj.widget_get(),))
+        self.new_prj.on_click(new_prj_cb)
 
         self.load_prj = widgets.Button(description='Load Project',
                                        margin="4px")
-        self.load_prj.on_click(lambda btn: LoadProjectMenu(self.prj_siblings,
-                                                           self.menubox, btn))
+        self.load_prj._gem_ctx = self
 
-        self.export_prj = widgets.Button(description='Save Project',
+        def load_prj_cb(btn):
+            load_prj = LoadProjectMenu(btn._gem_ctx)
+            btn._gem_ctx.menubox_set((load_prj.widget_get(),))
+        self.load_prj._gem_ctx = self
+        self.load_prj.on_click(load_prj_cb)
+
+        self.save_prj = widgets.Button(description='Save Project',
                                          margin="4px")
-        self.export_prj.on_click(lambda btn: SaveProject(self.prj_siblings,
-                                                         self.menubox, btn))
+        self._gem_ctx = self
+
+        def save_prj_cb(btn):
+            filename = os.path.join(g_prj.folder, 'project.json')
+            with open(filename, "w") as outfile:
+                json.dump(g_prj.to_dict(), outfile, sort_keys=True, indent=4)
+
+                mtk_comm.g_message.value = (
+                    "'%s' project saved correctly" % filename)
+
+        self.save_prj.on_click(save_prj_cb)
 
         self.box = widgets.HBox(children=[self.new_prj, self.load_prj,
-                                          self.export_prj])
+                                          self.save_prj
+                                          ])
 
         self.vbox = widgets.VBox(children=[self.box, self.menubox])
 
         g_prjbox = widgets.Box(children=[])
+
+    def menubox_set(self, new_items):
+        self.menubox.children = new_items
 
     def show(self):
         global g_prjbox

@@ -1,27 +1,15 @@
 import os
-import sys
-import gc
 from IPython.display import HTML
 from IPython.display import display
 import json
 from ipywidgets import widgets
 
-# from mtk_comm import (g_message, mtk_comm.GEM_MATRIPY_HOME, GEM_MATRIPY_SFX)
 import mtk_comm
 from mtk_comm import message_set, message_show
 
 from resources import Resources
 from models import Models
 from project import Project
-
-#text = widgets.Text()
-#display(text)
-
-#def handle_submit(sender):
-#    print(text.value)
-#
-#text.on_submit(handle_submit)
-# from IPython.display import display
 
 g_prj = None
 g_prjbox = None

@@ -12,13 +12,12 @@ from models import Models
 from project import Project
 
 g_prj = None
-g_prjbox = None
 
 
 class NewProjectMenu(object):
     @staticmethod
     def _create_cb(btn):
-        global g_prj, g_prjbox
+        global g_prj
         name = btn._gem_ctx.text.value
         newdir = os.path.join(mtk_comm.GEM_MATRIPY_HOME,
                               name
@@ -36,8 +35,7 @@ class NewProjectMenu(object):
         message_set("'%s' project created" % name)
         g_prj = Project(Resources([]), Models([]))
         g_prj.title_set(newdir, name)
-        if g_prjbox is not None:
-            g_prjbox.children = [g_prj.widget_get()]
+        btn._gem_ctx.frontend.prjbox_set([g_prj.widget_get()])
         btn._gem_ctx.frontend.menubox_set(())
         del btn._gem_ctx
 
@@ -68,16 +66,14 @@ class NewProjectMenu(object):
 class LoadProjectMenu(object):
     @staticmethod
     def _load_cb(btn):
-        global g_prj, g_prjbox
+        global g_prj
 
-        if g_prj:
+        if g_prj is not None:
             g_prj.clean()
             del g_prj
 
         g_prj = Project.load(btn._gem_ctx.ddown.value)
-        # print g_prjbox
-        if g_prjbox is not None:
-            g_prjbox.children = [g_prj.widget_get()]
+        btn._gem_ctx.frontend.prjbox_set([g_prj.widget_get()])
 
         btn._gem_ctx.frontend.menubox_set(())
         del btn._gem_ctx
@@ -123,7 +119,7 @@ class LoadProjectMenu(object):
 class Frontend():
 
     def __init__(self):
-        global g_prj, g_prjbox
+        global g_prj
 
         mtk_comm.init()
 
@@ -148,7 +144,7 @@ class Frontend():
         self.load_prj.on_click(load_prj_cb)
 
         self.save_prj = widgets.Button(description='Save Project',
-                                         margin="4px")
+                                       margin="4px")
         self._gem_ctx = self
 
         def save_prj_cb(btn):
@@ -165,14 +161,16 @@ class Frontend():
 
         self.vbox = widgets.VBox(children=[self.box, self.menubox])
 
-        g_prjbox = widgets.Box(children=[])
+        self.prjbox = widgets.Box(children=[])
+
+    def prjbox_set(self, new_items):
+        if self.prjbox is not None:
+            self.prjbox.children = new_items
 
     def menubox_set(self, new_items):
         self.menubox.children = new_items
 
     def show(self):
-        global g_prjbox
-
         display(HTML('''<script>
         code_show=true;
         function code_toggle() {
@@ -188,4 +186,4 @@ class Frontend():
         <a href="javascript:code_toggle()">Source toggle.</a>'''))
         message_show()
         display(self.vbox)
-        display(g_prjbox)
+        display(self.prjbox)

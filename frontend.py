@@ -33,7 +33,7 @@ class NewProjectMenu(object):
             return
 
         message_set("'%s' project created" % name)
-        g_prj = Project(Resources([]), Models([]))
+        g_prj = Project(Resources(), Models())
         g_prj.title_set(newdir, name)
         btn._gem_ctx.frontend.prjbox_set([g_prj.widget_get()])
         btn._gem_ctx.frontend.menubox_set(())
@@ -73,6 +73,7 @@ class LoadProjectMenu(object):
             del g_prj
 
         g_prj = Project.load(btn._gem_ctx.ddown.value)
+        print "g_prj: ", g_prj.resources
         btn._gem_ctx.frontend.prjbox_set([g_prj.widget_get()])
 
         btn._gem_ctx.frontend.menubox_set(())

@@ -2,6 +2,19 @@ from ipywidgets import widgets
 from serial import Dictable
 from mtk_comm import Bunch, message_set
 
+class Resource_external_file(Dictable):
+    __public__ = ["filename", "loader" ]
+
+    def __init__(self, filename, loader):
+        self.filename = filename
+        self.loader = loader
+        self.parent = None
+
+
+#        self.wid = widgets.Text(description=
+#        self.wid = widgets.VBox(description=("%s:" % key), value=value)
+    
+    
 
 class Resource_kv(Dictable):
     __public__ = ["key", "value"]
@@ -60,7 +73,8 @@ class Resources(Dictable):
         self.res_contbox = widgets.VBox(children=children)
 
         def res_addkv_cb(btn):
-            # print "res_addkv_cb fired"
+            print btn._gem_ctx
+            print "res_addkv_cb fired"
             def res_addkv_add(btn):
                 parent_ctx = btn._gem_ctx._parent_ctx
                 if parent_ctx.resource_find(btn._gem_ctx.name.value) > -1:
@@ -141,6 +155,9 @@ class Resources(Dictable):
         self.res_contbox.children = new_children
         self.resources.remove(resource)
         del resource
+
+    def parent_set(self, parent):
+        self.parent = parent
 
     def widget_get(self):
         return self.widget

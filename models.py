@@ -11,7 +11,7 @@ class Model(Dictable):
     def __init__(self, title, resources=None, other=None):
         self.title = title
         if resources is None:
-            self.resources = Resources([])
+            self.resources = Resources()
         else:
             self.resources = resources
 
@@ -66,7 +66,7 @@ class Models(Dictable):
                                 btn._gem_ctx.name.value)
                     return False
 
-                model = Model(btn._gem_ctx.name.value, Resources([]), [])
+                model = Model(btn._gem_ctx.name.value, Resources(), [])
                 parent_ctx.model_add(model)
 
             def model_close_cb(btn):

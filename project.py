@@ -56,7 +56,12 @@ class Project(Dictable):
             # all parts must be initialized with defaults and 
             # the json file must be created
             prj = Project([], [])
+        print "UNO"
         prj.title_set(prjdir, name[:-4])
+        print "DUE"
+        prj.resources.parent_set(prj)
+        print "TRE"
+        print "XX ", prj.resources
         return prj
 
     def widget_get(self):

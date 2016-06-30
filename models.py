@@ -8,9 +8,12 @@ from resources import Resources
 class Model(Dictable):
     __public__ = ["title", "resources"]
 
-    def __init__(self, title, resources=[], other=None):
+    def __init__(self, title, resources=None, other=None):
         self.title = title
-        self.resources = resources
+        if resources is None:
+            self.resources = Resources([])
+        else:
+            self.resources = resources
 
         self.is_cur = False
         self.is_cur_wid = widgets.ToggleButton(

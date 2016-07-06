@@ -1,8 +1,11 @@
 # from debug import get_debug
+import os
 import pydoc
 from ipywidgets import widgets
 from serial import Dictable
-from mtk_comm import Bunch, message_set
+from mbt_comm import Bunch, message_set
+import mbt_comm
+import hashlib
 
 class Importer(object):
     def __init__(self, ref, code, descr):
@@ -24,8 +27,13 @@ class Importers_collection(object):
         ret = {}
         for cur in self.importer:
             ret[cur.descr] = cur.code
-
         return ret
+
+    def ref_by_code(self, code):
+        for cur in self.importer:
+            if cur.code == code:
+                return cur.ref
+        return None
 
 mbt_importers = Importers_collection()
 # from oqmbt.china.china_tools import faults_to_hmtk
@@ -33,7 +41,7 @@ mbt_importers.add(Importer('oqmbt.tools.china.area.areas_to_hmtk', 'china_areas_
 mbt_importers.add(Importer('oqmbt.china.china_tools.faults_to_hmtk', 'china_faults_hmtk', 'China: from faults to hmtk'))
 
 class Resource_external_file(Dictable):
-    __public__ = ["filename", "loader", "onthefly", "checksum" ]
+    __public__ = ["filename", "loader", "onthefly", "checksum", "date" ]
 
     def __init__(self, filename, loader):
         self.filename = filename
@@ -44,42 +52,83 @@ class Resource_external_file(Dictable):
     def add_cb(btn):
         options = mbt_importers.options_get()
         title = widgets.HTML(value="Add external resource")
+        message = widgets.HTML(value="")
+        file_exists = widgets.Valid(value=False, readout='')
         filename = widgets.Text(description="Filename: ")
+        filename._gem_ctx = Bunch(file_exists=file_exists)
+        def check_existence(msg):
+            file_name = os.path.join(mbt_comm.OQ_MBT_DATA, msg['new'])
+            # print file_name
+            msg['owner']._gem_ctx.file_exists.value = (
+                os.path.exists(file_name) and not os.path.isdir(file_name))
+            return True
+        
+        filename.observe(check_existence, names=["value"])
+        flexbox = widgets.HBox(children=[filename, file_exists])
 
-        ddown = widgets.Dropdown(
-            # FIXME dynamic from register importers
+        importer = widgets.Dropdown(
             options=options,
             description='Type of importer:',
         )
 
-        def res_addext_add(btn):
-            print "todo"
+        onthefly = widgets.Checkbox(
+            value=True,)
+        onthefly_desc = widgets.HTML(value="Load on-the-fly when required (persistent and cached otherwise)")
+        onthefly_box = widgets.HBox(children=[onthefly, onthefly_desc])
 
-        add = widgets.Button(description='Add', margin="8px")
-        add._gem_ctx = btn._gem_ctx
-        add.on_click(res_addext_add)
+        
+        def new_cb(btn):
+            ctx = btn._gem_ctx
+            ctx.message.value = ""
+            if ctx.filename_exists.value is False:
+                ctx.message.value = "File '%s' doesn't exists" % ctx.filename.value
+                return False
 
-        def res_addext_close(btn):
+            importer = mbt_importers.ref_by_code(ctx.importer.value)
+            if importer is None:
+                ctx.message.value = "Importer '%s' not found." % ctx.importer.value
+                return False
+
+            print os.path.join(mbt_comm.OQ_MBT_DATA,
+                                        ctx.filename.value)
+            # == importer here ==
+            # obj = importer(os.path.join(mbt_comm.OQ_MBT_DATA,
+            #                             ctx.filename.value))
+            # print obj
+
+            # checksum computation
+            # BLOCKSIZE = 65536
+            # hasher = hashlib.sha1()
+            # with open('anotherfile.txt', 'rb') as afile:
+            #     buf = afile.read(BLOCKSIZE)
+            #     while len(buf) > 0:
+            #         hasher.update(buf)
+            #         buf = afile.read(BLOCKSIZE)
+            #         print(hasher.hexdigest())
+
+
+
+            
+        new = widgets.Button(description='Add', margin="8px")
+        new._gem_ctx = Bunch(message=message, filename=filename, filename_exists=file_exists,
+                             importer=importer, onthefly=onthefly, _parent_ctx=btn._gem_ctx)
+        new.on_click(new_cb)
+
+        def close_cb(btn):
             btn._gem_ctx.res_mgmt.children = []
 
         close = widgets.Button(description='Close', margin="8px")
         close._gem_ctx = btn._gem_ctx
-        close.on_click(res_addext_close)
+        close.on_click(close_cb)
 
-        btnbox = widgets.HBox(children=[add, close])
+        btnbox = widgets.HBox(children=[new, close])
 
-        box = widgets.Box(children=[title, filename, ddown, btnbox],
+        box = widgets.Box(children=[title, message, flexbox, importer, onthefly_box, btnbox],
                           border_style="solid", border_width="1px",
                           border_radius="8px", padding="8px",
                           width="400px")
 
         btn._gem_ctx.res_mgmt.children = [box]
-
-
-#    def options_get():
-#        pass
-#        self.wid = widgets.Text(description=
-#        self.wid = widgets.VBox(description=("%s:" % key), value=value)
 
 
 class Resource_kv(Dictable):

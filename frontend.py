@@ -4,8 +4,8 @@ from IPython.display import display
 import json
 from ipywidgets import widgets
 
-import mtk_comm
-from mtk_comm import message_set, message_show
+import mbt_comm
+from mbt_comm import message_set, message_show
 
 from resources import Resources
 from models import Models
@@ -19,9 +19,9 @@ class NewProjectMenu(object):
     def _create_cb(btn):
         global g_prj
         name = btn._gem_ctx.text.value
-        newdir = os.path.join(mtk_comm.GEM_MATRIPY_HOME,
+        newdir = os.path.join(mbt_comm.OQ_MBT_HOME,
                               name
-                              + mtk_comm.GEM_MATRIPY_SFX)
+                              + mbt_comm.OQ_MBT_SFX)
         if os.path.isdir(newdir):
             message_set("'%s' project already exists" % name)
             return
@@ -95,10 +95,10 @@ class LoadProjectMenu(object):
         self.close._gem_ctx = self
         self.close.on_click(self._close_cb)
 
-        for (_, all_dirs, _) in os.walk(mtk_comm.GEM_MATRIPY_HOME):
+        for (_, all_dirs, _) in os.walk(mbt_comm.OQ_MBT_HOME):
             break
 
-        prjs = [x for x in all_dirs if x.endswith(mtk_comm.GEM_MATRIPY_SFX)]
+        prjs = [x for x in all_dirs if x.endswith(mbt_comm.OQ_MBT_SFX)]
         prjs_items = {}
         for prj in prjs:
             prjs_items[prj[:-4]] = prj
@@ -121,7 +121,7 @@ class Frontend():
     def __init__(self):
         global g_prj
 
-        mtk_comm.init()
+        mbt_comm.init()
 
         self.menubox = widgets.Box(children=[])
 
@@ -187,3 +187,10 @@ class Frontend():
         message_show()
         display(self.vbox)
         display(self.prjbox)
+
+        # enable operation
+        load_prj = LoadProjectMenu(self)
+        self.menubox_set((load_prj.widget_get(),))
+        load_prj.ddown.value = 'SouthEast China_mbt'
+
+        load_prj.load._click_handlers.callbacks[0](load_prj.load)

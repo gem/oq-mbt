@@ -1,7 +1,7 @@
 from ipywidgets import widgets
 from serial import Dictable
 
-from mtk_comm import Bunch, accordion_title_find, message_set
+from mbt_comm import Bunch, accordion_title_find, message_set
 from resources import Resources
 
 

@@ -7,9 +7,9 @@ from IPython.display import display
 #  GLOBALS
 #
 # projects path
-GEM_MATRIPY_HOME = None
-GEM_MATRIPY_DATA = None
-GEM_MATRIPY_SFX = '_mbt'
+OQ_MBT_HOME = None
+OQ_MBT_DATA = None
+OQ_MBT_SFX = '_mbt'
 
 # message text widget handle
 g_message = None
@@ -37,22 +37,22 @@ def accordion_title_find(accord, name):
 
 
 def init():
-    global GEM_MATRIPY_HOME, GEM_MATRIPY_DATA, g_message
+    global OQ_MBT_HOME, OQ_MBT_DATA, g_message
 
-    if 'GEM_MATRIPY_HOME' in os.environ:
-        GEM_MATRIPY_HOME = os.environ['GEM_MATRIPY_HOME']
+    if 'OQ_MBT_HOME' in os.environ:
+        OQ_MBT_HOME = os.environ['OQ_MBT_HOME']
     else:
-        GEM_MATRIPY_HOME = os.path.join(expanduser("~"), '.matripyoska')
-        os.environ['GEM_MATRIPY_HOME'] = GEM_MATRIPY_HOME
+        OQ_MBT_HOME = os.path.join(expanduser("~"), '.oq_mbt')
+        os.environ['OQ_MBT_HOME'] = OQ_MBT_HOME
 
-    if not os.access(GEM_MATRIPY_HOME, os.W_OK):
-        print "Projects directory [%s] access denied." % GEM_MATRIPY_HOME
+    if not os.access(OQ_MBT_HOME, os.W_OK):
+        print "Projects directory [%s] access denied." % OQ_MBT_HOME
         raise os.PermissionError
 
-    if 'GEM_MATRIPY_DATA' in os.environ:
-        GEM_MATRIPY_DATA = os.environ['GEM_MATRIPY_DATA']
+    if 'OQ_MBT_DATA' in os.environ:
+        OQ_MBT_DATA = os.environ['OQ_MBT_DATA']
     else:
-        GEM_MATRIPY_DATA = expanduser("~")
+        OQ_MBT_DATA = expanduser("~")
 
     # message widget
     g_message = widgets.HTML(read_only=True, width="800px",

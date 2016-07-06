@@ -2,8 +2,8 @@ import os
 import json
 from ipywidgets import widgets
 
-import mtk_comm
-from mtk_comm import message_set
+import mbt_comm
+from mbt_comm import message_set
 from serial import Dictable
 
 #
@@ -41,7 +41,7 @@ class Project(Dictable):
 
     @classmethod
     def load(cls, name):
-        prjdir = os.path.join(mtk_comm.GEM_MATRIPY_HOME, name)
+        prjdir = os.path.join(mbt_comm.OQ_MBT_HOME, name)
 
         if not os.path.isdir(prjdir):
             message_set("'%s' project not exists" % name)

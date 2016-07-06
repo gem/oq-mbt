@@ -1,4 +1,5 @@
 import os
+from os.path import expanduser
 from ipywidgets import widgets
 from IPython.display import display
 
@@ -7,6 +8,7 @@ from IPython.display import display
 #
 # projects path
 GEM_MATRIPY_HOME = None
+GEM_MATRIPY_DATA = None
 GEM_MATRIPY_SFX = '_mbt'
 
 # message text widget handle
@@ -35,18 +37,22 @@ def accordion_title_find(accord, name):
 
 
 def init():
-    global GEM_MATRIPY_HOME, g_message
+    global GEM_MATRIPY_HOME, GEM_MATRIPY_DATA, g_message
 
     if 'GEM_MATRIPY_HOME' in os.environ:
         GEM_MATRIPY_HOME = os.environ['GEM_MATRIPY_HOME']
     else:
-        from os.path import expanduser
-        GEM_MATRIPY_HOME = expanduser("~") + '/.matripyoska'
+        GEM_MATRIPY_HOME = os.path.join(expanduser("~"), '.matripyoska')
         os.environ['GEM_MATRIPY_HOME'] = GEM_MATRIPY_HOME
 
     if not os.access(GEM_MATRIPY_HOME, os.W_OK):
         print "Projects directory [%s] access denied." % GEM_MATRIPY_HOME
         raise os.PermissionError
+
+    if 'GEM_MATRIPY_DATA' in os.environ:
+        GEM_MATRIPY_DATA = os.environ['GEM_MATRIPY_DATA']
+    else:
+        GEM_MATRIPY_DATA = expanduser("~")
 
     # message widget
     g_message = widgets.HTML(read_only=True, width="800px",

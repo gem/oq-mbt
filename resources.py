@@ -1,9 +1,34 @@
+# from debug import get_debug
+import pydoc
 from ipywidgets import widgets
 from serial import Dictable
 from mtk_comm import Bunch, message_set
 
+class Importer(object):
+    def __init__(self, ref, code, descr):
+        self.ref = pydoc.locate(ref)
+        self.code = code
+        self.descr = descr
+
+class Importers_collection(object):
+    def __init__(self):
+        self.importer = []
+
+    def add(self, importer):
+        for cur in self.importer:
+            if cur.code == importer.code:
+                raise ValueError
+        self.importer.append(importer)
+
+importers = Importers_collection()
+# from oqmbt.china.china_tools import faults_to_hmtk
+importers.add(Importer('oqmbt.tools.china.area.areas_to_hmtk', 'china_areas_hmtk', 'China: from areas to hmtk'))
+importers.add(Importer('oqmbt.china.china_tools.faults_to_hmtk', 'china_faults_hmtk', 'China: from faults to hmtk'))
+
 class Resource_external_file(Dictable):
     __public__ = ["filename", "loader" ]
+
+    importer = []
 
     def __init__(self, filename, loader):
         self.filename = filename
@@ -11,10 +36,15 @@ class Resource_external_file(Dictable):
         self.parent = None
 
 
+    @classmethod
+    def importers_register(cls, importer):
+        cls.importer.append(importer)
+
+    def options_get():
+        pass
 #        self.wid = widgets.Text(description=
 #        self.wid = widgets.VBox(description=("%s:" % key), value=value)
-    
-    
+
 
 class Resource_kv(Dictable):
     __public__ = ["key", "value"]
@@ -38,7 +68,7 @@ class Resource_kv(Dictable):
         self.wid_del.on_click(wid_del)
 
         self.widget = widgets.HBox(children=[self.wid_kv, self.wid_del],
-                                   width="800px")
+                                   width="400px")
 
     def parent_set(self, parent):
         self.parent = parent
@@ -118,8 +148,41 @@ class Resources(Dictable):
         self.res_addkv._gem_ctx = self
         self.res_addkv.on_click(res_addkv_cb)
 
+
         def res_addext_cb(btn):
-            print "res_addext_cb"
+            title = widgets.HTML(value="Add external resource")
+            filename = widgets.Text(description="Filename: ")
+
+            ddown = widgets.Dropdown(
+                # FIXME dynamic from register importers
+                options={'Faults to HMTK': 1, 'Areas to HMTK': 2},
+                value=1,
+                description='Type of importer:',
+            )
+
+            def res_addext_add(btn):
+                print "todo"
+
+            add = widgets.Button(description='Add', margin="8px")
+            add._gem_ctx = btn._gem_ctx
+            add.on_click(res_addext_add)
+
+            def res_addext_close(btn):
+                btn._gem_ctx.res_mgmt.children = []
+
+            close = widgets.Button(description='Close', margin="8px")
+            close._gem_ctx = btn._gem_ctx
+            close.on_click(res_addext_close)
+
+            btnbox = widgets.HBox(children=[add, close])
+
+            box = widgets.Box(children=[title, filename, ddown, btnbox],
+                              border_style="solid", border_width="1px",
+                              border_radius="8px", padding="8px",
+                              width="400px")
+
+            btn._gem_ctx.res_mgmt.children = [box]
+
         self.res_addext = widgets.Button(description='Add external file',
                                          margin="8px")
         self.res_addext._gem_ctx = self

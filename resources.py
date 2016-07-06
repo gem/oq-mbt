@@ -20,28 +20,64 @@ class Importers_collection(object):
                 raise ValueError
         self.importer.append(importer)
 
-importers = Importers_collection()
+    def options_get(self):
+        ret = {}
+        for cur in self.importer:
+            ret[cur.descr] = cur.code
+
+        return ret
+
+mbt_importers = Importers_collection()
 # from oqmbt.china.china_tools import faults_to_hmtk
-importers.add(Importer('oqmbt.tools.china.area.areas_to_hmtk', 'china_areas_hmtk', 'China: from areas to hmtk'))
-importers.add(Importer('oqmbt.china.china_tools.faults_to_hmtk', 'china_faults_hmtk', 'China: from faults to hmtk'))
+mbt_importers.add(Importer('oqmbt.tools.china.area.areas_to_hmtk', 'china_areas_hmtk', 'China: from areas to hmtk'))
+mbt_importers.add(Importer('oqmbt.china.china_tools.faults_to_hmtk', 'china_faults_hmtk', 'China: from faults to hmtk'))
 
 class Resource_external_file(Dictable):
-    __public__ = ["filename", "loader" ]
-
-    importer = []
+    __public__ = ["filename", "loader", "onthefly", "checksum" ]
 
     def __init__(self, filename, loader):
         self.filename = filename
         self.loader = loader
         self.parent = None
 
+    @staticmethod
+    def add_cb(btn):
+        options = mbt_importers.options_get()
+        title = widgets.HTML(value="Add external resource")
+        filename = widgets.Text(description="Filename: ")
 
-    @classmethod
-    def importers_register(cls, importer):
-        cls.importer.append(importer)
+        ddown = widgets.Dropdown(
+            # FIXME dynamic from register importers
+            options=options,
+            description='Type of importer:',
+        )
 
-    def options_get():
-        pass
+        def res_addext_add(btn):
+            print "todo"
+
+        add = widgets.Button(description='Add', margin="8px")
+        add._gem_ctx = btn._gem_ctx
+        add.on_click(res_addext_add)
+
+        def res_addext_close(btn):
+            btn._gem_ctx.res_mgmt.children = []
+
+        close = widgets.Button(description='Close', margin="8px")
+        close._gem_ctx = btn._gem_ctx
+        close.on_click(res_addext_close)
+
+        btnbox = widgets.HBox(children=[add, close])
+
+        box = widgets.Box(children=[title, filename, ddown, btnbox],
+                          border_style="solid", border_width="1px",
+                          border_radius="8px", padding="8px",
+                          width="400px")
+
+        btn._gem_ctx.res_mgmt.children = [box]
+
+
+#    def options_get():
+#        pass
 #        self.wid = widgets.Text(description=
 #        self.wid = widgets.VBox(description=("%s:" % key), value=value)
 
@@ -86,6 +122,47 @@ class Resource_kv(Dictable):
     def sync_dom(self):
         self.value = self.wid_kv.value
 
+    @staticmethod
+    def add_cb(btn):
+        def res_addkv_add(btn):
+            parent_ctx = btn._gem_ctx._parent_ctx
+            if parent_ctx.resource_find(btn._gem_ctx.name.value) > -1:
+                message_set("resource '%s' already exists"
+                           % btn._gem_ctx.name.value)
+                return False
+
+            res_kv = Resource_kv(btn._gem_ctx.name.value,
+                                 btn._gem_ctx.value.value)
+            res_kv.parent_set(parent_ctx)
+            parent_ctx.resource_add(res_kv)
+            # print "res_addkv_add fired"
+
+        def res_addkv_close(btn):
+            btn._gem_ctx.res_mgmt.children = []
+
+        title = widgets.HTML(value="New parameter")
+        name = widgets.Text(description="Name: ")
+        value = widgets.Text(description="Value: ")
+
+        add = widgets.Button(description='Add', margin="8px")
+        add._gem_ctx = Bunch(name=name, value=value,
+                             _parent_ctx=btn._gem_ctx)
+        add.on_click(res_addkv_add)
+
+        close = widgets.Button(description='Close', margin="8px")
+        close._gem_ctx = btn._gem_ctx
+        close.on_click(res_addkv_close)
+
+        btnbox = widgets.HBox(children=[add, close])
+
+        box = widgets.Box(children=[title, name, value, btnbox],
+                          border_style="solid", border_width="1px",
+                          border_radius="8px", padding="8px",
+                          width="400px")
+
+        btn._gem_ctx.res_mgmt.children = [box]
+
+
 
 class Resources(Dictable):
     __public__ = ["resources"]
@@ -102,91 +179,16 @@ class Resources(Dictable):
             item.parent_set(self)
         self.res_contbox = widgets.VBox(children=children)
 
-        def res_addkv_cb(btn):
-            print btn._gem_ctx
-            print "res_addkv_cb fired"
-            def res_addkv_add(btn):
-                parent_ctx = btn._gem_ctx._parent_ctx
-                if parent_ctx.resource_find(btn._gem_ctx.name.value) > -1:
-                    message_set("resource '%s' already exists"
-                               % btn._gem_ctx.name.value)
-                    return False
-
-                res_kv = Resource_kv(btn._gem_ctx.name.value,
-                                     btn._gem_ctx.value.value)
-                res_kv.parent_set(parent_ctx)
-                parent_ctx.resource_add(res_kv)
-                # print "res_addkv_add fired"
-
-            def res_addkv_close(btn):
-                btn._gem_ctx.res_mgmt.children = []
-
-            title = widgets.HTML(value="New parameter")
-            name = widgets.Text(description="Name: ")
-            value = widgets.Text(description="Value: ")
-
-            add = widgets.Button(description='Add', margin="8px")
-            add._gem_ctx = Bunch(name=name, value=value,
-                                 _parent_ctx=btn._gem_ctx)
-            add.on_click(res_addkv_add)
-
-            close = widgets.Button(description='Close', margin="8px")
-            close._gem_ctx = btn._gem_ctx
-            close.on_click(res_addkv_close)
-
-            btnbox = widgets.HBox(children=[add, close])
-
-            box = widgets.Box(children=[title, name, value, btnbox],
-                              border_style="solid", border_width="1px",
-                              border_radius="8px", padding="8px",
-                              width="400px")
-
-            btn._gem_ctx.res_mgmt.children = [box]
-
         self.res_addkv = widgets.Button(description='Add parameter',
                                         margin="8px")
         self.res_addkv._gem_ctx = self
-        self.res_addkv.on_click(res_addkv_cb)
+        self.res_addkv.on_click(Resource_kv.add_cb)
 
-
-        def res_addext_cb(btn):
-            title = widgets.HTML(value="Add external resource")
-            filename = widgets.Text(description="Filename: ")
-
-            ddown = widgets.Dropdown(
-                # FIXME dynamic from register importers
-                options={'Faults to HMTK': 1, 'Areas to HMTK': 2},
-                value=1,
-                description='Type of importer:',
-            )
-
-            def res_addext_add(btn):
-                print "todo"
-
-            add = widgets.Button(description='Add', margin="8px")
-            add._gem_ctx = btn._gem_ctx
-            add.on_click(res_addext_add)
-
-            def res_addext_close(btn):
-                btn._gem_ctx.res_mgmt.children = []
-
-            close = widgets.Button(description='Close', margin="8px")
-            close._gem_ctx = btn._gem_ctx
-            close.on_click(res_addext_close)
-
-            btnbox = widgets.HBox(children=[add, close])
-
-            box = widgets.Box(children=[title, filename, ddown, btnbox],
-                              border_style="solid", border_width="1px",
-                              border_radius="8px", padding="8px",
-                              width="400px")
-
-            btn._gem_ctx.res_mgmt.children = [box]
 
         self.res_addext = widgets.Button(description='Add external file',
                                          margin="8px")
         self.res_addext._gem_ctx = self
-        self.res_addext.on_click(res_addext_cb)
+        self.res_addext.on_click(Resource_external_file.add_cb)
 
         self.res_btns = widgets.HBox(
             children=[self.res_addkv, self.res_addext])

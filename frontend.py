@@ -188,9 +188,10 @@ class Frontend():
         display(self.vbox)
         display(self.prjbox)
 
-        # enable operation
-        load_prj = LoadProjectMenu(self)
-        self.menubox_set((load_prj.widget_get(),))
-        load_prj.ddown.value = 'SouthEast China_mbt'
+        if os.getenv('OQ_MBT_IS_DEVEL') is not None:
+            # enable operation
+            load_prj = LoadProjectMenu(self)
+            self.menubox_set((load_prj.widget_get(),))
+            load_prj.ddown.value = 'SouthEast China_mbt'
 
-        load_prj.load._click_handlers.callbacks[0](load_prj.load)
+            load_prj.load._click_handlers.callbacks[0](load_prj.load)

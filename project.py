@@ -28,7 +28,7 @@ class Project(Dictable):
         #
         # MODELS
         #
-        self.m = self.models = models
+        self.mod = self.models = models
         # print "models len: %d" % len(models.models)
         self.project_label = widgets.HTML(value="Project: ",
                                           font_weight="bold")

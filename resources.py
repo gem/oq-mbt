@@ -50,10 +50,10 @@ class Resource_external_file(Dictable):
         self.onthefly = onthefly
         self.checksum = checksum
         self.mtime = mtime
+        self._obj = None
 
         if self.onthefly is False:
-            if self._obj is None:
-                self.obj
+            self.value
 
         # check import file consistency
         # TODO
@@ -85,16 +85,16 @@ class Resource_external_file(Dictable):
 
 
     @property
-    def obj(self):
+    def value(self):
         abs_filename = os.path.join(mbt_comm.OQ_MBT_DATA,
-                                    self.filename.value)
+                                    self.filename)
         if self._obj != None:
             return self._obj
 
         if self.onthefly is True:
             importer = mbt_importers.ref_by_code(self.loader)
             with StdoutToNull():
-                self._obj = importer(self.abs_filename)
+                self._obj = importer(abs_filename)
             if self._obj is None:
                 raise ValueError
 
@@ -317,10 +317,10 @@ class Resources(Dictable):
             children=[self.res_label, self.res_contbox,
                       self.res_btns, self.res_mgmt])
 
-    def resource_find(self, name):
+    def resource_find(self, key):
         for i, res in enumerate(self.resources):
             # print "[%s] [%s]" % (res.key_get(), name)
-            if res.key_get() == name:
+            if res.key_get() == key:
                 return i
         return -1
 
@@ -330,6 +330,9 @@ class Resources(Dictable):
         self.res_contbox.children = (self.res_contbox.children +
                                      (resource.widget_get(),))
         self.res_mgmt.children = []
+
+    def resource_get(self, id):
+        return self.resources[id]
 
     def resource_del(self, resource):
         # print "resource_del fired"

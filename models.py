@@ -41,6 +41,12 @@ class Model(Dictable):
     def widget_get(self):
         return self.widget
 
+    def __getitem__(self, key):
+        id = self.resources.resource_find(key)
+        if id == -1:
+            raise KeyError
+        return self.resources.resource_get(id).value
+
 
 class Models(Dictable):
     __public__ = ["models"]
@@ -110,8 +116,24 @@ class Models(Dictable):
         self.models_cont.set_title(sz, model.title)
         self.models_mgmt.children = []
 
+    def model_find(self, title):
+        for i, mod in enumerate(self.models):
+            # print "[%s] [%s]" % (res.key_get(), name)
+            if mod.title == title:
+                return i
+        return -1
+
+    def model_get(self, id):
+        return self.models[id]
+
     def parent_set(self, parent):
         self.parent = parent
 
     def widget_get(self):
         return self.widget
+
+    def __getitem__(self, title):
+        mod = self.model_find(title)
+        if mod == -1:
+            raise KeyError
+        return self.model_get(mod)

@@ -28,7 +28,7 @@ class Project(Dictable):
         #
         # MODELS
         #
-        self.models = models
+        self.m = self.models = models
         # print "models len: %d" % len(models.models)
         self.project_label = widgets.HTML(value="Project: ",
                                           font_weight="bold")
@@ -85,3 +85,9 @@ class Project(Dictable):
         self.title = name
         self.folder = folder
         self.project_label.value = "Project: " + name
+
+    def __getitem__(self, key):
+        id = self.resources.resource_find(key)
+        if id == -1:
+            raise KeyError
+        return self.resources.resource_get(id).value

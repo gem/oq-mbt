@@ -195,3 +195,6 @@ class Frontend():
             load_prj.ddown.value = 'SouthEast China_mbt'
 
             load_prj.load._click_handlers.callbacks[0](load_prj.load)
+
+            print g_prj["owner"]
+            print g_prj.m["Model one"]["the_data"]

@@ -1,8 +1,8 @@
 import os
+import sys
 from os.path import expanduser
 from ipywidgets import widgets
 from IPython.display import display
-
 #
 #  GLOBALS
 #
@@ -14,6 +14,18 @@ OQ_MBT_SFX = '_mbt'
 # message text widget handle
 g_message = None
 
+class StdoutToNull(object):
+    def __init__(self):
+        self.stdout = open(os.devnull, "w")
+
+    def __enter__(self):
+        sys.stdout.flush()
+        self.origin = sys.stdout
+        sys.stdout = self.stdout
+
+    def __exit__(self, type, value, traceback):
+        sys.stdout = self.origin
+        self.stdout.close()
 
 class Bunch(object):
     def __init__(self, **kw):

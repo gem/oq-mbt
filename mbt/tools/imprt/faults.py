@@ -1,7 +1,31 @@
+
+import os
+import re
+
+from osgeo import ogr
+from shapely import wkt
+
 from oqmbt.oqt_project import OQtSource
+from mbt.utils import get_point_list
+
+from openquake.hazardlib.geo.line import Line
+
+MAPPING = {'identifier': 'ID',
+           'name': 'NAME',
+           'dip': 'DIP',
+           'rake': 'RAKE',
+           'upper_depth': 'DMIN',
+           'lower_depth': 'DMAX',
+           'recurrence': 'RECURRENCE',
+           'slip_rate': 'Sliprate',
+           'aseismic': 'COEF',
+           'mmax': 'MMAX',
+           'ri': 'RECURRENCE',
+           'coeff_fault': 'COEF'
+           }
 
 
-def fmg_to_oqs(shapefile_filename, mapping=None, log=False):
+def get_fmg_faults(shapefile_filename, mapping=None, log=False):
     """
     Creates al list of OQtSource istances starting from a shapefile
 
@@ -50,6 +74,8 @@ def fmg_to_oqs(shapefile_filename, mapping=None, log=False):
                 sid = 'sf'+tmp
             elif isinstance(tmp, int):
                 sid = 'sf%d' % tmp
+            elif isinstance(tmp, float):
+				sid = 'sf%d' % (int(tmp))
             else:
                 raise ValueError('Unsupported ID type')
 
@@ -58,7 +84,7 @@ def fmg_to_oqs(shapefile_filename, mapping=None, log=False):
             print 'dip:', feature.GetField(mapping['dip'])
 
             src = OQtSource(sid, 'SimpleFaultSource')
-            src.trace = Line(_get_point_list(x, y))
+            src.trace = Line(get_point_list(x, y))
             src.dip = float(feature.GetField(mapping['dip']))
             src.upper_depth = float(feature.GetField(mapping['upper_depth']))
             src.lower_depth = float(feature.GetField(mapping['lower_depth']))

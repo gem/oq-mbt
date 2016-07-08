@@ -39,6 +39,9 @@ class Dictable(object):
     def sync_dom(self):
         pass
 
+    def parent_set(self, parent):
+        self.parent = parent
+
     @staticmethod
     def serialize(obj):
         ret = None

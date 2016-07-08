@@ -155,9 +155,6 @@ class Resource_kv(Dictable):
         self.widget = widgets.HBox(children=[self.wid_kv, self.wid_del],
                                    width="400px")
 
-    def parent_set(self, parent):
-        self.parent = parent
-
     def key_get(self):
         return self.key
 
@@ -269,9 +266,6 @@ class Resources(Dictable):
         self.res_contbox.children = new_children
         self.resources.remove(resource)
         del resource
-
-    def parent_set(self, parent):
-        self.parent = parent
 
     def widget_get(self):
         return self.widget

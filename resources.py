@@ -61,7 +61,7 @@ class Resource_external_file(Dictable):
         self.parent = None
         self.wid_key = widgets.Label(value=self.key)
         if (len(self.filename) > 45):
-            file_label = "%s ... %s" % (self.filename[0:20], self.filename[-20:])
+            file_label = "%s ... %s" % (self.filename[0:10], self.filename[-30:])
         else:
             file_label = self.filename
 

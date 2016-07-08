@@ -53,7 +53,7 @@ class Project(Dictable):
             with open(filename, "r") as infile:
                 prj = Dictable.deserialize(json.load(infile))
         else:
-            # all parts must be initialized with defaults and 
+            # all parts must be initialized with defaults and
             # the json file must be created
             prj = Project([], [])
         prj.title_set(prjdir, name[:-4])
@@ -70,15 +70,16 @@ class Project(Dictable):
         #for item in self.resources:
         #    del item
         #self.resources = []
-        print "TODO clean resources"
+        # print "TODO clean resources"
 
         # models
-        print "TODO clean models"
+        # print "TODO clean models"
         # new_acc = widgets.Accordion(children=[], width=800)
 
         # self.models_contbox.children = [new_acc]
         # del(self.models_cont)
         # self.models_cont = new_acc
+        pass
 
     def title_set(self, folder, name):
         self.title = name

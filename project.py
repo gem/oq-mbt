@@ -3,7 +3,7 @@ import json
 from ipywidgets import widgets
 
 import mbt_comm
-from mbt_comm import message_set
+from mbt_comm import message_set, cells_cleanall
 from serial import Dictable
 
 #
@@ -58,6 +58,9 @@ class Project(Dictable):
             prj = Project([], [])
         prj.title_set(prjdir, name[:-4])
         prj.resources.parent_set(prj)
+
+        cells_cleanall()
+
         return prj
 
     def widget_get(self):

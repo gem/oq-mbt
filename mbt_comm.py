@@ -2,7 +2,7 @@ import os
 import sys
 from os.path import expanduser
 from ipywidgets import widgets
-from IPython.display import display
+from IPython.display import display, Javascript
 #
 #  GLOBALS
 #
@@ -69,3 +69,18 @@ def init():
     # message widget
     g_message = widgets.HTML(read_only=True, width="800px",
                              height="2em")
+
+def cells_cleanall():
+    display(Javascript("""
+      var cells = IPython.notebook.get_cells();
+      var ctx, ct = cells.length;
+      for (var i = 0 ; i < ct ; i++) {
+          if (i == 0) {
+              cells[i].unselect();
+          }
+          else {
+              cells[i].select();
+          }
+      }
+      IPython.notebook.delete_cell();
+    """))

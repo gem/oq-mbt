@@ -15,15 +15,20 @@ OQ_MBT_SFX = '_mbt'
 g_message = None
 
 class StdoutToNull(object):
-    def __init__(self):
+    def __init__(self, is_silent=True):
+        self.is_silent = is_silent
         self.stdout = open(os.devnull, "w")
 
     def __enter__(self):
+        if self.is_silent is False:
+            return
         sys.stdout.flush()
         self.origin = sys.stdout
         sys.stdout = self.stdout
 
     def __exit__(self, type, value, traceback):
+        if self.is_silent is False:
+            return
         sys.stdout = self.origin
         self.stdout.close()
 

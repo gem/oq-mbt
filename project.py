@@ -60,7 +60,7 @@ class Project(Dictable):
         prj.resources.parent_set(prj)
 
         cells_cleanall()
-
+        
         return prj
 
     def widget_get(self):

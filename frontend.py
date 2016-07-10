@@ -174,11 +174,11 @@ class Frontend():
         display(HTML('''<script>
         code_show=true;
         function code_toggle() {
-         if (code_show){
-         $('div.input').hide();
-         } else {
-         $('div.input').show();
-         }
+            if (code_show){
+                $($('div.input')[0]).hide();
+            } else {
+                $($('div.input')[0]).show();
+            }
          code_show = !code_show
         }
         $( document ).ready(code_toggle);

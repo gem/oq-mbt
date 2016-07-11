@@ -1,5 +1,20 @@
 {
     "__class__": "Project", 
+    "cells": {
+        "__class__": "Cells", 
+        "cells": [
+            {
+                "__class__": "Cell", 
+                "content": "** here the first markdown cell **", 
+                "type": "markdown"
+            }, 
+            {
+                "__class__": "Cell", 
+                "content": "# here the first code cell", 
+                "type": "code"
+            }
+        ]
+    }, 
     "models": {
         "__class__": "Models", 
         "models": [
@@ -37,6 +52,15 @@
                             "__class__": "Resource_kv", 
                             "key": "shear_modulus", 
                             "value": "3.2e10"
+                        }, 
+                        {
+                            "__class__": "Resource_external_file", 
+                            "checksum": "6bf0e18ae1357408ed447a8cdc1e8ef7e992b2e5", 
+                            "filename": "test_cn/china_faults_test_YF.shp", 
+                            "key": "from_shp", 
+                            "loader": "china_faults_hmtk", 
+                            "mtime": 1468240064.9873347, 
+                            "onthefly": false
                         }
                     ]
                 }, 

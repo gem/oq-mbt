@@ -1,0 +1,25 @@
+====  ISSUES  ====
+
+  - Run secondary ipnb
+  - Manage CURRENT project and model
+  
+  - Cells management
+    DONE . Remove all cells except first
+    DONE . Populate cells during load (find how to add, miss data structure part)
+    DONE . How to retrieve code cells and save them into project
+
+  - Project
+    . store current project
+    DONE . get keys
+
+  - Model
+    DON . get keys
+
+  - Models
+    DONE . get keys
+
+
+==== BUGS ====
+
+  - new project create folder but not pseudo-empty project.json
+    . move save into project to reuse it in "new project"

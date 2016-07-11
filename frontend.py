@@ -154,10 +154,6 @@ class Frontend():
             filename = os.path.join(g_prj.folder, 'project.json')
 
             def on_msg(msg):
-                with open('/tmp/ret_comm.txt', 'w') as ff:
-                    ff.write(str(msg['content']['data']))
-                    ff.write('\n')
-
                 with open(filename, "w") as outfile:
                     cells = []
                     for cell_in in msg['content']['data']:
@@ -172,8 +168,7 @@ class Frontend():
                      data={'some': 'data'})
             c.on_msg(on_msg)
 
-            c.send(['some', 'more', 'data'])
-            # c.close(['some', 'closing', 'data'])
+            c.send(['require_cells'])
 
         self.save_prj.on_click(save_prj_cb)
 

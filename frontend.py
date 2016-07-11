@@ -10,7 +10,7 @@ from mbt_comm import message_set, message_show
 
 from resources import Resources
 from models import Models
-from cells import Cell
+from cells import Cells, Cell
 from project import Project
 
 g_prj = None
@@ -35,7 +35,7 @@ class NewProjectMenu(object):
             return
 
         message_set("'%s' project created" % name)
-        g_prj = Project(Resources(), Models())
+        g_prj = Project(Resources(), Models(), Cells())
         g_prj.title_set(newdir, name)
         btn._gem_ctx.frontend.prjbox_set([g_prj.widget_get()])
         btn._gem_ctx.frontend.menubox_set(())

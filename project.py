@@ -69,7 +69,6 @@ class Project(Dictable):
             prj = Project([], [])
         prj.title_set(prjdir, name[:-4])
         prj.resources.parent_set(prj)
-        print prj.cells
         prj.cells.load()
 
         return prj

@@ -2,7 +2,18 @@
     "__class__": "Project", 
     "cells": {
         "__class__": "Cells", 
-        "cells": []
+        "cells": [
+            {
+                "__class__": "Cell", 
+                "content": "** bold text **", 
+                "type": "markdown"
+            }, 
+            {
+                "__class__": "Cell", 
+                "content": "from frontend import g_prj\nprint g_prj.keys()\nprint \"=====\"\nprint g_prj.mod.keys()\nfor i in g_prj.mod.keys():\n    print \"=====\"\n    print \"model: %s\" % i\n    print \"  %s\" % g_prj.mod[i].keys()", 
+                "type": "code"
+            }
+        ]
     }, 
     "models": {
         "__class__": "Models", 

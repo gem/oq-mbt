@@ -1,6 +1,6 @@
 from serial import Dictable
 from IPython.display import display, Javascript
-
+import json
 
 def cells_cleanall():
     display(Javascript("""
@@ -24,9 +24,9 @@ def cells_insert_at_bottom(type, content):
     display(Javascript("""
     {
     var cell = IPython.notebook.insert_cell_at_bottom('%s');
-    cell.set_text('%s');
+    cell.set_text(%s);
     }
-    """ % (type,content)))
+    """ % (type, json.dumps(content))))
 
             
 class Cell(Dictable):

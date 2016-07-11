@@ -104,3 +104,6 @@ class Project(Dictable):
         if id == -1:
             raise KeyError
         return self.resources.resource_get(id).value
+
+    def keys(self):
+        return [x.key for x in self.resources.resources]

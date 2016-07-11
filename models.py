@@ -46,6 +46,8 @@ class Model(Dictable):
         if id == -1:
             raise KeyError
         return self.resources.resource_get(id).value
+    def keys(self):
+        return [x.key for x in self.resources.resources]
 
 
 class Models(Dictable):
@@ -137,3 +139,6 @@ class Models(Dictable):
         if mod == -1:
             raise KeyError
         return self.model_get(mod)
+
+    def keys(self):
+        return [x.title for x in self.models]

@@ -10,7 +10,7 @@
             }, 
             {
                 "__class__": "Cell", 
-                "content": "# here the first code cell", 
+                "content": "# here the first code cell\nfrom frontend import g_prj\nprint g_prj.keys()\nprint g_prj.mod.keys()\nfor i in g_prj.mod.keys():\n    print g_prj.mod[i].keys()", 
                 "type": "code"
             }
         ]

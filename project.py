@@ -3,8 +3,9 @@ import json
 from ipywidgets import widgets
 
 import mbt_comm
-from mbt_comm import message_set, cells_cleanall
+from mbt_comm import message_set
 from serial import Dictable
+from cells import Cells
 
 #
 #  TODO
@@ -15,9 +16,9 @@ from serial import Dictable
 
 
 class Project(Dictable):
-    __public__ = ["resources", "models"]
+    __public__ = ["resources", "models", "cells"]
 
-    def __init__(self, resources, models):
+    def __init__(self, resources, models, cells = None):
         self.project_label = widgets.HTML(value="Project: ",
                                           font_weight="bold")
         #
@@ -29,6 +30,13 @@ class Project(Dictable):
         # MODELS
         #
         self.mod = self.models = models
+
+        # CELLS
+        if cells is None:
+            self.cells = Cells([])
+        else:
+            self.cells = cells
+
         # print "models len: %d" % len(models.models)
         self.project_label = widgets.HTML(value="Project: ",
                                           font_weight="bold")
@@ -38,6 +46,9 @@ class Project(Dictable):
                       self.models.widget_get()],
             border_style="solid", border_width="1px", padding="8px",
             border_radius="4px")
+
+    def cells_add(self, cells):
+        self.cells = Cells(cells)
 
     @classmethod
     def load(cls, name):
@@ -58,9 +69,9 @@ class Project(Dictable):
             prj = Project([], [])
         prj.title_set(prjdir, name[:-4])
         prj.resources.parent_set(prj)
+        print prj.cells
+        prj.cells.load()
 
-        cells_cleanall()
-        
         return prj
 
     def widget_get(self):

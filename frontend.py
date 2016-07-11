@@ -10,6 +10,7 @@ from mbt_comm import message_set, message_show
 
 from resources import Resources
 from models import Models
+from cells import Cell
 from project import Project
 
 g_prj = None
@@ -116,19 +117,6 @@ class LoadProjectMenu(object):
     def widget_get(self):
         return self.box
 
-def on_msg(msg):
-    with open('/tmp/ret_comm.txt', 'w') as ff:
-        ff.write(str(msg))
-        ff.write('\n')
-
-msgs = []
-print "prima"
-c = Comm(target_name='oq_getcells_target', target_module='oq_getcells_module',
-         data={'some': 'data'})
-c.on_msg(on_msg)
-
-
-print "dopo"
 
 
 class Frontend():
@@ -164,11 +152,28 @@ class Frontend():
 
         def save_prj_cb(btn):
             filename = os.path.join(g_prj.folder, 'project.json')
+
+            def on_msg(msg):
+                with open('/tmp/ret_comm.txt', 'w') as ff:
+                    ff.write(str(msg['content']['data']))
+                    ff.write('\n')
+
+                with open(filename, "w") as outfile:
+                    cells = []
+                    for cell_in in msg['content']['data']:
+                        cells.append(Cell(cell_in['type'], cell_in['content']))
+                    g_prj.cells_add(cells)
+                    
+                    json.dump(g_prj.to_dict(), outfile, sort_keys=True, indent=4)
+                    message_set("'%s' project saved correctly" % filename)
+                c.close([])
+            
+            c = Comm(target_name='oq_getcells_target', target_module='oq_getcells_module',
+                     data={'some': 'data'})
+            c.on_msg(on_msg)
+
             c.send(['some', 'more', 'data'])
             # c.close(['some', 'closing', 'data'])
-            with open(filename, "w") as outfile:
-                json.dump(g_prj.to_dict(), outfile, sort_keys=True, indent=4)
-                message_set("'%s' project saved correctly" % filename)
 
         self.save_prj.on_click(save_prj_cb)
 

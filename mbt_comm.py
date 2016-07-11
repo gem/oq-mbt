@@ -72,12 +72,16 @@ def init():
         OQ_MBT_DATA = expanduser("~")
 
     display(Javascript("""
-        console.log('before');
         define('oq_getcells_module', [], function() {
             var oq_getcells_target = function (comm, msg) {
                 comm.on_msg(function(m) {
-                    console.log('message', m);
-                    comm.send(['some reply data', m.content.data])
+                    var cells = IPython.notebook.get_cells();
+                    var ret = [];
+                    var ct = cells.length;
+                    for (var i = 1 ; i < ct ; i++) {
+                        ret.push({type: cells[i].cell_type, content: cells[i].get_text()});
+                    }
+                    comm.send(ret);
                 });
             comm.on_close(function(m) {
                 ;
@@ -85,42 +89,8 @@ def init():
             }
             return {'oq_getcells_target': oq_getcells_target}
         })
-        console.log('after');
     """))
 
     # message widget
     g_message = widgets.HTML(read_only=True, width="800px",
                              height="2em")
-
-
-    
-
-def cells_cleanall():
-    display(Javascript("""
-      {
-          var cells = IPython.notebook.get_cells();
-          var ctx, ct = cells.length;
-          for (var i = 0 ; i < ct ; i++) {
-              if (i == 0) {
-                  cells[i].unselect();
-              }
-              else {
-                  cells[i].select();
-              }
-          }
-          IPython.notebook.delete_cell();
-      }
-    """))
-
-def cells_getall():
-    display(Javascript("""
-      {
-          var cells = IPython.notebook.get_cells();
-          var ret = [];
-          var ctx, ct = cells.length;
-          for (var i = 1 ; i < ct ; i++) {
-              ret.append(cells[i].get_text())
-              }
-          }
-      }
-    """))

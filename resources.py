@@ -86,17 +86,16 @@ class Resource_external_file(Dictable):
 
     @property
     def value(self):
-        abs_filename = os.path.join(mbt_comm.OQ_MBT_DATA,
-                                    self.filename)
         if self._obj != None:
             return self._obj
 
-        if self.onthefly is True:
-            importer = mbt_importers.ref_by_code(self.loader)
-            with StdoutToNull():
-                self._obj = importer(abs_filename)
-            if self._obj is None:
-                raise ValueError
+        abs_filename = os.path.join(mbt_comm.OQ_MBT_DATA,
+                                    self.filename)
+        importer = mbt_importers.ref_by_code(self.loader)
+        with StdoutToNull():
+            self._obj = importer(abs_filename)
+        if self._obj is None:
+            raise ValueError
 
         return self._obj
 

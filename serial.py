@@ -25,10 +25,12 @@ class Dictable(object):
         args = []
         # print "  class and __public__, proceed with subclass [%s]" % dct['__class__']
         for val in cls.__public__:
-            if isinstance(dct[val], dict) and '__class__' in dct[val]:
-                args.append(Dictable.from_dict(dct[val]))
-            else:
-                args.append(cls.deserialize(dct[val]))
+            if val in dct:
+                if isinstance(dct[val], dict) and '__class__' in dct[val]:
+                    args.append(Dictable.from_dict(dct[val]))
+                else:
+                    args.append(cls.deserialize(dct[val]))
+
         # print "ARGS: ", cls.__name__
         # print args
         return cls(*args)

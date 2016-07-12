@@ -207,7 +207,7 @@ class Metys():
         display(self.prjbox)
         cells_cleanall()
 
-        if False and os.getenv('OQ_MBT_IS_DEVEL') is not None:
+        if os.getenv('OQ_MBT_IS_DEVEL') is not None:
             # enable operation
             load_prj = LoadProjectMenu(self)
             self.menubox_set((load_prj.widget_get(),))

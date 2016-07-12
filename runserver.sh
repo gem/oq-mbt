@@ -1,5 +1,4 @@
 #!/bin/bash
-<<<<<<< HEAD
 while [ $# -ne 0 ]
 do
     arg="$1"

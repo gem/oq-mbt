@@ -46,6 +46,13 @@ class Model(Dictable):
         if id == -1:
             raise KeyError
         return self.resources.resource_get(id).value
+
+    def clear(self, key):
+        id = self.resources.resource_find(key)
+        if id == -1:
+            raise KeyError
+        return self.resources.resource_get(id).clear()
+
     def keys(self):
         return [x.key for x in self.resources.resources]
 

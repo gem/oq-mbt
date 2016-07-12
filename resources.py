@@ -105,8 +105,11 @@ class Resource_external_file(Dictable):
         return self.key
 
     def clear(self):
+        if self.onthefly is False:
+            return False
         del self._obj
         self._obj = None
+        return True
 
     @classmethod
     def add_cb(cls, btn):
@@ -240,6 +243,9 @@ class Resource_kv(Dictable):
 
     def sync_dom(self):
         self.value = self.wid_kv.value
+
+    def clear(self):
+        return True
 
     @staticmethod
     def add_cb(btn):

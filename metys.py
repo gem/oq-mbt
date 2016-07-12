@@ -37,17 +37,17 @@ class NewProjectMenu(object):
         message_set("'%s' project created" % name)
         g_prj = Project(Resources(), Models(), Cells())
         g_prj.title_set(newdir, name)
-        btn._gem_ctx.frontend.prjbox_set([g_prj.widget_get()])
-        btn._gem_ctx.frontend.menubox_set(())
+        btn._gem_ctx.metys.prjbox_set([g_prj.widget_get()])
+        btn._gem_ctx.metys.menubox_set(())
         del btn._gem_ctx
 
     @staticmethod
     def _close_cb(btn):
-        btn._gem_ctx.frontend.menubox_set(())
+        btn._gem_ctx.metys.menubox_set(())
         del btn._gem_ctx
 
-    def __init__(self, frontend):
-        self.frontend = frontend
+    def __init__(self, metys):
+        self.metys = metys
         message_set('')
         self.text = widgets.Text(description='Name: ', margin="8px")
         self.create = widgets.Button(description='Create', margin="8px")
@@ -75,19 +75,19 @@ class LoadProjectMenu(object):
             del g_prj
 
         g_prj = Project.load(btn._gem_ctx.ddown.value)
-        btn._gem_ctx.frontend.prjbox_set([g_prj.widget_get()])
+        btn._gem_ctx.metys.prjbox_set([g_prj.widget_get()])
 
-        btn._gem_ctx.frontend.menubox_set(())
+        btn._gem_ctx.metys.menubox_set(())
         del btn._gem_ctx
 
     @staticmethod
     def _close_cb(btn):
         # print "close_cb"
-        btn._gem_ctx.frontend.menubox_set(())
+        btn._gem_ctx.metys.menubox_set(())
         del btn._gem_ctx
 
-    def __init__(self, frontend):
-        self.frontend = frontend
+    def __init__(self, metys):
+        self.metys = metys
         message_set('')
         self.load = widgets.Button(description='Load', margin="8px")
         self.load._gem_ctx = self
@@ -119,7 +119,7 @@ class LoadProjectMenu(object):
 
 
 
-class Frontend():
+class Metys():
 
     def __init__(self):
         global g_prj

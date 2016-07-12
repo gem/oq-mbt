@@ -10,7 +10,7 @@ from mbt_comm import message_set, message_show
 
 from resources import Resources
 from models import Models
-from cells import Cells, Cell
+from cells import Cells, Cell, cells_cleanall
 from project import Project
 
 g_prj = None
@@ -37,6 +37,7 @@ class NewProjectMenu(object):
         message_set("'%s' project created" % name)
         g_prj = Project(Resources(), Models(), Cells())
         g_prj.title_set(newdir, name)
+        g_prj.current_set()
         btn._gem_ctx.metys.prjbox_set([g_prj.widget_get()])
         btn._gem_ctx.metys.menubox_set(())
         del btn._gem_ctx
@@ -204,6 +205,7 @@ class Metys():
         message_show()
         display(self.vbox)
         display(self.prjbox)
+        cells_cleanall()
 
         if os.getenv('OQ_MBT_IS_DEVEL') is not None:
             # enable operation

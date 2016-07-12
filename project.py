@@ -70,8 +70,15 @@ class Project(Dictable):
         prj.title_set(prjdir, name[:-4])
         prj.resources.parent_set(prj)
         prj.cells.load()
+        prj.current_set()
 
         return prj
+
+    def current_set(self):
+        with open(os.path.join(mbt_comm.OQ_MBT_HOME, 'CURRENT_PRJ'), 'w') as f:
+            title, _ = self.title_get()
+            f.write(str(title))
+
 
     def widget_get(self):
         return self.project_box
@@ -98,6 +105,9 @@ class Project(Dictable):
         self.title = name
         self.folder = folder
         self.project_label.value = "Project: " + name
+
+    def title_get(self):
+        return (self.title, self.folder)
 
     def __getitem__(self, key):
         id = self.resources.resource_find(key)

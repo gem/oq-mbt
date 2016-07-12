@@ -188,7 +188,7 @@ class Metys():
     def menubox_set(self, new_items):
         self.menubox.children = new_items
 
-    def show(self):
+    def primary(self):
         display(HTML('''<script>
         code_show=true;
         function code_toggle() {

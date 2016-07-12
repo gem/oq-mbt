@@ -1,4 +1,5 @@
 #!/bin/bash
+<<<<<<< HEAD
 while [ $# -ne 0 ]
 do
     arg="$1"
@@ -12,8 +13,7 @@ do
     shift
 done
 
-export PYTHONPATH=../model_building_tools:../hmtk:../oq-nrmllib:../oq-hazardlib:../oq-engine
-# add --no-browser to skip
+export PYTHONPATH=../model_building_tools:../hmtk:../oq-nrmllib:../oq-hazardlib:../oq-engine:../oq-mbt:
 
 if [ "$reference" = "true" ]; then
     SCRIPT_PATH="$(dirname "$0")"              # relative
@@ -21,5 +21,5 @@ if [ "$reference" = "true" ]; then
     export OQ_MBT_HOME=$SCRIPT_PATH/ref
     export OQ_MBT_DATA=$SCRIPT_PATH/ref-data
 fi
+# add --no-browser to skip
 jupyter-notebook $*
-

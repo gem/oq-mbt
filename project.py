@@ -51,7 +51,7 @@ class Project(Dictable):
         self.cells = Cells(cells)
 
     @classmethod
-    def load(cls, name):
+    def load(cls, name, is_primary=True):
         prjdir = os.path.join(mbt_comm.OQ_MBT_HOME, name)
 
         if not os.path.isdir(prjdir):
@@ -69,8 +69,9 @@ class Project(Dictable):
             prj = Project([], [])
         prj.title_set(prjdir, name[:-4])
         prj.resources.parent_set(prj)
-        prj.cells.load()
-        prj.current_set()
+        if is_primary is True:
+            prj.cells.load()
+            prj.current_set()
 
         return prj
 
@@ -79,6 +80,12 @@ class Project(Dictable):
             title, _ = self.title_get()
             f.write(str(title))
 
+
+    @classmethod
+    def current_get(cls):
+        with open(os.path.join(mbt_comm.OQ_MBT_HOME, 'CURRENT_PRJ'), 'r') as f:
+            return f.read()
+        return None
 
     def widget_get(self):
         return self.project_box

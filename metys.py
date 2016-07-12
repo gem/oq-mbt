@@ -75,7 +75,7 @@ class LoadProjectMenu(object):
             g_prj.clean()
             del g_prj
 
-        g_prj = Project.load(btn._gem_ctx.ddown.value)
+        g_prj = Project.load(btn._gem_ctx.ddown.value, True)
         btn._gem_ctx.metys.prjbox_set([g_prj.widget_get()])
 
         btn._gem_ctx.metys.menubox_set(())
@@ -207,7 +207,7 @@ class Metys():
         display(self.prjbox)
         cells_cleanall()
 
-        if os.getenv('OQ_MBT_IS_DEVEL') is not None:
+        if False and os.getenv('OQ_MBT_IS_DEVEL') is not None:
             # enable operation
             load_prj = LoadProjectMenu(self)
             self.menubox_set((load_prj.widget_get(),))
@@ -217,7 +217,19 @@ class Metys():
 
             print g_prj["owner"]
 
-            
-#            print g_prj.mod["Model one"]["the_data"]
+    @classmethod
+    def secondary(cls):
+        global g_prj
+
+        if g_prj is None:
+            mbt_comm.init()
+
+            # the primary metys page isn't
+            prj_name = Project.current_get()
+            if prj_name is None:
+                print "No current project recognized, run primary page, load a project and than retry here"
+                return False
+
+            g_prj = Project.load(prj_name + mbt_comm.OQ_MBT_SFX, False)
 
 

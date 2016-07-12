@@ -20,11 +20,11 @@ SIMPLE_FAULT_ATTRIBUTES = set(['source_id', 'name', 'tectonic_region_type',
 SIMPLE_FAULT_ATTRIBUTES |= set(['gr_aval', 'gr_bval', 'source_type'])
 
 # Create the set of valid source types
-SOURCE_TYPES = set()
-for name, obj in inspect.getmembers(oqsrc):
-    if inspect.isclass(obj):
-        if not re.search('Rupture', name):
-            SOURCE_TYPES.add(name)
+#SOURCE_TYPES = set()
+#for name, obj in inspect.getmembers(oqsrc):
+#    if inspect.isclass(obj):
+#        if not re.search('Rupture', name):
+#            SOURCE_TYPES.add(name)
 
 class OQtSource(object):
     """

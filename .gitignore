@@ -1,3 +1,5 @@
 *.pyc
 *.swp
 *.so
+mbt.ipynb
+ref/CURRENT_*

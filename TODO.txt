@@ -1,12 +1,14 @@
 ====  ISSUES  ====
 
-  - Run secondary ipnb
+  - Run secondary ipynb
   - Manage CURRENT project and model
   
   - Cells management
     DONE . Remove all cells except first
     DONE . Populate cells during load (find how to add, miss data structure part)
     DONE . How to retrieve code cells and save them into project
+
+  - Run markdown when load
 
   - Project
     . store current project

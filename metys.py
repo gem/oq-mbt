@@ -10,7 +10,7 @@ from mbt_comm import message_set, message_show
 
 from resources import Resources
 from models import Models
-from cells import Cells, Cell
+from cells import Cells, Cell, cells_cleanall
 from project import Project
 
 g_prj = None
@@ -37,6 +37,7 @@ class NewProjectMenu(object):
         message_set("'%s' project created" % name)
         g_prj = Project(Resources(), Models(), Cells())
         g_prj.title_set(newdir, name)
+        g_prj.current_set()
         btn._gem_ctx.metys.prjbox_set([g_prj.widget_get()])
         btn._gem_ctx.metys.menubox_set(())
         del btn._gem_ctx
@@ -74,7 +75,7 @@ class LoadProjectMenu(object):
             g_prj.clean()
             del g_prj
 
-        g_prj = Project.load(btn._gem_ctx.ddown.value)
+        g_prj = Project.load(btn._gem_ctx.ddown.value, True)
         btn._gem_ctx.metys.prjbox_set([g_prj.widget_get()])
 
         btn._gem_ctx.metys.menubox_set(())
@@ -187,7 +188,7 @@ class Metys():
     def menubox_set(self, new_items):
         self.menubox.children = new_items
 
-    def show(self):
+    def primary(self):
         display(HTML('''<script>
         code_show=true;
         function code_toggle() {
@@ -204,6 +205,7 @@ class Metys():
         message_show()
         display(self.vbox)
         display(self.prjbox)
+        cells_cleanall()
 
         if os.getenv('OQ_MBT_IS_DEVEL') is not None:
             # enable operation
@@ -215,7 +217,19 @@ class Metys():
 
             print g_prj["owner"]
 
-            
-#            print g_prj.mod["Model one"]["the_data"]
+    @classmethod
+    def secondary(cls):
+        global g_prj
+
+        if g_prj is None:
+            mbt_comm.init()
+
+            # the primary metys page isn't
+            prj_name = Project.current_get()
+            if prj_name is None:
+                print "No current project recognized, run primary page, load a project and than retry here"
+                return False
+
+            g_prj = Project.load(prj_name + mbt_comm.OQ_MBT_SFX, False)
 
 

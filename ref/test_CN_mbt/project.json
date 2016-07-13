@@ -75,7 +75,7 @@
                         {
                             "__class__": "Resource_external_file", 
                             "checksum": "d52dada8d7a9549e5375f72d721b835f7e8e9916", 
-                            "filename": "/home/openquake/GEM/oq-mbt/ref-data/test_cn/isc_ext_china.csv", 
+                            "filename": "test_cn/isc_ext_china.csv", 
                             "key": "catalogue_from_csv", 
                             "loader": "get_htmk_catalogue", 
                             "mtime": 1468311940.262547, 

@@ -160,11 +160,11 @@ class Metys():
                     for cell_in in msg['content']['data']:
                         cells.append(Cell(cell_in['type'], cell_in['content']))
                     g_prj.cells_add(cells)
-                    
+
                     json.dump(g_prj.to_dict(), outfile, sort_keys=True, indent=4)
                     message_set("'%s' project saved correctly" % filename)
                 c.close([])
-            
+
             c = Comm(target_name='oq_getcells_target', target_module='oq_getcells_module',
                      data={'some': 'data'})
             c.on_msg(on_msg)
@@ -222,6 +222,9 @@ class Metys():
         global g_prj
 
         if g_prj is None:
+            with open("/tmp/secondary.log", "a") as log:
+                log.write("g_prj is None\n")
+
             mbt_comm.init()
 
             # the primary metys page isn't
@@ -231,5 +234,8 @@ class Metys():
                 return False
 
             g_prj = Project.load(prj_name + mbt_comm.OQ_MBT_SFX, False)
+        else:
+            with open("/tmp/secondary.log", "a") as log:
+                log.write("g_prj is not None\n")
 
 

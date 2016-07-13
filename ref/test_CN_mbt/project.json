@@ -15,7 +15,12 @@
             }, 
             {
                 "__class__": "Cell", 
-                "content": "g_prj.mod['ASC']['catalogue_from_csv']", 
+                "content": "catalogue = g_prj.mod['ASC']['catalogue_from_csv']\nfaults = g_prj.mod['ASC']['from_shp']", 
+                "type": "code"
+            }, 
+            {
+                "__class__": "Cell", 
+                "content": "print catalogue", 
                 "type": "code"
             }, 
             {

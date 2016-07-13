@@ -1,7 +1,18 @@
 ====  ISSUES  ====
+  - filename helpers
 
-  - Run secondary ipynb
-  - Manage CURRENT project and model
+  - delete models (with current management)
+
+  - is last modification saved ?
+
+  - better layout
+
+==== BUGS ====
+
+  - new project create folder but not pseudo-empty project.json
+    . move save into project to reuse it in "new project"
+
+==== DONE ISSUES ====
   
   - Cells management
     DONE . Remove all cells except first
@@ -10,18 +21,18 @@
 
   - Run markdown when load
 
-  - Project
-    . store current project
+  - Model
     DONE . get keys
 
-  - Model
-    DON . get keys
 
   - Models
     DONE . get keys
 
+  DONE - Run secondary ipynb (with %run)
+  DONE - Manage CURRENT project and model
 
-==== BUGS ====
+  - Project
+    DONE . store current project
+    DONE . get keys
 
-  - new project create folder but not pseudo-empty project.json
-    . move save into project to reuse it in "new project"
+

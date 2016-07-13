@@ -15,24 +15,13 @@ class Model(Dictable):
         else:
             self.resources = resources
 
-        self.is_cur = False
-        self.is_cur_wid = widgets.ToggleButton(
-            description='Is current',
-            value=self.is_cur
-            )
-
         def clicked(btn):
             print clicked
 
-        # self.is_cur_wid.on_click(clicked)
-
         self.other = other
-        self.other_wid_get = widgets.HTML(value="other")
 
         self.widget = widgets.VBox(children=[
-            self.resources.widget_get(),
-            self.is_cur_wid,
-            self.other_wid_get])
+            self.resources.widget_get()])
 
     def parent_set(self, parent):
         self.parent = parent
@@ -58,19 +47,33 @@ class Model(Dictable):
 
 
 class Models(Dictable):
-    __public__ = ["models"]
+    __public__ = ["models", "current"]
 
-    def __init__(self, models=[]):
+    def __init__(self, models=[], current=None):
         self.models_label = widgets.HTML(value="Models:", font_weight="bold")
         # ATTENTION: buggy accordion implementation force us to destroy and recreate it
         #            for each modification (UGLY)!
         self.models_cont = widgets.Accordion(children=[], width=800)
+
+        def selected_index_cb(msg):
+            self.current = self.model_get(msg['new']).title
+
+        self.models_cont.observe(selected_index_cb, names=["selected_index"])
+
         self.models_mgmt = widgets.VBox(children=[])
 
         self.models = []
         for item in models:
             self.model_add(item)
             item.parent_set(self)
+
+        self.current = None
+        if current != None:
+            model_id = self.model_find(current)
+            if model_id > -1:
+                self.current = current
+        elif len(self.models) > 0:
+            self.current = self.models[0].title
 
         def models_add_cb(btn):
             def model_add_cb(btn):
@@ -116,6 +119,9 @@ class Models(Dictable):
                       self.models_add, self.models_mgmt],
             border_style="solid", border_width="1px", padding="8px",
             border_radius="4px")
+        if self.current is not None:
+            self.models_cont.selected_index = self.model_find(self.current)
+
 
     def model_add(self, model):
         self.models.append(model)

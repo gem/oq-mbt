@@ -138,8 +138,7 @@ class Resource_external_file(Dictable):
             description='Type of importer:',
         )
 
-        onthefly = widgets.Checkbox(
-            value=True,)
+        onthefly = widgets.Checkbox(value=False,)
         onthefly_desc = widgets.HTML(value="Load on-the-fly when required (persistent and cached otherwise)")
         onthefly_box = widgets.HBox(children=[onthefly, onthefly_desc])
 

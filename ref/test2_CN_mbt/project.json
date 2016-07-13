@@ -1,0 +1,126 @@
+{
+    "__class__": "Project", 
+    "cells": {
+        "__class__": "Cells", 
+        "cells": [
+            {
+                "__class__": "Cell", 
+                "content": "** bold text **", 
+                "type": "markdown"
+            }, 
+            {
+                "__class__": "Cell", 
+                "content": "from metys import g_prj\nprint g_prj.keys()\nprint \"=====\"\nprint g_prj.mod.keys()\nprint \"Current model: %s\" % g_prj.mod.current\nfor i in g_prj.mod.keys():\n    print \"=====\"\n    print \"model: %s\" % i\n    print \"  %s\" % g_prj.mod[i].keys()", 
+                "type": "code"
+            }, 
+            {
+                "__class__": "Cell", 
+                "content": "", 
+                "type": "code"
+            }
+        ]
+    }, 
+    "models": {
+        "__class__": "Models", 
+        "current": "Second model", 
+        "models": [
+            {
+                "__class__": "Model", 
+                "resources": {
+                    "__class__": "Resources", 
+                    "resources": [
+                        {
+                            "__class__": "Resource_kv", 
+                            "key": "mfd_binwidth", 
+                            "value": "0.1"
+                        }, 
+                        {
+                            "__class__": "Resource_kv", 
+                            "key": "catalogue_cutoff_magnitude", 
+                            "value": "4.5"
+                        }, 
+                        {
+                            "__class__": "Resource_kv", 
+                            "key": "magnitude_delta", 
+                            "value": "0.5"
+                        }, 
+                        {
+                            "__class__": "Resource_kv", 
+                            "key": "rupture_mesh_spacing", 
+                            "value": "10.0"
+                        }, 
+                        {
+                            "__class__": "Resource_kv", 
+                            "key": "rupt_aspect_ratio", 
+                            "value": "1.5"
+                        }, 
+                        {
+                            "__class__": "Resource_kv", 
+                            "key": "shear_modulus", 
+                            "value": "3.2e10"
+                        }, 
+                        {
+                            "__class__": "Resource_external_file", 
+                            "checksum": "6bf0e18ae1357408ed447a8cdc1e8ef7e992b2e5", 
+                            "filename": "test_cn/china_faults_test_YF.shp", 
+                            "key": "from_shp", 
+                            "loader": "china_faults_hmtk", 
+                            "mtime": 1468240064.9873347, 
+                            "onthefly": false
+                        }
+                    ]
+                }, 
+                "title": "ASC"
+            }, 
+            {
+                "__class__": "Model", 
+                "resources": {
+                    "__class__": "Resources", 
+                    "resources": [
+                        {
+                            "__class__": "Resource_kv", 
+                            "key": "the_second_key", 
+                            "value": "the second value"
+                        }
+                    ]
+                }, 
+                "title": "Second model"
+            }
+        ]
+    }, 
+    "resources": {
+        "__class__": "Resources", 
+        "resources": [
+            {
+                "__class__": "Resource_kv", 
+                "key": "mfd_binwidth", 
+                "value": "0.1"
+            }, 
+            {
+                "__class__": "Resource_kv", 
+                "key": "catalogue_cutoff_magnitude", 
+                "value": "4.5"
+            }, 
+            {
+                "__class__": "Resource_kv", 
+                "key": "magnitude_delta", 
+                "value": "0.5"
+            }, 
+            {
+                "__class__": "Resource_kv", 
+                "key": "rupture_mesh_spacing", 
+                "value": "10.0"
+            }, 
+            {
+                "__class__": "Resource_kv", 
+                "key": "rupt_aspect_ratio", 
+                "value": "1.5"
+            }, 
+            {
+                "__class__": "Resource_kv", 
+                "key": "shear_modulus", 
+                "value": "3.2e10"
+            }
+        ]
+    }
+}

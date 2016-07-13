@@ -15,24 +15,13 @@ class Model(Dictable):
         else:
             self.resources = resources
 
-        self.is_cur = False
-        self.is_cur_wid = widgets.ToggleButton(
-            description='Is current',
-            value=self.is_cur
-            )
-
         def clicked(btn):
             print clicked
 
-        # self.is_cur_wid.on_click(clicked)
-
         self.other = other
-        self.other_wid_get = widgets.HTML(value="other")
 
         self.widget = widgets.VBox(children=[
-            self.resources.widget_get(),
-            self.is_cur_wid,
-            self.other_wid_get])
+            self.resources.widget_get()])
 
     def parent_set(self, parent):
         self.parent = parent

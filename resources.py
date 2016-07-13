@@ -10,6 +10,9 @@ import hashlib
 class Importer(object):
     def __init__(self, ref, code, descr):
         self.ref = pydoc.locate(ref)
+        if not callable(self.ref):
+            raise TypeError("The importer [%s] isn't a callable."
+                            % ref)
         self.code = code
         self.descr = descr
 
@@ -39,8 +42,8 @@ mbt_importers = Importers_collection()
 # from oqmbt.china.china_tools import faults_to_hmtk
 mbt_importers.add(Importer('oqmbt.tools.china.area.areas_to_hmtk', 'china_areas_hmtk', 'China: from areas to hmtk'))
 mbt_importers.add(Importer('oqmbt.china.china_tools.faults_to_hmtk', 'china_faults_hmtk', 'China: from faults to hmtk'))
-mbt_importers.add(Importer('mbt.tools.imprt.faults', 'get_fmg_faults', 'FMG-shallow_faults'))
-mbt_importers.add(Importer('mbt.tools.imprt.catalogues', 'get_htmk_catalogue', 'FMG-catalogue'))
+mbt_importers.add(Importer('mbt.tools.imprt.faults.get_fmg_faults', 'get_fmg_faults', 'FMG-shallow_faults'))
+mbt_importers.add(Importer('mbt.tools.imprt.catalogues.get_htmk_catalogue', 'get_htmk_catalogue', 'FMG-catalogue'))
 
 class Resource_external_file(Dictable):
     __public__ = ["key", "filename", "loader", "onthefly", "checksum", "mtime" ]
@@ -135,8 +138,7 @@ class Resource_external_file(Dictable):
             description='Type of importer:',
         )
 
-        onthefly = widgets.Checkbox(
-            value=True,)
+        onthefly = widgets.Checkbox(value=False,)
         onthefly_desc = widgets.HTML(value="Load on-the-fly when required (persistent and cached otherwise)")
         onthefly_box = widgets.HBox(children=[onthefly, onthefly_desc])
 

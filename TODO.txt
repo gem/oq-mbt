@@ -39,3 +39,6 @@
     DONE . get keys
 
 
+==== FIXED BUGS ====
+
+  DONE - change of kv resources not reflected in an on-the-fly project update

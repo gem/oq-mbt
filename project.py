@@ -105,6 +105,7 @@ class Project(Dictable):
         with open(filename, "w") as outfile:
             json.dump(self.to_dict(), outfile, sort_keys=True, indent=4)
 
+        return True
 
     def current_set(self):
         with open(os.path.join(mbt_comm.OQ_MBT_HOME, 'CURRENT_PRJ'), 'w') as f:

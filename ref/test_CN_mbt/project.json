@@ -12,11 +12,17 @@
                 "__class__": "Cell", 
                 "content": "from metys import g_prj\nprint g_prj.keys()\nprint \"=====\"\nprint g_prj.mod.keys()\nfor i in g_prj.mod.keys():\n    print \"=====\"\n    print \"model: %s\" % i\n    print \"  %s\" % g_prj.mod[i].keys()", 
                 "type": "code"
+            }, 
+            {
+                "__class__": "Cell", 
+                "content": "from metys import g_prj\nprint g_prj['mfd_binwidth']", 
+                "type": "code"
             }
         ]
     }, 
     "models": {
         "__class__": "Models", 
+        "current": "ASC", 
         "models": [
             {
                 "__class__": "Model", 

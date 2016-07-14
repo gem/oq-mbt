@@ -219,9 +219,10 @@ class Resource_kv(Dictable):
 
         self.wid_kv = widgets.Text(description=("%s:" % key), value=value)
 
-        def wid_kv_on_change(txt):
-            print "wid_kv_on_change fired"
-        self.wid_kv.on_submit(wid_kv_on_change)
+        def wid_kv_on_observe(msg):
+            self.value = msg['new']
+        self.wid_kv.observe(wid_kv_on_observe, names=["value"])
+
 
         self.wid_del = widgets.Button(description="Delete", margin="4px")
         self.wid_del._gem_ctx = self

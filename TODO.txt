@@ -1,6 +1,4 @@
 ====  ISSUES  ====
-  - filename helpers
-
   - delete models (with current management)
 
   - is last modification saved ?
@@ -13,10 +11,11 @@
 
 ==== BUGS ====
 
-  - new project create folder but not pseudo-empty project.json
-    . move save into project to reuse it in "new project"
+  DONE - new project create folder but not pseudo-empty project.json
+    DONE . move save into project to reuse it in "new project"
 
 ==== DONE ISSUES ====
+  DONE  - filename helpers
   
   - Cells management
     DONE . Remove all cells except first

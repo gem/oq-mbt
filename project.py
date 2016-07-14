@@ -164,6 +164,7 @@ class Project(Dictable):
 
     def objpath(self, objname, is_leaf=True):
         if is_leaf:
-            return os.path.join(quote_plus(self.title), 'data', quote_plus(objname))
+            return (mbt_comm.OQ_MBT_HOME, os.path.join(quote_plus(self.title),
+                                                       'data', quote_plus(objname)))
         else:
             return os.path.join(quote_plus(self.title), quote_plus(objname))

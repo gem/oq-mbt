@@ -3,6 +3,7 @@ from ipywidgets import widgets
 from serial import Dictable
 from urllib import quote_plus
 
+import mbt_comm
 from mbt_comm import Bunch, accordion_title_find, message_set
 from resources import Resources
 
@@ -50,9 +51,10 @@ class Model(Dictable):
     def objpath(self, objname, is_leaf=True):
         pre = os.path.join(self.parent.parent.objpath(self.title, is_leaf=False))
         if is_leaf:
-            return os.path.join(pre, 'data', quote_plus(objname))
+            return (mbt_comm.OQ_MBT_HOME,
+                    os.path.join(pre, 'data', quote_plus(objname)))
         else:
-            return os.path.join(pre, quote_plus(objname))
+            return (os.path.join(pre, quote_plus(objname)))
 
 
 class Models(Dictable):

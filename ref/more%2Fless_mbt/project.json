@@ -5,7 +5,7 @@
         "cells": [
             {
                 "__class__": "Cell", 
-                "content": "from metys import g_prj\nfrom mbt_comm import OQ_MBT_HOME\nprint \"OQ_MBT_HOME:\\n    %s\" % OQ_MBT_HOME\nprint \"g_prj.objpath('the name'):\\n    %s\" % g_prj.objpath('the name')\nprint \"g_prj.mod['the/model'].objpath('the name'):\\n    %s\" % g_prj.mod['the/model'].objpath('the name')", 
+                "content": "from metys import g_prj\nprint \"g_prj.objpath('the name'):\\n    %s  /  %s\" % g_prj.objpath('the name')\nprint \"g_prj.mod['the/model'].objpath('the name'):\\n    %s  /  %s\" % g_prj.mod['the/model'].objpath('the name')", 
                 "type": "code"
             }
         ]

@@ -1,5 +1,7 @@
+import os
 from ipywidgets import widgets
 from serial import Dictable
+from urllib import quote_plus
 
 from mbt_comm import Bunch, accordion_title_find, message_set
 from resources import Resources
@@ -45,6 +47,13 @@ class Model(Dictable):
     def keys(self):
         return [x.key for x in self.resources.resources]
 
+    def objpath(self, objname, is_leaf=True):
+        pre = os.path.join(self.parent.parent.objpath(self.title, is_leaf=False))
+        if is_leaf:
+            return os.path.join(pre, 'data', quote_plus(objname))
+        else:
+            return os.path.join(pre, quote_plus(objname))
+
 
 class Models(Dictable):
     __public__ = ["models", "current"]
@@ -65,7 +74,6 @@ class Models(Dictable):
         self.models = []
         for item in models:
             self.model_add(item)
-            item.parent_set(self)
 
         self.current = None
         if current != None:
@@ -130,6 +138,7 @@ class Models(Dictable):
         self.models_cont.children = children_new
         self.models_cont.set_title(sz, model.title)
         self.models_mgmt.children = []
+        model.parent_set(self)
 
     def model_find(self, title):
         for i, mod in enumerate(self.models):

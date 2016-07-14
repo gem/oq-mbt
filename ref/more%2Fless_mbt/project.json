@@ -1,0 +1,37 @@
+{
+    "__class__": "Project", 
+    "cells": {
+        "__class__": "Cells", 
+        "cells": [
+            {
+                "__class__": "Cell", 
+                "content": "from metys import g_prj\nfrom mbt_comm import OQ_MBT_HOME\nprint \"OQ_MBT_HOME:\\n    %s\" % OQ_MBT_HOME\nprint \"g_prj.objpath('the name'):\\n    %s\" % g_prj.objpath('the name')\nprint \"g_prj.mod['the/model'].objpath('the name'):\\n    %s\" % g_prj.mod['the/model'].objpath('the name')", 
+                "type": "code"
+            }
+        ]
+    }, 
+    "models": {
+        "__class__": "Models", 
+        "current": "the/model", 
+        "models": [
+            {
+                "__class__": "Model", 
+                "resources": {
+                    "__class__": "Resources", 
+                    "resources": []
+                }, 
+                "title": "the/model"
+            }
+        ]
+    }, 
+    "resources": {
+        "__class__": "Resources", 
+        "resources": [
+            {
+                "__class__": "Resource_kv", 
+                "key": "new", 
+                "value": "param"
+            }
+        ]
+    }
+}

@@ -69,6 +69,7 @@ class LoadProjectMenu(object):
             del g_prj
 
         g_prj = Project.load(btn._gem_ctx.ddown.value, True)
+
         btn._gem_ctx.metys.prjbox_set([g_prj.widget_get()])
 
         btn._gem_ctx.metys.menubox_set(())

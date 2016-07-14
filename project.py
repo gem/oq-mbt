@@ -26,7 +26,7 @@ class Project(Dictable):
         # MODELS
         #
         self.mod = self.models = models
-
+        self.models.parent_set(self)
         # CELLS
         if cells is None:
             self.cells = Cells([])
@@ -92,6 +92,7 @@ class Project(Dictable):
 
         msg = "'%s' project created" % title
         prj = Project(Resources(), Models(), Cells())
+
         prj.title_set(newdir, title)
         prj.save()
 
@@ -160,3 +161,9 @@ class Project(Dictable):
 
     def keys(self):
         return [x.key for x in self.resources.resources]
+
+    def objpath(self, objname, is_leaf=True):
+        if is_leaf:
+            return os.path.join(quote_plus(self.title), 'data', quote_plus(objname))
+        else:
+            return os.path.join(quote_plus(self.title), quote_plus(objname))

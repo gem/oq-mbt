@@ -1,16 +1,14 @@
 import os
 from IPython.display import HTML
-from IPython.display import display, Javascript
+from IPython.display import display
 from ipykernel.comm import Comm
-import json
+from urllib import unquote_plus
 from ipywidgets import widgets
 
 import mbt_comm
 from mbt_comm import message_set, message_show
 
-from resources import Resources
-from models import Models
-from cells import Cells, Cell, cells_cleanall
+from cells import Cell, cells_cleanall
 from project import Project
 
 g_prj = None
@@ -20,27 +18,22 @@ class NewProjectMenu(object):
     @staticmethod
     def _create_cb(btn):
         global g_prj
-        name = btn._gem_ctx.text.value
-        newdir = os.path.join(mbt_comm.OQ_MBT_HOME,
-                              name
-                              + mbt_comm.OQ_MBT_SFX)
-        if os.path.isdir(newdir):
-            message_set("'%s' project already exists" % name)
-            return
 
-        try:
-            os.mkdir(newdir)
-        except:
-            message_set("'%s' project creation failed" % name)
-            return
+        title = btn._gem_ctx.text.value
+        prj, msg = Project.create(title)
 
-        message_set("'%s' project created" % name)
-        g_prj = Project(Resources(), Models(), Cells())
-        g_prj.title_set(newdir, name)
+        message_set(msg)
+        if prj is None:
+            return False
+
+        g_prj = prj
         g_prj.current_set()
+
         btn._gem_ctx.metys.prjbox_set([g_prj.widget_get()])
         btn._gem_ctx.metys.menubox_set(())
         del btn._gem_ctx
+
+        return True
 
     @staticmethod
     def _close_cb(btn):
@@ -104,7 +97,7 @@ class LoadProjectMenu(object):
         prjs = [x for x in all_dirs if x.endswith(mbt_comm.OQ_MBT_SFX)]
         prjs_items = {}
         for prj in prjs:
-            prjs_items[prj[:-4]] = prj
+            prjs_items[unquote_plus(prj[:-4])] = unquote_plus(prj)
         self.ddown = widgets.Dropdown(
             options=prjs_items,
             description='Projects:',
@@ -152,17 +145,17 @@ class Metys():
         self._gem_ctx = self
 
         def save_prj_cb(btn):
-            filename = os.path.join(g_prj.folder, 'project.json')
+
 
             def on_msg(msg):
-                with open(filename, "w") as outfile:
-                    cells = []
-                    for cell_in in msg['content']['data']:
-                        cells.append(Cell(cell_in['type'], cell_in['content']))
-                    g_prj.cells_add(cells)
-
-                    json.dump(g_prj.to_dict(), outfile, sort_keys=True, indent=4)
-                    message_set("'%s' project saved correctly" % filename)
+                cells = []
+                for cell_in in msg['content']['data']:
+                    cells.append(Cell(cell_in['type'], cell_in['content']))
+                g_prj.cells_add(cells)
+                if g_prj.save() is True:
+                    message_set("'%s' project saved correctly" % g_prj.title_get()[0])
+                else:
+                    message_set("'%s' project save failed" % g_prj.title_get()[0])
                 c.close([])
 
             c = Comm(target_name='oq_getcells_target', target_module='oq_getcells_module',

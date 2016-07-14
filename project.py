@@ -6,14 +6,10 @@ import mbt_comm
 from mbt_comm import message_set
 from serial import Dictable
 from cells import Cells
+from urllib import quote_plus
 
-#
-#  TODO
-#
-# fix TODO for resources and for models
-# manage "current" project and model
-# add exteral items (with md5 checks)
-
+from resources import Resources
+from models import Models
 
 class Project(Dictable):
     __public__ = ["resources", "models", "cells"]
@@ -52,11 +48,16 @@ class Project(Dictable):
 
     @classmethod
     def load(cls, name, is_primary=True):
-        prjdir = os.path.join(mbt_comm.OQ_MBT_HOME, name)
+        prjdir = os.path.join(mbt_comm.OQ_MBT_HOME, quote_plus(name))
+        prjdir_old = os.path.join(mbt_comm.OQ_MBT_HOME, name)
 
-        if not os.path.isdir(prjdir):
-            message_set("'%s' project not exists" % name)
-            return None
+        if os.path.isdir(prjdir) is False:
+            if os.path.isdir(prjdir_old) is True:
+                # migration case
+                os.rename(prjdir_old, prjdir)
+            else:
+                message_set("'%s' project not exists" % name)
+                return None
 
         filename = os.path.join(prjdir, 'project.json')
         if os.path.isfile(filename):
@@ -74,6 +75,35 @@ class Project(Dictable):
             prj.current_set()
 
         return prj
+
+    @classmethod
+    def create(cls, title):
+        newdir = os.path.join(mbt_comm.OQ_MBT_HOME,
+                              quote_plus(title) + mbt_comm.OQ_MBT_SFX)
+        if os.path.isdir(newdir):
+            msg = "'%s' project already exists" % title
+            return (None, msg)
+
+        try:
+            os.mkdir(newdir)
+        except:
+            msg = "'%s' project creation failed" % title
+            return (None, msg)
+
+        msg = "'%s' project created" % title
+        prj = Project(Resources(), Models(), Cells())
+        prj.title_set(newdir, title)
+        prj.save()
+
+        return (prj, msg)
+
+
+    def save(self):
+        filename = os.path.join(self.folder, 'project.json')
+
+        with open(filename, "w") as outfile:
+            json.dump(self.to_dict(), outfile, sort_keys=True, indent=4)
+
 
     def current_set(self):
         with open(os.path.join(mbt_comm.OQ_MBT_HOME, 'CURRENT_PRJ'), 'w') as f:

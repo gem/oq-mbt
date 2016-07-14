@@ -1,4 +1,17 @@
 #!/bin/bash
+
+
+usage () {
+    echo
+    echo "$0 - run jupyter-notebook with the right environmenti variables"
+    echo
+    echo "$0 [-r|--ref] [--no-browser]"
+    echo "   -r|--ref      use repository paths for project and data directories"
+    echo "   --no-browser  don't open new browser page"
+    echo "   -h|--help     this help"
+    echo
+    exit $1
+}
 while [ $# -ne 0 ]
 do
     arg="$1"
@@ -6,7 +19,11 @@ do
         -r|--ref)
             reference="true"
             ;;
+        -h|--help)
+            usage 0
+            ;;
         *)
+            break
             ;;
     esac
     shift

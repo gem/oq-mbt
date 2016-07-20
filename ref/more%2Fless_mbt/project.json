@@ -12,15 +12,77 @@
     }, 
     "models": {
         "__class__": "Models", 
-        "current": "the/model", 
+        "current": "the third", 
         "models": [
             {
                 "__class__": "Model", 
                 "resources": {
                     "__class__": "Resources", 
-                    "resources": []
+                    "resources": [
+                        {
+                            "__class__": "Resource_kv", 
+                            "key": "the", 
+                            "value": "model"
+                        }
+                    ]
                 }, 
                 "title": "the/model"
+            }, 
+            {
+                "__class__": "Model", 
+                "resources": {
+                    "__class__": "Resources", 
+                    "resources": [
+                        {
+                            "__class__": "Resource_kv", 
+                            "key": "the", 
+                            "value": "second"
+                        }
+                    ]
+                }, 
+                "title": "the second"
+            }, 
+            {
+                "__class__": "Model", 
+                "resources": {
+                    "__class__": "Resources", 
+                    "resources": [
+                        {
+                            "__class__": "Resource_kv", 
+                            "key": "the", 
+                            "value": "third"
+                        }
+                    ]
+                }, 
+                "title": "the third"
+            }, 
+            {
+                "__class__": "Model", 
+                "resources": {
+                    "__class__": "Resources", 
+                    "resources": [
+                        {
+                            "__class__": "Resource_kv", 
+                            "key": "the", 
+                            "value": "fourth"
+                        }
+                    ]
+                }, 
+                "title": "the fourth"
+            }, 
+            {
+                "__class__": "Model", 
+                "resources": {
+                    "__class__": "Resources", 
+                    "resources": [
+                        {
+                            "__class__": "Resource_kv", 
+                            "key": "the", 
+                            "value": "fifth"
+                        }
+                    ]
+                }, 
+                "title": "the fifth"
             }
         ]
     }, 

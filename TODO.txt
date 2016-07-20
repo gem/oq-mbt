@@ -1,5 +1,7 @@
 ====  ISSUES  ====
-  - delete models (with current management)
+  - widget grand renaming with 'wid_' prefix
+  - try to remove models proxy widget
+  - manage delete widgets porperly
 
   - is last modification saved ?
 
@@ -9,26 +11,24 @@
     . implement all md5sum check when loaded with
       visual message
 
+  - External resource
+    . Better visualization widget
+
+  - Run markdown when load
+
+
 ==== BUGS ====
 
-  DONE - new project create folder but not pseudo-empty project.json
-    DONE . move save into project to reuse it in "new project"
-
 ==== DONE ISSUES ====
-  DONE  - filename helpers
+  DONE - delete models (with current management)
+  DONE - filename helpers
   
-  - Cells management
+  DONE - Cells management
     DONE . Remove all cells except first
     DONE . Populate cells during load (find how to add, miss data structure part)
     DONE . How to retrieve code cells and save them into project
 
-  - Run markdown when load
-
-  - Model
-    DONE . get keys
-
-
-  - Models
+  DONE - Model
     DONE . get keys
 
   DONE - Run secondary ipynb (with %run)
@@ -42,3 +42,7 @@
 ==== FIXED BUGS ====
 
   DONE - change of kv resources not reflected in an on-the-fly project update
+
+  DONE - new project create folder but not pseudo-empty project.json
+    DONE . move save into project to reuse it in "new project"
+

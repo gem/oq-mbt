@@ -208,6 +208,9 @@ class Resource_external_file(Dictable):
         if self.parent:
             self.parent.resource_del(self)
 
+    def close(self):
+        # FIXME
+        pass
 
 class Resource_kv(Dictable):
     __public__ = ["key", "value"]
@@ -290,6 +293,9 @@ class Resource_kv(Dictable):
 
         btn._gem_ctx.res_mgmt.children = [box]
 
+    def close(self):
+        # FIXME
+        pass
 
 
 class Resources(Dictable):
@@ -350,6 +356,7 @@ class Resources(Dictable):
                               if x != resource.widget_get()])
         self.res_contbox.children = new_children
         self.resources.remove(resource)
+        resource.close()
         del resource
 
     def widget_get(self):

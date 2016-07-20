@@ -2,33 +2,82 @@ import os
 from ipywidgets import widgets
 from serial import Dictable
 from urllib import quote_plus
+from IPython.display import display
 
 import mbt_comm
 from mbt_comm import Bunch, accordion_title_find, message_set
 from resources import Resources
 
+def confirm(message, yes_cb, no_cb, context):
+    wid_message = widgets.HTML(value=message, font_weight="bold")
+    wid_yes = widgets.Button(description="YES")
+
+    def close_widget(ctx):
+        for wid in ctx.widgets:
+            wid.close()
+
+    def confirm_yes_cb(btn):
+        ctx = btn._gem_ctx
+        ctx.yes_cb(ctx.context)
+        close_widget(ctx)
+
+    def confirm_no_cb(btn):
+        ctx = btn._gem_ctx
+        ctx.no_cb(ctx.context)
+        close_widget(ctx)
+
+    wid_yes.on_click(confirm_yes_cb)
+    wid_no = widgets.Button(description="NO")
+    wid_no.on_click(confirm_no_cb)
+    wid_yesno = widgets.HBox(children=[wid_yes, wid_no])
+    wid_confirm_inner = widgets.VBox(children=[wid_message, wid_yesno])
+    wid_confirm_inner.add_class('gem_confirm_inner')
+    wid_confirm = widgets.HBox(children=[wid_confirm_inner])
+    wid_confirm.add_class('gem_confirm')
+
+    wid_no._gem_ctx = wid_yes._gem_ctx = Bunch(
+        yes_cb=yes_cb, no_cb=no_cb, context=context,
+        widgets=[wid_yes, wid_no, wid_yesno, wid_confirm_inner, wid_confirm])
+    display(wid_confirm)
 
 class Model(Dictable):
     __public__ = ["title", "resources"]
 
     def __init__(self, title, resources=None, other=None):
         self.title = title
+        self.parent = None
+
         if resources is None:
             self.resources = Resources()
         else:
             self.resources = resources
 
-        def clicked(btn):
-            print clicked
-
         self.other = other
 
+        self.model_delete_btn = widgets.Button(description='Delete', margin="8px")
+        self.model_delete_btn._gem_ctx = self
+
+        def yes_cb(model):
+            parent = model.parent_get()
+            parent.model_del(model)
+
+        def no_cb(model):
+            return
+
+        def model_delete_cb(model_delete_cb):
+            confirm("This is the confirm page", yes_cb, no_cb, self)
+            return
+
+        self.model_delete_btn.on_click(model_delete_cb)
+        model_label = widgets.Label(value="Model:")
         self.widget = widgets.VBox(children=[
-            self.resources.widget_get()])
+            self.resources.widget_get(), model_label, self.model_delete_btn])
 
     def parent_set(self, parent):
         self.parent = parent
-        pass
+
+    def parent_get(self):
+        return self.parent
 
     def widget_get(self):
         return self.widget
@@ -56,6 +105,9 @@ class Model(Dictable):
         else:
             return (os.path.join(pre, quote_plus(objname)))
 
+    def close(self):
+        # FIXME
+        pass
 
 class Models(Dictable):
     __public__ = ["models", "current"]
@@ -64,26 +116,23 @@ class Models(Dictable):
         self.models_label = widgets.HTML(value="Models:", font_weight="bold")
         # ATTENTION: buggy accordion implementation force us to destroy and recreate it
         #            for each modification (UGLY)!
-        self.models_cont = widgets.Accordion(children=[], width=800)
-
-        def selected_index_cb(msg):
-            self.current = self.model_get(msg['new']).title
-
-        self.models_cont.observe(selected_index_cb, names=["selected_index"])
+        self.models_cont = None
+        self.models_proxy = widgets.Proxy(self.models_cont)
 
         self.models_mgmt = widgets.VBox(children=[])
 
-        self.models = []
-        for item in models:
-            self.model_add(item)
+        self.models = models
+        for mod in self.models:
+            mod.parent_set(self)
 
+        # 'current' is a model title
         self.current = None
         if current != None:
             model_id = self.model_find(current)
             if model_id > -1:
                 self.current = current
-        elif len(self.models) > 0:
-            self.current = self.models[0].title
+
+        self.widget_update()
 
         def models_add_cb(btn):
             def model_add_cb(btn):
@@ -96,6 +145,7 @@ class Models(Dictable):
 
                 model = Model(btn._gem_ctx.name.value, Resources(), [])
                 parent_ctx.model_add(model)
+                btn._gem_ctx._parent_ctx.models_mgmt.children = []
 
             def model_close_cb(btn):
                 btn._gem_ctx.models_mgmt.children = []
@@ -125,22 +175,53 @@ class Models(Dictable):
         self.models_add.on_click(models_add_cb)
 
         self.widget = widgets.VBox(
-            children=[self.models_label, self.models_cont,
+            children=[self.models_label, self.models_proxy,
                       self.models_add, self.models_mgmt],
             border_style="solid", border_width="1px", padding="8px",
             border_radius="4px")
-        if self.current is not None:
-            self.models_cont.selected_index = self.model_find(self.current)
 
+
+    def widget_update(self):
+        models_cont_old = self.models_cont
+
+        children_new = [mod.widget_get() for mod in self.models]
+        models_cont_new = widgets.Accordion(children=children_new, width=800)
+        for i, mod in enumerate(self.models):
+            models_cont_new.set_title(i, mod.title)
+
+        model_id = -1
+        if self.current is not None:
+            model_id = self.model_find(self.current)
+            if model_id == -1:
+                self.current = None
+
+        if model_id >= 0:
+            models_cont_new.selected_index = model_id
+        else:
+            models_cont_new.selected_index = -1
+
+        def selected_index_cb(msg):
+            self.current = self.model_get(msg['new']).title
+
+        models_cont_new.observe(selected_index_cb, names=["selected_index"])
+
+        self.models_proxy.child = models_cont_new
+        self.models_cont = models_cont_new
+        if models_cont_old is not None:
+            models_cont_old.close()
 
     def model_add(self, model):
         self.models.append(model)
-        sz = len(self.models_cont.children)
-        children_new = self.models_cont.children + (model.widget_get(),)
-        self.models_cont.children = children_new
-        self.models_cont.set_title(sz, model.title)
-        self.models_mgmt.children = []
+        self.current = model.title
+        self.widget_update()
         model.parent_set(self)
+
+    def model_del(self, model):
+        self.models.remove(model)
+        self.widget_update()
+        model.close()
+        del model
+
 
     def model_find(self, title):
         for i, mod in enumerate(self.models):

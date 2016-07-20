@@ -183,6 +183,8 @@ class Metys():
         self.menubox.children = new_items
 
     def primary(self):
+        display(HTML('''<link rel="stylesheet" href="mbt.css" type="text/css">'''))
+
         display(HTML('''<script>
         code_show=true;
         function code_toggle() {

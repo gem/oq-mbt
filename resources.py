@@ -305,10 +305,11 @@ class Resources(Dictable):
         #
         #  RESOURCES
         #
-        self.resources = resources
+
+        self.resources = resources[:]
         self.res_label = widgets.HTML(value="Resources:", font_weight="bold")
         children = []
-        for item in resources:
+        for item in self.resources:
             children.append(item.widget_get())
             item.parent_set(self)
         self.res_contbox = widgets.VBox(children=children)

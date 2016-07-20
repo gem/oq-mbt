@@ -211,8 +211,6 @@ class Metys():
 
             load_prj.load._click_handlers.callbacks[0](load_prj.load)
 
-            print g_prj["owner"]
-
     @classmethod
     def secondary(cls):
         global g_prj

@@ -121,7 +121,7 @@ class Models(Dictable):
 
         self.models_mgmt = widgets.VBox(children=[])
 
-        self.models = models
+        self.models = models[:]
         for mod in self.models:
             mod.parent_set(self)
 

@@ -117,51 +117,51 @@ class Resource_external_file(Dictable):
     @classmethod
     def add_cb(cls, btn):
         options = mbt_importers.options_get()
-        title = widgets.HTML(value="Add external resource")
-        message = widgets.HTML(value="")
-        key = widgets.Text(description="Key: ")
-        file_exists = widgets.Valid(value=False, readout='')
-        filename = widgets.Text(description="Filename: ")
-        filename._gem_ctx = Bunch(file_exists=file_exists)
+        wid_title = widgets.HTML(value="Add external resource")
+        wid_message = widgets.HTML(value="")
+        wid_key = widgets.Text(description="Key: ")
+        wid_file_exists = widgets.Valid(value=False, readout='')
+        wid_filename = widgets.Text(description="Filename: ")
+        wid_filename._gem_ctx = Bunch(wid_file_exists=wid_file_exists)
         def check_existence(msg):
             file_name = os.path.join(mbt_comm.OQ_MBT_DATA, msg['new'])
             # print file_name
-            msg['owner']._gem_ctx.file_exists.value = (
+            msg['owner']._gem_ctx.wid_file_exists.value = (
                 os.path.exists(file_name) and not os.path.isdir(file_name))
             return True
 
-        filename.observe(check_existence, names=["value"])
-        flexbox = widgets.HBox(children=[filename, file_exists])
+        wid_filename.observe(check_existence, names=["value"])
+        wid_flexbox = widgets.HBox(children=[wid_filename, wid_file_exists])
 
-        importer = widgets.Dropdown(
+        wid_importer = widgets.Dropdown(
             options=options,
             description='Type of importer:',
         )
 
-        onthefly = widgets.Checkbox(value=False,)
-        onthefly_desc = widgets.HTML(value="Load on-the-fly when required (persistent and cached otherwise)")
-        onthefly_box = widgets.HBox(children=[onthefly, onthefly_desc])
+        wid_onthefly = widgets.Checkbox(value=False,)
+        wid_onthefly_desc = widgets.HTML(value="Load on-the-fly when required (persistent and cached otherwise)")
+        wid_onthefly_box = widgets.HBox(children=[wid_onthefly, wid_onthefly_desc])
 
 
         def new_cb(btn):
             ctx = btn._gem_ctx
             parent_ctx = btn._gem_ctx._parent_ctx
-            ctx.message.value = ""
+            ctx.wid_message.value = ""
 
             # check again against C&P missing modify message workaround
             abs_filename = os.path.join(mbt_comm.OQ_MBT_DATA,
-                                        ctx.filename.value)
+                                        ctx.wid_filename.value)
             # print abs_filename
-            file_exists.value = (
+            wid_file_exists.value = (
                 os.path.exists(abs_filename) and not os.path.isdir(abs_filename))
 
-            if ctx.filename_exists.value is False:
-                ctx.message.value = "File '%s' doesn't exists" % ctx.filename.value
+            if ctx.wid_file_exists.value is False:
+                ctx.wid_message.value = "File '%s' doesn't exists" % ctx.wid_filename.value
                 return False
 
             importer = mbt_importers.ref_by_code(ctx.importer.value)
             if importer is None:
-                ctx.message.value = "Importer '%s' not found." % ctx.importer.value
+                ctx.wid_message.value = "Importer '%s' not found." % ctx.wid_importer.value
                 return False
 
             # checksum computation
@@ -177,32 +177,33 @@ class Resource_external_file(Dictable):
             # retrieve mtime
             mtime = os.stat(abs_filename).st_mtime
 
-            res_ef = cls(ctx.key.value, ctx.filename.value, ctx.importer.value,
-                         ctx.onthefly.value, checksum, mtime)
+            res_ef = cls(ctx.wid_key.value, ctx.wid_filename.value, ctx.wid_importer.value,
+                         ctx.wid_onthefly.value, checksum, mtime)
             res_ef.parent_set(parent_ctx)
             parent_ctx.resource_add(res_ef)
 
 
-        new = widgets.Button(description='Add', margin="8px")
-        new._gem_ctx = Bunch(message=message, key=key, filename=filename, filename_exists=file_exists,
-                             importer=importer, onthefly=onthefly, _parent_ctx=btn._gem_ctx)
-        new.on_click(new_cb)
+        wid_new_btn = widgets.Button(description='Add', margin="8px")
+        wid_new_btn._gem_ctx = Bunch(wid_message=wid_message, wid_key=wid_key, wid_filename=wid_filename,
+                             wid_file_exists=wid_file_exists, wid_importer=wid_importer,
+                             wid_onthefly=wid_onthefly, _parent_ctx=btn._gem_ctx)
+        wid_new_btn.on_click(new_cb)
 
         def close_cb(btn):
-            btn._gem_ctx.res_mgmt.children = []
+            btn._gem_ctx.wid_mgmt.children = []
 
-        close = widgets.Button(description='Close', margin="8px")
-        close._gem_ctx = btn._gem_ctx
-        close.on_click(close_cb)
+        wid_close_btn = widgets.Button(description='Close', margin="8px")
+        wid_close_btn._gem_ctx = btn._gem_ctx
+        wid_close_btn.on_click(close_cb)
 
-        btnbox = widgets.HBox(children=[new, close])
+        wid_btnbox = widgets.HBox(children=[wid_new_btn, wid_close_btn])
 
-        box = widgets.Box(children=[key, title, message, flexbox, importer, onthefly_box, btnbox],
+        wid_box = widgets.Box(children=[wid_key, wid_title, wid_message, wid_flexbox, wid_importer, wid_onthefly_box, wid_btnbox],
                           border_style="solid", border_width="1px",
                           border_radius="8px", padding="8px",
                           width="400px")
 
-        btn._gem_ctx.res_mgmt.children = [box]
+        btn._gem_ctx.wid_mgmt.children = [wid_box]
 
     def on_del(self):
         if self.parent:
@@ -269,29 +270,29 @@ class Resource_kv(Dictable):
             # print "res_addkv_add fired"
 
         def res_addkv_close(btn):
-            btn._gem_ctx.res_mgmt.children = []
+            btn._gem_ctx.wid_mgmt.children = []
 
-        title = widgets.HTML(value="New parameter")
-        name = widgets.Text(description="Name: ")
-        value = widgets.Text(description="Value: ")
+        wid_title = widgets.HTML(value="New parameter")
+        wid_name = widgets.Text(description="Name: ")
+        wid_value = widgets.Text(description="Value: ")
 
-        add = widgets.Button(description='Add', margin="8px")
-        add._gem_ctx = Bunch(name=name, value=value,
+        wid_add_btn = widgets.Button(description='Add', margin="8px")
+        wid_add_btn._gem_ctx = Bunch(wid_name=wid_name, wid_value=wid_value,
                              _parent_ctx=btn._gem_ctx)
-        add.on_click(res_addkv_add)
+        wid_add_btn.on_click(res_addkv_add)
 
-        close = widgets.Button(description='Close', margin="8px")
-        close._gem_ctx = btn._gem_ctx
-        close.on_click(res_addkv_close)
+        wid_close_btn = widgets.Button(description='Close', margin="8px")
+        wid_close_btn._gem_ctx = btn._gem_ctx
+        wid_close_btn.on_click(res_addkv_close)
 
-        btnbox = widgets.HBox(children=[add, close])
+        wid_btnbox = widgets.HBox(children=[wid_add_btn, wid_close_btn])
 
-        box = widgets.Box(children=[title, name, value, btnbox],
+        wid_box = widgets.Box(children=[wid_title, wid_name, wid_value, wid_btnbox],
                           border_style="solid", border_width="1px",
                           border_radius="8px", padding="8px",
                           width="400px")
 
-        btn._gem_ctx.res_mgmt.children = [box]
+        btn._gem_ctx.wid_mgmt.children = [wid_box]
 
     def close(self):
         # FIXME
@@ -307,36 +308,35 @@ class Resources(Dictable):
         #
 
         self.resources = resources[:]
-        self.res_label = widgets.HTML(value="Resources:", font_weight="bold")
+        self.wid_label = widgets.HTML(value="Resources:", font_weight="bold")
         children = []
         for item in self.resources:
             children.append(item.widget_get())
             item.parent_set(self)
-        self.res_contbox = widgets.VBox(children=children)
+        self.wid_contbox = widgets.VBox(children=children)
 
-        self.res_addkv = widgets.Button(description='Add parameter',
+        self.wid_addkv = widgets.Button(description='Add parameter',
                                         margin="8px")
-        self.res_addkv._gem_ctx = self
-        self.res_addkv.on_click(Resource_kv.add_cb)
+        self.wid_addkv._gem_ctx = self
+        self.wid_addkv.on_click(Resource_kv.add_cb)
 
 
-        self.res_addext = widgets.Button(description='Add external file',
+        self.wid_addext = widgets.Button(description='Add external file',
                                          margin="8px")
-        self.res_addext._gem_ctx = self
-        self.res_addext.on_click(Resource_external_file.add_cb)
+        self.wid_addext._gem_ctx = self
+        self.wid_addext.on_click(Resource_external_file.add_cb)
 
-        self.res_btns = widgets.HBox(
-            children=[self.res_addkv, self.res_addext])
+        self.wid_btns = widgets.HBox(
+            children=[self.wid_addkv, self.wid_addext])
 
-        self.res_mgmt = widgets.VBox(children=[])
+        self.wid_mgmt = widgets.VBox(children=[])
 
         self.widget = widgets.VBox(
-            children=[self.res_label, self.res_contbox,
-                      self.res_btns, self.res_mgmt])
+            children=[self.wid_label, self.wid_contbox,
+                      self.wid_btns, self.wid_mgmt])
 
     def resource_find(self, key):
         for i, res in enumerate(self.resources):
-            # print "[%s] [%s]" % (res.key_get(), name)
             if res.key_get() == key:
                 return i
         return -1
@@ -344,18 +344,18 @@ class Resources(Dictable):
     def resource_add(self, resource):
         # print "resource_add fired"
         self.resources.append(resource)
-        self.res_contbox.children = (self.res_contbox.children +
+        self.wid_contbox.children = (self.wid_contbox.children +
                                      (resource.widget_get(),))
-        self.res_mgmt.children = []
+        self.wid_mgmt.children = []
 
     def resource_get(self, id):
         return self.resources[id]
 
     def resource_del(self, resource):
         # print "resource_del fired"
-        new_children = tuple([x for x in self.res_contbox.children
+        new_children = tuple([x for x in self.wid_contbox.children
                               if x != resource.widget_get()])
-        self.res_contbox.children = new_children
+        self.wid_contbox.children = new_children
         self.resources.remove(resource)
         resource.close()
         del resource

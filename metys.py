@@ -43,20 +43,20 @@ class NewProjectMenu(object):
     def __init__(self, metys):
         self.metys = metys
         message_set('')
-        self.text = widgets.Text(description='Name: ', margin="8px")
-        self.create = widgets.Button(description='Create', margin="8px")
-        self.create._gem_ctx = self
-        self.create.on_click(self._create_cb)
+        self.wid_text = widgets.Text(description='Name: ', margin="8px")
+        self.wid_create_btn = widgets.Button(description='Create', margin="8px")
+        self.wid_create_btn._gem_ctx = self
+        self.wid_create_btn.on_click(self._create_cb)
 
-        self.close = widgets.Button(description='Close', margin="8px")
-        self.close._gem_ctx = self
-        self.close.on_click(self._close_cb)
-        self.box = widgets.Box(children=[self.text, self.create, self.close],
+        self.wid_close_btn = widgets.Button(description='Close', margin="8px")
+        self.wid_close_btn._gem_ctx = self
+        self.wid_close_btn.on_click(self._close_cb)
+        self.wid_box = widgets.Box(children=[self.wid_text, self.wid_create_btn, self.wid_close_btn],
                                border_style="solid", border_width="1px",
                                border_radius="8px", width="400px")
 
     def widget_get(self):
-        return self.box
+        return self.wid_box
 
 
 class LoadProjectMenu(object):
@@ -68,7 +68,7 @@ class LoadProjectMenu(object):
             g_prj.clean()
             del g_prj
 
-        g_prj = Project.load(btn._gem_ctx.ddown.value, True)
+        g_prj = Project.load(btn._gem_ctx.wid_ddown.value, True)
 
         btn._gem_ctx.metys.prjbox_set([g_prj.widget_get()])
 
@@ -84,13 +84,13 @@ class LoadProjectMenu(object):
     def __init__(self, metys):
         self.metys = metys
         message_set('')
-        self.load = widgets.Button(description='Load', margin="8px")
-        self.load._gem_ctx = self
-        self.load.on_click(self._load_cb)
+        self.wid_load_btn = widgets.Button(description='Load', margin="8px")
+        self.wid_load_btn._gem_ctx = self
+        self.wid_load_btn.on_click(self._load_cb)
 
-        self.close = widgets.Button(description='Close', margin="8px")
-        self.close._gem_ctx = self
-        self.close.on_click(self._close_cb)
+        self.wid_close_btn = widgets.Button(description='Close', margin="8px")
+        self.wid_close_btn._gem_ctx = self
+        self.wid_close_btn.on_click(self._close_cb)
 
         for (_, all_dirs, _) in os.walk(mbt_comm.OQ_MBT_HOME):
             break
@@ -99,18 +99,18 @@ class LoadProjectMenu(object):
         prjs_items = {}
         for prj in prjs:
             prjs_items[unquote_plus(prj[:-4])] = unquote_plus(prj)
-        self.ddown = widgets.Dropdown(
+        self.wid_ddown = widgets.Dropdown(
             options=prjs_items,
             description='Projects:',
             margin="8px"
         )
 
-        self.box = widgets.Box(children=[self.ddown, self.load, self.close],
+        self.wid_box = widgets.Box(children=[self.wid_ddown, self.wid_load_btn, self.wid_close_btn],
                                border_style="solid", border_width="1px",
                                border_radius="8px", width="400px")
 
     def widget_get(self):
-        return self.box
+        return self.wid_box
 
 
 
@@ -121,27 +121,27 @@ class Metys():
 
         mbt_comm.init()
 
-        self.menubox = widgets.Box(children=[])
+        self.wid_menubox = widgets.Box(children=[])
 
-        self.new_prj = widgets.Button(description='New Project', margin="4px")
-        self.new_prj._gem_ctx = self
+        self.wid_new_prj_btn = widgets.Button(description='New Project', margin="4px")
+        self.wid_new_prj_btn._gem_ctx = self
 
         def new_prj_cb(btn):
             new_prj = NewProjectMenu(btn._gem_ctx)
             btn._gem_ctx.menubox_set((new_prj.widget_get(),))
-        self.new_prj.on_click(new_prj_cb)
+        self.wid_new_prj_btn.on_click(new_prj_cb)
 
-        self.load_prj = widgets.Button(description='Load Project',
+        self.wid_load_prj_btn = widgets.Button(description='Load Project',
                                        margin="4px")
-        self.load_prj._gem_ctx = self
+        self.wid_load_prj_btn._gem_ctx = self
 
         def load_prj_cb(btn):
             load_prj = LoadProjectMenu(btn._gem_ctx)
             btn._gem_ctx.menubox_set((load_prj.widget_get(),))
-        self.load_prj._gem_ctx = self
-        self.load_prj.on_click(load_prj_cb)
+        self.wid_load_prj_btn._gem_ctx = self
+        self.wid_load_prj_btn.on_click(load_prj_cb)
 
-        self.save_prj = widgets.Button(description='Save Project',
+        self.wid_save_prj_btn = widgets.Button(description='Save Project',
                                        margin="4px")
         self._gem_ctx = self
 
@@ -165,22 +165,21 @@ class Metys():
 
             c.send(['require_cells'])
 
-        self.save_prj.on_click(save_prj_cb)
+        self.wid_save_prj_btn.on_click(save_prj_cb)
 
-        self.box = widgets.HBox(children=[self.new_prj, self.load_prj,
-                                          self.save_prj
-                                          ])
+        self.wid_box = widgets.HBox(children=[self.wid_new_prj_btn, self.wid_load_prj_btn,
+                                              self.wid_save_prj_btn])
 
-        self.vbox = widgets.VBox(children=[self.box, self.menubox])
+        self.wid_vbox = widgets.VBox(children=[self.wid_box, self.wid_menubox])
 
-        self.prjbox = widgets.Box(children=[])
+        self.wid_prjbox = widgets.Box(children=[])
 
     def prjbox_set(self, new_items):
-        if self.prjbox is not None:
-            self.prjbox.children = new_items
+        if self.wid_prjbox is not None:
+            self.wid_prjbox.children = new_items
 
     def menubox_set(self, new_items):
-        self.menubox.children = new_items
+        self.wid_menubox.children = new_items
 
     def primary(self):
         display(HTML('''<link rel="stylesheet" href="mbt.css" type="text/css">'''))
@@ -199,17 +198,17 @@ class Metys():
         </script>
         <a href="javascript:code_toggle()">Source toggle.</a>'''))
         message_show()
-        display(self.vbox)
-        display(self.prjbox)
+        display(self.wid_vbox)
+        display(self.wid_prjbox)
         cells_cleanall()
 
         if os.getenv('OQ_MBT_IS_DEVEL') is not None:
             # enable operation
             load_prj = LoadProjectMenu(self)
             self.menubox_set((load_prj.widget_get(),))
-            load_prj.ddown.value = 'SouthEast China_mbt'
+            load_prj.wid_ddown.value = 'SouthEast China_mbt'
 
-            load_prj.load._click_handlers.callbacks[0](load_prj.load)
+            load_prj.wid_load_btn._click_handlers.callbacks[0](load_prj.wid_load_btn)
 
     @classmethod
     def secondary(cls):

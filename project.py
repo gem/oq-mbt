@@ -15,7 +15,7 @@ class Project(Dictable):
     __public__ = ["resources", "models", "cells"]
 
     def __init__(self, resources, models, cells = None):
-        self.project_label = widgets.HTML(value="Project: ",
+        self.wid_prj_label = widgets.HTML(value="Project: ",
                                           font_weight="bold")
         #
         #  RESOURCES
@@ -23,21 +23,21 @@ class Project(Dictable):
         self.resources = resources
 
         #
-        # MODELS
+        #  MODELS
         #
         self.mod = self.models = models
         self.models.parent_set(self)
-        # CELLS
+
+        #
+        #  CELLS
+        #
         if cells is None:
             self.cells = Cells([])
         else:
             self.cells = cells
 
-        # print "models len: %d" % len(models.models)
-        self.project_label = widgets.HTML(value="Project: ",
-                                          font_weight="bold")
-        self.project_box = widgets.VBox(
-            children=[self.project_label,
+        self.wid_prj_box = widgets.VBox(
+            children=[self.wid_prj_label,
                       self.resources.widget_get(),
                       self.models.widget_get()],
             border_style="solid", border_width="1px", padding="8px",
@@ -120,7 +120,7 @@ class Project(Dictable):
         return None
 
     def widget_get(self):
-        return self.project_box
+        return self.wid_prj_box
 
     def clean(self):
         # resources
@@ -133,17 +133,17 @@ class Project(Dictable):
 
         # models
         # print "TODO clean models"
-        # new_acc = widgets.Accordion(children=[], width=800)
+        # wid_new_acc = widgets.Accordion(children=[], width=800)
 
-        # self.models_contbox.children = [new_acc]
+        # self.models_contbox.children = [wid_new_acc]
         # del(self.models_cont)
-        # self.models_cont = new_acc
+        # self.models_cont = wid_new_acc
         pass
 
     def title_set(self, folder, name):
         self.title = name
         self.folder = folder
-        self.project_label.value = "Project: " + name
+        self.wid_prj_label.value = "Project: " + name
 
     def title_get(self):
         return (self.title, self.folder)

@@ -19,7 +19,7 @@ class NewProjectMenu(object):
     def _create_cb(btn):
         global g_prj
 
-        title = btn._gem_ctx.text.value
+        title = btn._gem_ctx.wid_text.value
         prj, msg = Project.create(title)
 
         message_set(msg)

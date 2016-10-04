@@ -258,13 +258,13 @@ class Resource_kv(Dictable):
     def add_cb(btn):
         def res_addkv_add(btn):
             parent_ctx = btn._gem_ctx._parent_ctx
-            if parent_ctx.resource_find(btn._gem_ctx.name.value) > -1:
+            if parent_ctx.resource_find(btn._gem_ctx.wid_name.value) > -1:
                 message_set("resource '%s' already exists"
-                           % btn._gem_ctx.name.value)
+                           % btn._gem_ctx.wid_name.value)
                 return False
 
-            res_kv = Resource_kv(btn._gem_ctx.name.value,
-                                 btn._gem_ctx.value.value)
+            res_kv = Resource_kv(btn._gem_ctx.wid_name.value,
+                                 btn._gem_ctx.wid_value.value)
             res_kv.parent_set(parent_ctx)
             parent_ctx.resource_add(res_kv)
             # print "res_addkv_add fired"

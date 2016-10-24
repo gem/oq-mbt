@@ -39,8 +39,7 @@ class Importers_collection(object):
         return None
 
 mbt_importers = Importers_collection()
-# from oqmbt.china.china_tools import faults_to_hmtk
-mbt_importers.add(Importer('mbt.importers.faults.get_fmg_faults', 'get_fmg_faults', 'FMG-shallow_faults'))
+#mbt_importers.add(Importer('mbt.importers.faults.get_fmg_faults', 'get_fmg_faults', 'FMG-shallow_faults'))
 mbt_importers.add(Importer('mbt.importers.catalogues.get_htmk_catalogue', 'get_htmk_catalogue', 'HMTK-catalogue'))
 
 class Resource_external_file(Dictable):

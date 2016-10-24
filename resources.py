@@ -159,7 +159,7 @@ class Resource_external_file(Dictable):
                 ctx.wid_message.value = "File '%s' doesn't exists" % ctx.wid_filename.value
                 return False
 
-            importer = mbt_importers.ref_by_code(ctx.importer.value)
+            importer = mbt_importers.ref_by_code(ctx.wid_importer.value)
             if importer is None:
                 ctx.wid_message.value = "Importer '%s' not found." % ctx.wid_importer.value
                 return False

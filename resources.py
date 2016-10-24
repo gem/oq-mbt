@@ -40,10 +40,8 @@ class Importers_collection(object):
 
 mbt_importers = Importers_collection()
 # from oqmbt.china.china_tools import faults_to_hmtk
-mbt_importers.add(Importer('oqmbt.tools.china.area.areas_to_hmtk', 'china_areas_hmtk', 'China: from areas to hmtk'))
-mbt_importers.add(Importer('oqmbt.china.china_tools.faults_to_hmtk', 'china_faults_hmtk', 'China: from faults to hmtk'))
-mbt_importers.add(Importer('mbt.tools.imprt.faults.get_fmg_faults', 'get_fmg_faults', 'FMG-shallow_faults'))
-mbt_importers.add(Importer('mbt.tools.imprt.catalogues.get_htmk_catalogue', 'get_htmk_catalogue', 'FMG-catalogue'))
+mbt_importers.add(Importer('mbt.importers.faults.get_fmg_faults', 'get_fmg_faults', 'FMG-shallow_faults'))
+mbt_importers.add(Importer('mbt.importers.catalogues.get_htmk_catalogue', 'get_htmk_catalogue', 'HMTK-catalogue'))
 
 class Resource_external_file(Dictable):
     __public__ = ["key", "filename", "loader", "onthefly", "checksum", "mtime" ]

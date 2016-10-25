@@ -1,18 +1,29 @@
-import re
 from osgeo import ogr
 from shapely import wkt
 
-# IDS and NAME are mandatory, everything else optional
-PARAMETERS = {'IDS': str, 'NAME': str, 'MMAX': float, 'TRT': str}
+from oqmbt.oqt_project import OQtSource
 
-def areas_to_oqt_sources(shapefile_filename):
+from openquake.hazardlib.geo.polygon import Polygon
+from openquake.hazardlib.geo.point import Point
+
+def _get_point_list(lons, lats):
+    """
+    :returns:
+        Returns a list of :class:` openquake.hazardlib.geo.point.Point` 
+        instances
+    """
+    points = []
+    for i in range(0, len(lons)):
+        points.append(Point(lons[i], lats[i]))
+    return points
+
+def areas_to_oqt_sources(shapefile_filename, idname='IDZ'):
     """
     :parameter str shapefile_filename:
         Name of the shapefile containing the polygons
     :returns:
         A list of :class:`oqmbt.oqt_project.OQtSource` istances
     """
-    idname = 'Id'
     # Set the driver
     driver = ogr.GetDriverByName('ESRI Shapefile')
     dataSource = driver.Open(shapefile_filename, 0)
@@ -27,8 +38,11 @@ def areas_to_oqt_sources(shapefile_filename):
         x, y = polygon.exterior.coords.xy
         points = _get_point_list(x, y)
         # Set the ID
+        print type(feature.GetField(idname))
         if isinstance(feature.GetField(idname), str):
             id_str = feature.GetField(idname)
+        elif isinstance(feature.GetField(idname), int):
+            id_str = '%d' % (feature.GetField(idname))
         else:
             raise ValueError('Unsupported source ID type')
         # Create the source
@@ -36,9 +50,6 @@ def areas_to_oqt_sources(shapefile_filename):
                         source_type='AreaSource',
                         polygon=Polygon(points),
                         name=id_str)
-        # Set tectonic region
-        if feature.GetField('TRT')
-			trt = _set_trt(feature.GetField('TRT'))
         # Append the new source
         if not id_set and set(id_str):
             sources[id_str] = src

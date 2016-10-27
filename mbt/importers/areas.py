@@ -1,7 +1,7 @@
 from osgeo import ogr
 from shapely import wkt
 
-from metys.mbt.sources import OQtSource
+from mbt.sources import OQtSource
 
 from openquake.hazardlib.geo.polygon import Polygon
 from openquake.hazardlib.geo.point import Point
@@ -22,7 +22,7 @@ def areas_to_oqt_sources(shapefile_filename, idname='IDZ'):
     :parameter str shapefile_filename:
         Name of the shapefile containing the polygons
     :returns:
-        A list of :class:`metys.mbt.sources.OQtSource` istances
+        A list of :class:`mbt.sources.OQtSource` istances
     """
     # Set the driver
     driver = ogr.GetDriverByName('ESRI Shapefile')

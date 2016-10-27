@@ -96,8 +96,7 @@ def init():
         os.environ['OQ_MBT_HOME'] = OQ_MBT_HOME
 
     if not os.access(OQ_MBT_HOME, os.W_OK):
-        print "Projects directory [%s] access denied." % OQ_MBT_HOME
-        raise os.PermissionError
+        raise OSError("Projects directory [%s] access denied." % OQ_MBT_HOME)
 
     if 'OQ_MBT_DATA' in os.environ:
         OQ_MBT_DATA = os.environ['OQ_MBT_DATA']

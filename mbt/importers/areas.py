@@ -1,7 +1,7 @@
 from osgeo import ogr
 from shapely import wkt
 
-from oqmbt.oqt_project import OQtSource
+from mbt.sources import OQtSource
 
 from openquake.hazardlib.geo.polygon import Polygon
 from openquake.hazardlib.geo.point import Point

@@ -62,9 +62,9 @@
                         {
                             "__class__": "Resource_external_file", 
                             "checksum": "6bf0e18ae1357408ed447a8cdc1e8ef7e992b2e5", 
-                            "filename": "test_cn/china_faults_test_YF.shp", 
+                            "filename": "sample_faults_fmg_format.shp", 
                             "key": "from_shp", 
-                            "loader": "china_faults_hmtk", 
+                            "loader": "get_htmk_catalogue", 
                             "mtime": 1468240064.9873347, 
                             "onthefly": false
                         }

@@ -5,7 +5,7 @@ import re
 from osgeo import ogr
 from shapely import wkt
 
-from oqmbt.oqt_project import OQtSource
+from mbt.sources import OQtSource
 from mbt.utils import get_point_list
 
 from openquake.hazardlib.geo.line import Line

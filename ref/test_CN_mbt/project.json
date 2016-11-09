@@ -62,9 +62,9 @@
                         {
                             "__class__": "Resource_external_file", 
                             "checksum": "6bf0e18ae1357408ed447a8cdc1e8ef7e992b2e5", 
-                            "filename": "sample_faults_fmg_format.shp", 
+                            "filename": "sample_area_fmg_format.shp", 
                             "key": "from_shp", 
-                            "loader": "get_htmk_catalogue", 
+                            "loader": "FMG-shallow_faults", 
                             "mtime": 1468240064.9873347, 
                             "onthefly": false
                         }

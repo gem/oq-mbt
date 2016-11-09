@@ -1,3 +1,7 @@
+import inspect
+import re
+import openquake.hazardlib.source as oqsrc
+
 # List of valid attributes for an area source
 AREAS_ATTRIBUTES = set(['source_id', 'name', 'tectonic_region_type', 'mfd',
                         'rupture_mesh_spacing',

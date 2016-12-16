@@ -38,7 +38,6 @@ def areas_to_oqt_sources(shapefile_filename, idname='IDZ'):
         x, y = polygon.exterior.coords.xy
         points = _get_point_list(x, y)
         # Set the ID
-        print type(feature.GetField(idname))
         if isinstance(feature.GetField(idname), str):
             id_str = feature.GetField(idname)
         elif isinstance(feature.GetField(idname), int):

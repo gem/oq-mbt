@@ -9,7 +9,7 @@ class TestFaultImport(unittest.TestCase):
 
     def test_import_oq(self):
         # Read the shapefile
-        path = './data/shapefiles/oq/simple_fault_simple.shp'
+        path = './data/shapefiles/oq/sample_fault_simple.shp'
         filename = os.path.join(os.path.dirname(__file__), path)
         srclist = get_oq_shp_faults(filename)
         # Check the content of the source list
@@ -37,7 +37,7 @@ class TestFaultImport(unittest.TestCase):
 
     def test_import_fmg(self):
         # Read the shapefile
-        path = './data/shapefiles/oq/simple_fault_simple.shp'
+        path = './data/shapefiles/fmg/simple_fault_simple.shp'
         filename = os.path.join(os.path.dirname(__file__), path)
         srclist = get_oq_shp_faults(filename)
         # Check the content of the source list

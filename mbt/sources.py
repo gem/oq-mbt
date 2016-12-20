@@ -3,25 +3,48 @@ import re
 import openquake.hazardlib.source as oqsrc
 
 # List of valid attributes for an area source
-AREAS_ATTRIBUTES = set(['source_id', 'name', 'tectonic_region_type', 'mfd',
+AREAS_ATTRIBUTES = set(['source_id', 
+						'name', 
+						'tectonic_region_type', 
+						'mfd',
                         'rupture_mesh_spacing',
                         'magnitude_scaling_relationship',
-                        'rupture_aspect_ratio', 'temporal_occurrence_model',
-                        'upper_seismogenic_depth', 'lower_seismogenic_depth',
-                        'nodal_plane_distribution', 'hypocenter_distribution',
-                        'polygon', 'area_discretization'])
-AREAS_ATTRIBUTES |= set(['gr_aval', 'gr_bval', 'source_type'])
+                        'rupture_aspect_ratio', 
+                        'temporal_occurrence_model',
+                        'upper_seismogenic_depth', 
+                        'lower_seismogenic_depth',
+                        'nodal_plane_distribution', 
+                        'hypocenter_distribution',
+                        'polygon', 
+                        'area_discretization'])
+                        
+AREAS_ATTRIBUTES |= set(['gr_aval', 
+						 'gr_bval', 
+						 'source_type'])
 
 # List of valid attributes for a simple source
-SIMPLE_FAULT_ATTRIBUTES = set(['source_id', 'name', 'tectonic_region_type',
-                               'mfd', 'rupture_mesh_spacing',
+SIMPLE_FAULT_ATTRIBUTES = set(['source_id', 
+                               'name', 
+                               'tectonic_region_type',
+                               'mfd', 
+                               'rupture_mesh_spacing',
                                'magnitude_scaling_relationship',
                                'rupture_aspect_ratio',
                                'temporal_occurrence_model',
                                'upper_seismogenic_depth',
-                               'lower_seismogenic_depth', 'fault_trace',
-                               'dip', 'rake', 'hypo_list', 'slip_list'])
-SIMPLE_FAULT_ATTRIBUTES |= set(['gr_aval', 'gr_bval', 'source_type'])
+                               'lower_seismogenic_depth', 
+                               'fault_trace',
+                               'dip', 
+                               'rake', 
+                               'hypo_list', 
+                               'slip_list'])
+                               
+SIMPLE_FAULT_ATTRIBUTES |= set(['gr_aval', 
+                                'gr_bval', 
+                                'source_type'])
+
+# This adds support for shapefiles created by the OpenQuake-engine                            
+SIMPLE_FAULT_ATTRIBUTES |= set([''])
 
 # Create the set of valid source types
 SOURCE_TYPES = set()
@@ -50,17 +73,16 @@ class OQtSource(object):
                 self.source_type = args[1]
         if len(kwargs):
             self.__dict__.update(kwargs)
-        # Check mandatory attributes
+        # Check mandatory attributes: ID
         if 'source_id' not in self.__dict__:
             raise ValueError('Source must have an ID')
         elif not isinstance(self.source_id, str):
             raise ValueError('ID must be a string')
-        #
+        # Check mandatory fields: SOURCE TYPE
         if 'source_type' not in self.__dict__:
             raise ValueError('Source must have a type')
         if self.source_type not in SOURCE_TYPES:
             raise ValueError('Unrecognized source type: %s' % self.source_type)
-        # Find the set
         if 'source_type' in self.__dict__:
             attribute_set = AREAS_ATTRIBUTES
         elif 'source_type' in self.__dict__:

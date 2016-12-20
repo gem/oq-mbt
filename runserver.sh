@@ -29,7 +29,7 @@ do
     shift
 done
 
-export PYTHONPATH=$PWD/../model_building_tools:$PWD/../hmtk:$PWD/../oq-nrmllib:$PWD/../oq-hazardlib:$PWD/../oq-engine:$PWD:
+export PYTHONPATH=$PWD/../hmtk:$PWD/../oq-nrmllib:$PWD/../oq-hazardlib:$PWD/../oq-engine:$PWD:
 
 if [ "$reference" = "true" ]; then
     SCRIPT_PATH="$(dirname "$0")"              # relative

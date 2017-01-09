@@ -7,7 +7,7 @@ from prettytable import PrettyTable
 from hmtk.seismicity.selector import CatalogueSelector
 from hmtk.sources.area_source import mtkAreaSource
 
-from oqmbt.sources import OQtSource
+from mbt.sources import OQtSource
 
 from openquake.hazardlib.geo.polygon import Polygon
 

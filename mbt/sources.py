@@ -3,47 +3,47 @@ import re
 import openquake.hazardlib.source as oqsrc
 
 # List of valid attributes for an area source
-AREAS_ATTRIBUTES = set(['source_id', 
-						'name', 
-						'tectonic_region_type', 
+AREAS_ATTRIBUTES = set(['source_id',
+						'name',
+						'tectonic_region_type',
 						'mfd',
                         'rupture_mesh_spacing',
                         'magnitude_scaling_relationship',
-                        'rupture_aspect_ratio', 
+                        'rupture_aspect_ratio',
                         'temporal_occurrence_model',
-                        'upper_seismogenic_depth', 
+                        'upper_seismogenic_depth',
                         'lower_seismogenic_depth',
-                        'nodal_plane_distribution', 
+                        'nodal_plane_distribution',
                         'hypocenter_distribution',
-                        'polygon', 
+                        'polygon',
                         'area_discretization'])
-                        
-AREAS_ATTRIBUTES |= set(['gr_aval', 
-						 'gr_bval', 
+
+AREAS_ATTRIBUTES |= set(['gr_aval',
+						 'gr_bval',
 						 'source_type'])
 
 # List of valid attributes for a simple source
-SIMPLE_FAULT_ATTRIBUTES = set(['source_id', 
-                               'name', 
+SIMPLE_FAULT_ATTRIBUTES = set(['source_id',
+                               'name',
                                'tectonic_region_type',
-                               'mfd', 
+                               'mfd',
                                'rupture_mesh_spacing',
                                'magnitude_scaling_relationship',
                                'rupture_aspect_ratio',
                                'temporal_occurrence_model',
                                'upper_seismogenic_depth',
-                               'lower_seismogenic_depth', 
+                               'lower_seismogenic_depth',
                                'fault_trace',
-                               'dip', 
-                               'rake', 
-                               'hypo_list', 
+                               'dip',
+                               'rake',
+                               'hypo_list',
                                'slip_list'])
-                               
-SIMPLE_FAULT_ATTRIBUTES |= set(['gr_aval', 
-                                'gr_bval', 
+
+SIMPLE_FAULT_ATTRIBUTES |= set(['gr_aval',
+                                'gr_bval',
                                 'source_type'])
 
-# This adds support for shapefiles created by the OpenQuake-engine                            
+# This adds support for shapefiles created by the OpenQuake-engine
 SIMPLE_FAULT_ATTRIBUTES |= set([''])
 
 # Create the set of valid source types
@@ -92,10 +92,10 @@ class OQtSource(object):
         # Check attributes
         for key in self.__dict__:
             if key not in attribute_set:
-                print 'Attribute set', attribute_set
+                print ('Attribute set', attribute_set)
                 msg = 'Parameter %s not compatible with this source' % (key)
                 raise ValueError(msg)
 
     def get_info(self):
         for key in self.__dict__:
-            print '%30s:' % (key), getattr(self, key)
+            print ('%30s:' % (key), getattr(self, key))

@@ -6,6 +6,11 @@ File formats
 
 For specific information on shapefiles see https://en.wikipedia.org/wiki/Shapefile
 
+Area sources
+^^^^^^^^^^^^
+
+Area sources can be produced starting from the information included in a shapefile.
+
 Catalogues
 ^^^^^^^^^^
 
@@ -18,10 +23,11 @@ Shallow Faults
 The construction of fault sources with the oq-mbt starts from the information
 included in a shapefile  
 
-Area sources
-^^^^^^^^^^^^
+Strain rate
+^^^^^^^^^^^
 
-Area sources can be produced starting from the information included in a shapefile.
+Strain rate models can be used for the characterisation of earthquake 
+occurrence in the oq-mbt.
 
 Internal Data models
 --------------------

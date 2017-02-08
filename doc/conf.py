@@ -46,8 +46,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Model Building Toolkit'
-copyright = u'2017, Marco Pagani'
-author = u'Marco Pagani'
+copyright = u'2017, GEM Foundation'
+author = u'GEM Foundation'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

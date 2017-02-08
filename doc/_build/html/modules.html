@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Getting started &#8212; Model Building Toolkit 0.1 documentation</title>
+    <title>Modules &#8212; Model Building Toolkit 0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -26,8 +26,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Supported file formats" href="fileformats.html" />
-    <link rel="prev" title="Welcome to Model Building Toolkit’s documentation!" href="index.html" /> 
+    <link rel="prev" title="Internal Data models" href="datamodels.html" /> 
   </head>
   <body role="document">
     <div class="related" role="navigation" aria-label="related navigation">
@@ -37,10 +36,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="fileformats.html" title="Supported file formats"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="index.html" title="Welcome to Model Building Toolkit’s documentation!"
+          <a href="datamodels.html" title="Internal Data models"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">Model Building Toolkit 0.1 documentation</a> &#187;</li> 
       </ul>
@@ -51,8 +47,31 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="getting-started">
-<h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="modules">
+<h1>Modules<a class="headerlink" href="#modules" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="shallow-fault-sources">
+<h2>Shallow fault sources<a class="headerlink" href="#shallow-fault-sources" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="set-the-mfd">
+<h3>Set the MFD<a class="headerlink" href="#set-the-mfd" title="Permalink to this headline">¶</a></h3>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Name:</th><td class="field-body">double_truncated_mfd_from_sliprate</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Long:</th><td class="field-body">With this</td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li>m_low         Lowest magnitude</li>
+<li>bin_width     Width of the bins used to describe the discrete MFD</li>
+<li>scalerel_name Scaling relationship name (as in the oq-hazardlib)</li>
+</ul>
+<p>Example of config parameters:
+<code class="docutils literal"><span class="pre">params={'m_low':</span> <span class="pre">6.5,</span> <span class="pre">'bin_width':</span> <span class="pre">0.1,</span> <span class="pre">'scalerel_name':</span> <span class="pre">'WC1994'}</span></code></p>
+</div>
+</div>
 </div>
 
 
@@ -61,16 +80,24 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Modules</a><ul>
+<li><a class="reference internal" href="#shallow-fault-sources">Shallow fault sources</a><ul>
+<li><a class="reference internal" href="#set-the-mfd">Set the MFD</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
-  <p class="topless"><a href="index.html"
-                        title="previous chapter">Welcome to Model Building Toolkit&#8217;s documentation!</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="fileformats.html"
-                        title="next chapter">Supported file formats</a></p>
+  <p class="topless"><a href="datamodels.html"
+                        title="previous chapter">Internal Data models</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/gstarted.rst.txt"
+      <li><a href="_sources/modules.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -95,10 +122,7 @@
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="fileformats.html" title="Supported file formats"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="index.html" title="Welcome to Model Building Toolkit’s documentation!"
+          <a href="datamodels.html" title="Internal Data models"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">Model Building Toolkit 0.1 documentation</a> &#187;</li> 
       </ul>

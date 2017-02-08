@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>All about file formats and data models &#8212; Model Building Toolkit 0.1 documentation</title>
+    <title>Internal Data models &#8212; Model Building Toolkit 0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -26,7 +26,8 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Getting started" href="gstarted.html" /> 
+    <link rel="next" title="Modules" href="modules.html" />
+    <link rel="prev" title="Supported file formats" href="fileformats.html" /> 
   </head>
   <body role="document">
     <div class="related" role="navigation" aria-label="related navigation">
@@ -36,7 +37,10 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="gstarted.html" title="Getting started"
+          <a href="modules.html" title="Modules"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="fileformats.html" title="Supported file formats"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">Model Building Toolkit 0.1 documentation</a> &#187;</li> 
       </ul>
@@ -47,36 +51,19 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="all-about-file-formats-and-data-models">
-<h1>All about file formats and data models<a class="headerlink" href="#all-about-file-formats-and-data-models" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="file-formats">
-<h2>File formats<a class="headerlink" href="#file-formats" title="Permalink to this headline">¶</a></h2>
-<p>For specific information on shapefiles see <a class="reference external" href="https://en.wikipedia.org/wiki/Shapefile">https://en.wikipedia.org/wiki/Shapefile</a></p>
+  <div class="section" id="internal-data-models">
+<h1>Internal Data models<a class="headerlink" href="#internal-data-models" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="area-sources">
-<h3>Area sources<a class="headerlink" href="#area-sources" title="Permalink to this headline">¶</a></h3>
-<p>Area sources can be produced starting from the information included in a shapefile.</p>
-</div>
-<div class="section" id="catalogues">
-<h3>Catalogues<a class="headerlink" href="#catalogues" title="Permalink to this headline">¶</a></h3>
-<p>The MBT can read standard <cite>.csv</cite> earthquake catalogue files supported by the
-Hazard Modeller&#8217;s Toolkit (see the oq-hmtk for additional information).</p>
+<h2>Area sources<a class="headerlink" href="#area-sources" title="Permalink to this headline">¶</a></h2>
+<p>An area source instance can have the following attributes:</p>
+<ul class="simple">
+<li><cite>id</cite></li>
+<li><cite>name</cite></li>
+</ul>
 </div>
 <div class="section" id="shallow-faults">
-<h3>Shallow Faults<a class="headerlink" href="#shallow-faults" title="Permalink to this headline">¶</a></h3>
-<p>The construction of fault sources with the oq-mbt starts from the information
-included in a shapefile</p>
-</div>
-<div class="section" id="strain-rate">
-<h3>Strain rate<a class="headerlink" href="#strain-rate" title="Permalink to this headline">¶</a></h3>
-<p>Strain rate models can be used for the characterisation of earthquake
-occurrence in the oq-mbt.</p>
-</div>
-</div>
-<div class="section" id="internal-data-models">
-<h2>Internal Data models<a class="headerlink" href="#internal-data-models" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id1">
-<h3>Shallow Faults<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
-<p>In the oq-mbt, a fault instance can have the following attributes:</p>
+<h2>Shallow Faults<a class="headerlink" href="#shallow-faults" title="Permalink to this headline">¶</a></h2>
+<p>A fault instance can have the following attributes:</p>
 <ul class="simple">
 <li><cite>dip</cite></li>
 <li><cite>dipdir</cite></li>
@@ -84,9 +71,8 @@ occurrence in the oq-mbt.</p>
 <li><cite>sliprate</cite></li>
 </ul>
 </div>
-<div class="section" id="id2">
-<h3>Area sources<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
-</div>
+<div class="section" id="subduction-interface-faults">
+<h2>Subduction interface faults<a class="headerlink" href="#subduction-interface-faults" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -98,30 +84,24 @@ occurrence in the oq-mbt.</p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">All about file formats and data models</a><ul>
-<li><a class="reference internal" href="#file-formats">File formats</a><ul>
+<li><a class="reference internal" href="#">Internal Data models</a><ul>
 <li><a class="reference internal" href="#area-sources">Area sources</a></li>
-<li><a class="reference internal" href="#catalogues">Catalogues</a></li>
 <li><a class="reference internal" href="#shallow-faults">Shallow Faults</a></li>
-<li><a class="reference internal" href="#strain-rate">Strain rate</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#internal-data-models">Internal Data models</a><ul>
-<li><a class="reference internal" href="#id1">Shallow Faults</a></li>
-<li><a class="reference internal" href="#id2">Area sources</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#subduction-interface-faults">Subduction interface faults</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="gstarted.html"
-                        title="previous chapter">Getting started</a></p>
+  <p class="topless"><a href="fileformats.html"
+                        title="previous chapter">Supported file formats</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="modules.html"
+                        title="next chapter">Modules</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/formats.rst.txt"
+      <li><a href="_sources/datamodels.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -146,13 +126,16 @@ occurrence in the oq-mbt.</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="gstarted.html" title="Getting started"
+          <a href="modules.html" title="Modules"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="fileformats.html" title="Supported file formats"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">Model Building Toolkit 0.1 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2017, Marco Pagani.
+        &#169; Copyright 2017, GEM Foundation.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
     </div>
   </body>

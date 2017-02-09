@@ -47,10 +47,8 @@ def areas_to_oqt_sources(shapefile_filename):
     fieldnames = set()
     for i in range(layerDefinition.GetFieldCount()):
         fieldName = layerDefinition.GetFieldDefn(i).GetName()
-        print fieldName
         if fieldName in mapping and mapping[fieldName] in admitted:
             fieldnames.add(fieldName)
-    print 'fieldnames:', fieldnames
 
     # reading sources geometry
     sources = {}
@@ -75,6 +73,8 @@ def areas_to_oqt_sources(shapefile_filename):
             id_str = '%d' % (feature.GetField(idname))
         else:
             raise ValueError('Unsupported source ID type')
+        print '>>', id_str
+
         # Create the source
         src = OQtSource(source_id=id_str,
                         source_type='AreaSource',
@@ -86,9 +86,13 @@ def areas_to_oqt_sources(shapefile_filename):
             value = get_value(mapping[key], feature.GetField(key))
             setattr(src, mapping[key], value)
 
-        if not id_set and set(id_str):
+        if not id_set & set([id_str]):
             sources[id_str] = src
+            id_set.add(id_str)
         else:
+            print id_set
+            print id_set & set(id_str)
+            print 'IDs:', id_str
             raise ValueError('Sources with non unique ID %s' % id_str)
 
     dataSource.Destroy()

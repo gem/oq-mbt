@@ -7,13 +7,14 @@ from mbt.utils import get_lons_lats_from_line
 
 class TestFaultImport(unittest.TestCase):
 
-    def test_import_oqi_with_slip(self):
+    def test_import_oq_with_slip(self):
         # Read the shapefile
         path = './data/shapefiles/oq/simple_fault_simple_with_slip.shp'
         filename = os.path.join(os.path.dirname(__file__), path)
-        srclist = get_oq_shp_faults(filename)
+        srcdict = get_oq_shp_faults(filename)
+        keys = srcdict.keys()
         # Check sliprate value 
-        src = srclist[0]
+        src = srcdict[keys[0]]
         self.assertEqual(src.sliprate, 1.23)
 
 
@@ -21,11 +22,12 @@ class TestFaultImport(unittest.TestCase):
         # Read the shapefile
         path = './data/shapefiles/oq/simple_fault_simple.shp'
         filename = os.path.join(os.path.dirname(__file__), path)
-        srclist = get_oq_shp_faults(filename)
+        srcdict = get_oq_shp_faults(filename)
+        keys = srcdict.keys()
         # Check the content of the source list
-        self.assertEqual(len(srclist), 1)
+        self.assertEqual(len(keys), 1)
         # Check source 
-        src = srclist[0]
+        src = srcdict[keys[0]]
         self.assertEqual(src.source_id, 'sf3')
         # Check longitudes
         lons, lats = get_lons_lats_from_line(src.trace)
@@ -49,12 +51,13 @@ class TestFaultImport(unittest.TestCase):
         # Read the shapefile
         path = './data/shapefiles/fmg/sample_faults_fmg_format.shp'
         filename = os.path.join(os.path.dirname(__file__), path)
-        srclist = get_fmg_faults(filename)
+        srcdict = get_fmg_faults(filename)
+        keys = srcdict.keys()
         # Check the content of the source list
-        print len(srclist)
-        self.assertEqual(len(srclist), 7)
+        print len(keys)
+        self.assertEqual(len(keys), 7)
         # Check source
-        src = srclist[0]
+        src = srcdict['sf137']
         self.assertEqual(src.source_id, 'sf137')
         self.assertEqual(src.name, 'BB')
         # Check dip

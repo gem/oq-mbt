@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Internal Data models &#8212; Model Building Toolkit 0.1 documentation</title>
+    <title>Default parameters &#8212; Model Building Toolkit 0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -51,18 +51,37 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="internal-data-models">
-<h1>Internal Data models<a class="headerlink" href="#internal-data-models" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="default-parameters">
+<h1>Default parameters<a class="headerlink" href="#default-parameters" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="area-sources">
 <h2>Area sources<a class="headerlink" href="#area-sources" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="shallow-faults">
+<h2>Shallow Faults<a class="headerlink" href="#shallow-faults" title="Permalink to this headline">¶</a></h2>
+<p>Below we provide a list of default parameters the user can specify for each model:</p>
+<ul class="simple">
+<li><cite>sfs_default_b_gr</cite> - Gutenberg-Richter relationship b-value</li>
+<li><cite>sfs_default_creeping_coefficient</cite> - Fault creeping coefficient [0-1]. When equal to unity all the slip on the fault is considered aseismic.</li>
+<li><cite>sfs_default_lower_seismogenic_depth</cite> - Lower seismogenic depth [km]</li>
+<li><cite>sfs_default_mesh_spacing</cite> - Spacing of the mesh used to represent the fault surface [km]</li>
+<li><cite>sfs_default_mmin</cite> - Minimum magnitude used - when necessary - to define the magnitude-frequency distribution for shallow fault sources</li>
+<li><cite>sfs_default_scalerel</cite> - Name of the OpenQuake-engine magnitude scaling relationship class e.g. &#8216;WC1994&#8217;</li>
+<li><cite>sfs_default_upper_seismogenic_depth</cite> - Upper seismogenic depth [km]</li>
+</ul>
+</div>
+</div>
+<div class="section" id="internal-data-models">
+<h1>Internal Data models<a class="headerlink" href="#internal-data-models" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2>Area sources<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <p>An area source instance can have the following attributes:</p>
 <ul class="simple">
 <li><cite>id</cite></li>
 <li><cite>name</cite></li>
 </ul>
 </div>
-<div class="section" id="shallow-faults">
-<h2>Shallow Faults<a class="headerlink" href="#shallow-faults" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id2">
+<h2>Shallow Faults<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <p>A fault instance can have the following attributes:</p>
 <ul class="simple">
 <li><cite>dip</cite></li>
@@ -84,9 +103,14 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Internal Data models</a><ul>
+<li><a class="reference internal" href="#">Default parameters</a><ul>
 <li><a class="reference internal" href="#area-sources">Area sources</a></li>
 <li><a class="reference internal" href="#shallow-faults">Shallow Faults</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#internal-data-models">Internal Data models</a><ul>
+<li><a class="reference internal" href="#id1">Area sources</a></li>
+<li><a class="reference internal" href="#id2">Shallow Faults</a></li>
 <li><a class="reference internal" href="#subduction-interface-faults">Subduction interface faults</a></li>
 </ul>
 </li>

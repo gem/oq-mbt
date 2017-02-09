@@ -1,11 +1,20 @@
-Default parameters
-------------------
+Configuration parameters
+------------------------
 
-Area sources
-^^^^^^^^^^^^
+Default catalogue processing parameters
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Shallow Faults
-^^^^^^^^^^^^^^
+Below we provide a list of parameters the user can specify for each model:
+
+* `catalogue_cutoff_magnitude` - The value of magnitiude below which eartquakes included in the catalogue are discarded
+* `catalogue_cutoff_depth` - The value of depth [km] below which eartquakes included in the catalogue are discarded
+
+
+Default area source parameters
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Default shallow fault parameters
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Below we provide a list of default parameters the user can specify for each model:
 

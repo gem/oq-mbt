@@ -13,7 +13,7 @@ from openquake.hazardlib.geo.point import Point
 def _get_point_list(lons, lats):
     """
     :returns:
-        Returns a list of :class:` openquake.hazardlib.geo.point.Point` 
+        Returns a list of :class:` openquake.hazardlib.geo.point.Point`
         instances
     """
     points = []
@@ -47,10 +47,10 @@ def areas_to_oqt_sources(shapefile_filename):
     fieldnames = set()
     for i in range(layerDefinition.GetFieldCount()):
         fieldName = layerDefinition.GetFieldDefn(i).GetName()
-        print fieldName
+        print (fieldName)
         if fieldName in mapping and mapping[fieldName] in admitted:
             fieldnames.add(fieldName)
-    print 'fieldnames:', fieldnames
+    print ('fieldnames:', fieldnames)
 
     # reading sources geometry
     sources = {}
@@ -59,7 +59,7 @@ def areas_to_oqt_sources(shapefile_filename):
 
         # Get geometry
         geom = feature.GetGeometryRef()
-        geom_wkt = geom.ExportToWkt()
+        # geom_wkt = geom.ExportToWkt()
 
         # Read the geometry
         geom = feature.GetGeometryRef()
@@ -93,7 +93,6 @@ def areas_to_oqt_sources(shapefile_filename):
 
     dataSource.Destroy()
     return {key: sources[key] for key in sorted(sources)}
-
 
     """
     # Set the driver

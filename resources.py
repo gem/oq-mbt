@@ -39,9 +39,10 @@ class Importers_collection(object):
         return None
 
 mbt_importers = Importers_collection()
-mbt_importers.add(Importer('mbt.importers.faults.get_fmg_faults', 'get_fmg_faults', 'FMG-shallow_faults'))
-mbt_importers.add(Importer('mbt.importers.catalogues.get_hmtk_catalogue', 'get_hmtk_catalogue', 'HMTK-catalogue'))
-mbt_importers.add(Importer('mbt.importers.areas.areas_to_oqt_sources', 'areas_to_oqt_source', 'MBT-shapefile_area'))
+mbt_importers.add(Importer('mbt.importers.faults.get_fmg_faults', 'get_fmg_faults', 'FMG-shapefile-shallow_faults'))
+mbt_importers.add(Importer('mbt.importers.catalogues.get_hmtk_catalogue', 'get_htmk_catalogue', 'HMTK-csv-catalogue'))
+mbt_importers.add(Importer('mbt.importers.areas.areas_to_oqt_sources', 'areas_to_oqt_source', 'MBT-shapefile-area'))
+mbt_importers.add(Importer('mbt.importers.faults.get_oq_shp_faults', 'get_oq_shp_faults', 'MBT-shapefile-shallow_faults'))
 
 class Resource_external_file(Dictable):
     __public__ = ["key", "filename", "loader", "onthefly", "checksum", "mtime" ]

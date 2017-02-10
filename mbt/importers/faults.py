@@ -25,6 +25,7 @@ TYPES = {
          'tectonic_region_type': 'str',
          'upper_depth': 'float',
          'rupture_aspect_ratio' : 'float',
+         'sliprate' : 'float',
         }
 
 for idx in range(0,6):
@@ -51,6 +52,7 @@ MAPPING_OQ = {
 	      'usd': 'upper_depth',
 	      'lsd': 'lower_depth',
               'dip': 'dip',
+              'sliprate': 'sliprate',
              }
 
 for idx in range(0,6):
@@ -70,7 +72,7 @@ MAPPING_FMG = {'identifier': 'ID',
                'upper_depth': 'DMIN',
                'lower_depth': 'DMAX',
                'recurrence': 'RECURRENCE',
-               'slip_rate': 'Sliprate',
+               'sliprate': 'Sliprate',
                'slip_max': 'Slip_Max',
                'slip_min': 'Slip_Min',
                'aseismic': 'COEF',
@@ -238,7 +240,7 @@ def get_fmg_faults(shapefile_filename, mapping=None, log=False):
             src.lower_depth = float(feature.GetField(mapping['lower_depth']))
             src.name = feature.GetField(mapping['name'])
             # slip
-            src.slip_rate = float(feature.GetField(mapping['slip_rate']))
+            src.sliprate = float(feature.GetField(mapping['sliprate']))
             src.slip_max = float(feature.GetField(mapping['slip_max']))
             src.slip_min = float(feature.GetField(mapping['slip_min']))
             # recurrence

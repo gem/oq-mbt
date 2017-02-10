@@ -7,6 +7,16 @@ from mbt.utils import get_lons_lats_from_line
 
 class TestFaultImport(unittest.TestCase):
 
+    def test_import_oqi_with_slip(self):
+        # Read the shapefile
+        path = './data/shapefiles/oq/simple_fault_simple_with_slip.shp'
+        filename = os.path.join(os.path.dirname(__file__), path)
+        srclist = get_oq_shp_faults(filename)
+        # Check sliprate value 
+        src = srclist[0]
+        self.assertEqual(src.sliprate, 1.23)
+
+
     def test_import_oq(self):
         # Read the shapefile
         path = './data/shapefiles/oq/simple_fault_simple.shp'

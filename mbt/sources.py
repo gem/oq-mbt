@@ -3,10 +3,10 @@ import re
 import openquake.hazardlib.source as oqsrc
 
 # List of valid attributes for an area source
-AREAS_ATTRIBUTES = set(['source_id',
-						'name',
-						'tectonic_region_type',
-						'mfd',
+AREAS_ATTRIBUTES = set(['source_id', 
+			'name', 
+			'tectonic_region_type', 
+			'mfd',
                         'rupture_mesh_spacing',
                         'magnitude_scaling_relationship',
                         'rupture_aspect_ratio',
@@ -17,10 +17,10 @@ AREAS_ATTRIBUTES = set(['source_id',
                         'hypocenter_distribution',
                         'polygon',
                         'area_discretization'])
-
-AREAS_ATTRIBUTES |= set(['gr_aval',
-						 'gr_bval',
-						 'source_type'])
+                        
+AREAS_ATTRIBUTES |= set(['gr_aval', 
+			 'gr_bval', 
+			 'source_type'])
 
 # List of valid attributes for a simple source
 SIMPLE_FAULT_ATTRIBUTES = set(['source_id',
@@ -34,6 +34,13 @@ SIMPLE_FAULT_ATTRIBUTES = set(['source_id',
                                'upper_seismogenic_depth',
                                'lower_seismogenic_depth',
                                'fault_trace',
+                               'dip', 
+                               'rake', 
+                               'hypo_list', 
+                               'sliprate'])
+                               
+SIMPLE_FAULT_ATTRIBUTES |= set(['gr_aval', 
+                                'gr_bval', 
                                'dip',
                                'rake',
                                'hypo_list',

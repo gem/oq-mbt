@@ -64,7 +64,7 @@
                             "checksum": "6bf0e18ae1357408ed447a8cdc1e8ef7e992b2e5", 
                             "filename": "sample_area_fmg_format.shp", 
                             "key": "from_shp", 
-                            "loader": "FMG-shallow_faults", 
+                            "loader": "FMG-shapefile-shallow_faults", 
                             "mtime": 1468240064.9873347, 
                             "onthefly": false
                         }

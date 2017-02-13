@@ -98,60 +98,60 @@ def get_value(key, value):
         # Check dip value
         if key == 'dip':
             if value > 90 or value < 0:
-                print 'dip outside admitted range'
+                print ('dip outside admitted range')
         return value
     elif TYPES[key] == 'int':
-        return int(value)	    
+        return int(value)
     else:
         raise ValueError('Unknown type')
-	
+
 
 def get_oq_shp_faults(shapefile_filename, log=False):
     """
     Creates al list of OQtSource istances starting from a shapefile
     :value shapefile_filename:
     :returns:
-        A list of :class:OQtSource instances   
+        A list of :class:OQtSource instances
     """
     # set the default mapping
     mapping = MAPPING_OQ
     admitted = set()
     for key in TYPES:
         admitted.add(key)
-    print 'Admitted:', admitted
-                                    
+    print ('Admitted:', admitted)
+
     # check if file exists
     assert os.path.exists(shapefile_filename)
-    
+
     # Reading the file
     driver = ogr.GetDriverByName('ESRI Shapefile')
     dataSource = driver.Open(shapefile_filename, 0)
     layer = dataSource.GetLayer()
     layerDefinition = layer.GetLayerDefn()
-  
+
     # Attribute table: get fields and selected the ones admitted
     fieldnames = set()
     for i in range(layerDefinition.GetFieldCount()):
         fieldName = layerDefinition.GetFieldDefn(i).GetName()
-        print fieldName
+        print (fieldName)
         if fieldName in mapping and mapping[fieldName] in admitted:
             fieldnames.add(fieldName)
-    
+
     # reading sources geometry
     sources = {}
     id_set = set()
     for cnt, feature in enumerate(layer):
-		
+
         # Get geometry
         geom = feature.GetGeometryRef()
         geom_wkt = geom.ExportToWkt()
         if re.search('^MULTILINESTRING', geom_wkt):
-            print 'multilinestring skipping'
-            print '   ', feature.GetField('name')
+            print ('multilinestring skipping')
+            print ('   ', feature.GetField('name'))
             continue
         else:
             line = wkt.loads(geom.ExportToWkt())
-            x, y = line.coords.xy 
+            x, y = line.coords.xy
 
         # Get fault ID and set internal ID
         tmp = feature.GetField('id')
@@ -163,14 +163,14 @@ def get_oq_shp_faults(shapefile_filename, log=False):
             sid = 'sf%d' % (int(tmp))
         else:
             raise ValueError('Unsupported ID type')
-		
+
 	# Create a new source and set the geometry
         src = OQtSource(sid, 'SimpleFaultSource')
         src.trace = Line(get_point_list(x, y))
-		
+
 	# Get attributes
         for key in fieldnames:
-	    value = get_value(mapping[key], feature.GetField(key))
+            value = get_value(mapping[key], feature.GetField(key))
             setattr(src, mapping[key], value)
 
         if not id_set and set(sid):
@@ -180,13 +180,6 @@ def get_oq_shp_faults(shapefile_filename, log=False):
             raise ValueError('Sources with non unique ID %s' % sid)
 
     dataSource.Destroy()
-
-    #srtd = sorted(sources, key=lambda x: x.source_id, reverse=False)
-    #if log:
-    #    for src in srtd:
-    #        print '%4s %-40s' % (src.id, src.name)
-    #return srtd
-
     return {key: sources[key] for key in sorted(sources)}
 
 def get_fmg_faults(shapefile_filename, mapping=None, log=False):
@@ -196,8 +189,8 @@ def get_fmg_faults(shapefile_filename, mapping=None, log=False):
     :parameter string shapefile_filename:
         Name of the shapefile containing information on active faults
     :parameter mapping:
-        A dictionary indicating for each parameter in the shapefile 
-        attribute table the corresponding one in the mtkActiveFault 
+        A dictionary indicating for each parameter in the shapefile
+        attribute table the corresponding one in the mtkActiveFault
         object. Note that only the information listed in this
         dictionary will be included in the OQtSource istances.
     """
@@ -222,15 +215,15 @@ def get_fmg_faults(shapefile_filename, mapping=None, log=False):
         geom_wkt = geom.ExportToWkt()
         if (re.search('^MULTILINESTRING', geom_wkt) or dip < 0.1 or
                 feature.GetField("TYPE") == 'SUB'):
-            print 'skipping'
-            print '   ', feature.GetField(mapping['name'])
+            print ('skipping')
+            print ('   ', feature.GetField(mapping['name']))
         else:
             line = wkt.loads(geom.ExportToWkt())
             x, y = line.coords.xy
             if dip > 90 or dip < 0:
-                print 'dip outside admitted range'
-                print '   ', feature.GetField(mapping['dip'])
-                print '   ', feature.GetField(mapping['name'])
+                print ('dip outside admitted range')
+                print ('   ', feature.GetField(mapping['dip']))
+                print ('   ', feature.GetField(mapping['name']))
 
             tmp = feature.GetField(mapping['identifier'])
             if isinstance(tmp, str):
@@ -238,7 +231,7 @@ def get_fmg_faults(shapefile_filename, mapping=None, log=False):
             elif isinstance(tmp, int):
                 sid = 'sf%d' % tmp
             elif isinstance(tmp, float):
-				sid = 'sf%d' % (int(tmp))
+                sid = 'sf%d' % (int(tmp))
             else:
                 raise ValueError('Unsupported ID type')
             # Read attributes
@@ -267,11 +260,4 @@ def get_fmg_faults(shapefile_filename, mapping=None, log=False):
             else:
                 raise ValueError('Sources with non unique ID %s' % sid)
     dataSource.Destroy()
-
-    #srtd = sorted(sources, key=lambda x: x.source_id, reverse=False)
-    #if log:
-    #    for src in srtd:
-    #        print '%4s %-40s' % (src.id, src.name)
-    #return srtd
-
     return {key: sources[key] for key in sorted(sources)}

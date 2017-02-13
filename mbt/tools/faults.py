@@ -17,10 +17,10 @@ def _get_rate_above_m_low(seismic_moment, m_low, m_upp, b_gr=1.0):
     a_m = 9.1
     b_m = 1.5
     beta = b_gr * numpy.log(10.)
-    x = (-seismic_moment*(b_m*numpy.log(10.) - beta) /
-         (beta*(10**(a_m + b_m*m_low) -
-          10**(a_m + b_m*m_upp)*numpy.exp(beta*(m_low - m_upp)))))
-    rate_m_low = x * (1-numpy.exp(-beta*(m_upp-m_low)))
+    x = (-seismic_moment * (b_m * numpy.log(10.) - beta) /
+         (beta * (10**(a_m + b_m * m_low) -
+          10**(a_m + b_m * m_upp)*numpy.exp(beta * (m_low - m_upp)))))
+    rate_m_low = x * (1-numpy.exp(-beta * (m_upp-m_low)))
     return rate_m_low
 
 

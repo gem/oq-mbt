@@ -3,3 +3,5 @@
 *.so
 mbt.ipynb
 ref/CURRENT_*
+./mbt/notebooks/sources_shallow_fault/.ipynb_checkpoints/
+./mbt/notebooks/sources_area/.ipynb_checkpoints/

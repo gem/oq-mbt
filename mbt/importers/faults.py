@@ -49,8 +49,8 @@ MAPPING_OQ = {
               'msr': 'magnitude_scaling_relationship',
               'rar': 'rupture_aspect_ratio',
               'rake': 'rake',
-	      'usd': 'upper_depth',
-	      'lsd': 'lower_depth',
+              'usd': 'upper_depth',
+              'lsd': 'lower_depth',
               'dip': 'dip',
               'sliprate': 'sliprate',
              }
@@ -65,7 +65,7 @@ for idx in range(0,6):
     MAPPING_OQ['strike%d' % (idx)] = 'strike%d' % (idx)
     MAPPING_OQ['npweight%d' % (idx)] = 'npweight%d' % (idx)
 
-# key is the name of the field is the shapefile value is the 
+# key is the name of the field is the shapefile value is the
 # corresponding attribute name in the mbt
 MAPPING_FMG = {'identifier': 'ID',
                'name': 'NAME',

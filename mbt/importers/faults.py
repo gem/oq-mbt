@@ -65,6 +65,8 @@ for idx in range(0,6):
     MAPPING_OQ['strike%d' % (idx)] = 'strike%d' % (idx)
     MAPPING_OQ['npweight%d' % (idx)] = 'npweight%d' % (idx)
 
+# key is the name of the field is the shapefile value is the 
+# corresponding attribute name in the mbt
 MAPPING_FMG = {'identifier': 'ID',
                'name': 'NAME',
                'dip': 'DIP',
@@ -136,7 +138,8 @@ def get_oq_shp_faults(shapefile_filename, log=False):
             fieldnames.add(fieldName)
 
     # reading sources geometry
-    sources = []
+    sources = {}
+    id_set = set()
     for cnt, feature in enumerate(layer):
 
         # Get geometry
@@ -157,7 +160,7 @@ def get_oq_shp_faults(shapefile_filename, log=False):
         elif isinstance(tmp, int):
             sid = 'sf%d' % tmp
         elif isinstance(tmp, float):
-            d = 'sf%d' % (int(tmp))
+            sid = 'sf%d' % (int(tmp))
         else:
             raise ValueError('Unsupported ID type')
 
@@ -170,14 +173,14 @@ def get_oq_shp_faults(shapefile_filename, log=False):
             value = get_value(mapping[key], feature.GetField(key))
             setattr(src, mapping[key], value)
 
-        sources.append(src)
-    dataSource.Destroy()
+        if not id_set and set(sid):
+            sources[sid] = src
+            id_set.add(sid)
+        else:
+            raise ValueError('Sources with non unique ID %s' % sid)
 
-    srtd = sorted(sources, key=lambda x: x.source_id, reverse=False)
-    if log:
-        for src in srtd:
-            print ('%4s %-40s' % (src.id, src.name))
-    return srtd
+    dataSource.Destroy()
+    return {key: sources[key] for key in sorted(sources)}
 
 def get_fmg_faults(shapefile_filename, mapping=None, log=False):
     """
@@ -202,7 +205,8 @@ def get_fmg_faults(shapefile_filename, mapping=None, log=False):
     dataSource = driver.Open(shapefile_filename, 0)
     layer = dataSource.GetLayer()
     # reading sources geometry
-    sources = []
+    sources = {}
+    id_set = set()
     for cnt, feature in enumerate(layer):
         # get dip
         dip = float(feature.GetField(mapping['dip']))
@@ -249,11 +253,11 @@ def get_fmg_faults(shapefile_filename, mapping=None, log=False):
             src.ri = float(feature.GetField(mapping['ri']))
             # coupling coefficient
             src.ccoeff = float(feature.GetField(mapping['ccoeff']))
-            sources.append(src)
-    dataSource.Destroy()
 
-    srtd = sorted(sources, key=lambda x: x.source_id, reverse=False)
-    if log:
-        for src in srtd:
-            print ('%4s %-40s' % (src.id, src.name))
-    return srtd
+            if not id_set & set(sid):
+                sources[sid] = src
+                id_set.add(sid)
+            else:
+                raise ValueError('Sources with non unique ID %s' % sid)
+    dataSource.Destroy()
+    return {key: sources[key] for key in sorted(sources)}

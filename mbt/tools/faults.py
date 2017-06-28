@@ -3,7 +3,8 @@ import math
 import numpy
 from openquake.hazardlib.geo.mesh import Mesh
 
-def _get_rate_above_m_low(seismic_moment, m_low, m_upp, b_gr=1.0):
+
+def _get_rate_above_m_low(seismic_moment, m_low, m_upp, b_gr):
     """
     :parameter seismic_moment:
         Seismic moment in Nm
@@ -66,7 +67,7 @@ def rates_for_double_truncated_mfd(area, slip_rate, m_low, m_upp,
     moment_from_slip = (rigidity_Pa * area_m2 * slip_m)
 
     # Compute total rate
-    rate_above = _get_rate_above_m_low(moment_from_slip, m_low, m_upp)
+    rate_above = _get_rate_above_m_low(moment_from_slip, m_low, m_upp, b_gr)
 
     # Compute rate per bin
     rrr = []

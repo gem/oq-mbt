@@ -49,8 +49,8 @@ MAPPING_OQ = {
               'msr': 'magnitude_scaling_relationship',
               'rar': 'rupture_aspect_ratio',
               'rake': 'rake',
-	      'usd': 'upper_depth',
-	      'lsd': 'lower_depth',
+              'usd': 'upper_depth',
+              'lsd': 'lower_depth',
               'dip': 'dip',
               'sliprate': 'sliprate',
              }
@@ -65,7 +65,7 @@ for idx in range(0,6):
     MAPPING_OQ['strike%d' % (idx)] = 'strike%d' % (idx)
     MAPPING_OQ['npweight%d' % (idx)] = 'npweight%d' % (idx)
 
-# key is the name of the field is the shapefile value is the 
+# key is the name of the field is the shapefile value is the
 # corresponding attribute name in the mbt
 MAPPING_FMG = {'identifier': 'ID',
                'name': 'NAME',
@@ -118,7 +118,6 @@ def get_oq_shp_faults(shapefile_filename, log=False):
     admitted = set()
     for key in TYPES:
         admitted.add(key)
-    print ('Admitted:', admitted)
 
     # check if file exists
     assert os.path.exists(shapefile_filename)
@@ -173,11 +172,11 @@ def get_oq_shp_faults(shapefile_filename, log=False):
             value = get_value(mapping[key], feature.GetField(key))
             setattr(src, mapping[key], value)
 
-        if not id_set and set(sid):
+        if not id_set & set([sid]):
             sources[sid] = src
             id_set.add(sid)
-        else:
-            raise ValueError('Sources with non unique ID %s' % sid)
+        #else:
+        #    raise ValueError('Sources with non unique ID %s' % sid)
 
     dataSource.Destroy()
     return {key: sources[key] for key in sorted(sources)}
@@ -254,7 +253,7 @@ def get_fmg_faults(shapefile_filename, mapping=None, log=False):
             # coupling coefficient
             src.ccoeff = float(feature.GetField(mapping['ccoeff']))
 
-            if not id_set & set(sid):
+            if not id_set & set([sid]):
                 sources[sid] = src
                 id_set.add(sid)
             else:

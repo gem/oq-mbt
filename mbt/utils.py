@@ -2,6 +2,16 @@
 from openquake.hazardlib.geo.point import Point
 
 
+
+def mag_to_mo(mag):
+    """
+    Scalar moment [in Nm] from moment magnitude
+
+    :return:
+        The computed scalar seismic moment
+    """
+    return 10**(1.5*mag+9.1)
+
 def get_lons_lats_from_line(line):
     """
     """
@@ -16,8 +26,9 @@ def get_lons_lats_from_line(line):
 def get_point_list(lons, lats):
     """
     :parameter lons:
+        A list
     :parameter lats:
-    	A :class:list of :class:openquake.hazardlib.geo.point.Point
+    	A list
     :returns:
         Returns a list of :class:` openquake.hazardlib.geo.point.Point`
         instances

@@ -14,8 +14,8 @@ class TestAreasImport(unittest.TestCase):
         srcdict = areas_to_oqt_sources(filename)
         # Check the content of the source list
         self.assertEqual(len(srcdict), 1)
-        keys = srcdict.keys()
-        # Check source 
+        keys = list(srcdict.keys())
+        # Check source
         src = srcdict[keys[0]]
         self.assertEqual(src.source_id, '1')
         # Check name

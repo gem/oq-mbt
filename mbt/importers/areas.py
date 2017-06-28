@@ -73,7 +73,7 @@ def areas_to_oqt_sources(shapefile_filename):
             id_str = '%d' % (feature.GetField(idname))
         else:
             raise ValueError('Unsupported source ID type')
-        print '>>', id_str
+        print ('>>', id_str)
 
         # Create the source
         src = OQtSource(source_id=id_str,
@@ -90,10 +90,10 @@ def areas_to_oqt_sources(shapefile_filename):
             sources[id_str] = src
             id_set.add(id_str)
         else:
-            print id_set
-            print id_set & set(id_str)
-            print 'IDs:', id_str
-            raise ValueError('Sources with non unique ID %s' % id_str)
+            print (id_set)
+            print (id_set & set(id_str))
+            print ('IDs:', id_str)
+            raise (ValueError('Sources with non unique ID %s' % id_str))
 
     dataSource.Destroy()
     return {key: sources[key] for key in sorted(sources)}

@@ -37,6 +37,11 @@ def _get_cumul_rate_truncated(m, m_low, m_upp, rate_gt_m_low, b_gr=1.0):
     return rate
 
 
+def rates_for_pure_characteristic_model(area, slip_rate, m_char):
+    """
+    """
+
+
 def rates_for_double_truncated_mfd(area, slip_rate, m_low, m_upp,
                                    b_gr, bin_width=0.1):
     """
@@ -45,7 +50,7 @@ def rates_for_double_truncated_mfd(area, slip_rate, m_low, m_upp,
         float [km2]
     :parameter slip_rate:
         Slip-rate
-        float [mm/tr]
+        float [mm/yr]
     :parameter m_low:
         Lower magnitude
         float

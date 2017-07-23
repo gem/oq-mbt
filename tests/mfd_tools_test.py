@@ -52,6 +52,11 @@ class TestStackMFDs(unittest.TestCase):
         self.assertTrue(numpy.allclose(res, expected))
 
     def test_stack_03(self):
+        """
+        In this test we stack two discrete MFDs using a different bin size.
+        Since the MFD stacked to the first one has a lower bin size this is
+        first upsampled and then stacked.
+        """
         self.mfd1.stack(self.mfd3)
         res = numpy.array(self.mfd1.get_annual_occurrence_rates())
         expected = numpy.array([[4.4, 0.7],

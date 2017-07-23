@@ -10,7 +10,7 @@ def mag_to_mo(mag):
     :return:
         The computed scalar seismic moment
     """
-    return 10**(1.5*mag+9.1)
+    return 10.**(1.5*mag+9.1)
 
 def get_lons_lats_from_line(line):
     """

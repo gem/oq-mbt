@@ -24,7 +24,7 @@ class RatesDoubleTruncatedFromSlipTestCase(unittest.TestCase):
         b_gr = 1.1
         bin_width = 0.05
 
-        # Compute moment in Pa
+        # Compute moment in Nm
         expected = (32 * 1e9) * (area * 1e6) * (slip_rate * 1e-3)
 
         # Compute rates and magnitudes (i.e. bin centers)

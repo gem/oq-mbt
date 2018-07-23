@@ -2,11 +2,12 @@ import os
 from ipywidgets import widgets
 from serial import Dictable
 from urllib import quote_plus
-from IPython.display import display
+# from IPython.display import display
 
 import mbt_comm
 from mbt_comm import Bunch, accordion_title_find, message_set, metys_confirm
 from resources import Resources
+
 
 class Model(Dictable):
     __public__ = ["title", "resources"]
@@ -22,7 +23,8 @@ class Model(Dictable):
 
         self.other = other
 
-        self.wid_delete_btn = widgets.Button(description='Delete', margin="8px")
+        self.wid_delete_btn = widgets.Button(description='Delete',
+                                             margin="8px")
         self.wid_delete_btn._gem_ctx = self
 
         def yes_cb(model):
@@ -33,7 +35,8 @@ class Model(Dictable):
             return
 
         def model_delete_cb(model_delete_cb):
-            metys_confirm("Delete '%s' model, confirm it ?" % self.title, yes_cb, no_cb, self)
+            metys_confirm("Delete '%s' model, confirm it ?" % self.title,
+                          yes_cb, no_cb, self)
             return
 
         self.wid_delete_btn.on_click(model_delete_cb)
@@ -66,7 +69,8 @@ class Model(Dictable):
         return [x.key for x in self.resources.resources]
 
     def objpath(self, objname, is_leaf=True):
-        pre = os.path.join(self.parent.parent.objpath(self.title, is_leaf=False))
+        pre = os.path.join(self.parent.parent.objpath(
+            self.title, is_leaf=False))
         if is_leaf:
             return (mbt_comm.OQ_MBT_HOME,
                     os.path.join(pre, 'data', quote_plus(objname)))
@@ -77,12 +81,14 @@ class Model(Dictable):
         # FIXME
         pass
 
+
 class Models(Dictable):
     __public__ = ["models", "current"]
 
     def __init__(self, models=[], current=None):
         self.wid_label = widgets.HTML(value="Models:", font_weight="bold")
-        # ATTENTION: buggy accordion implementation force us to destroy and recreate it
+        # ATTENTION: buggy accordion implementation force us
+        #            to destroy and recreate it
         #            for each modification (UGLY)!
         self.wid_models_cont = None
         self.wid_proxy = widgets.Proxy(self.wid_models_cont)
@@ -95,7 +101,7 @@ class Models(Dictable):
 
         # 'current' is a model title
         self.current = None
-        if current != None:
+        if current is not None:
             model_id = self.model_find(current)
             if model_id > -1:
                 self.current = current
@@ -122,7 +128,8 @@ class Models(Dictable):
             wid_name = widgets.Text(description="Name: ")
 
             wid_add_btn = widgets.Button(description='Add', margin="8px")
-            wid_add_btn._gem_ctx = Bunch(wid_name=wid_name, _parent_ctx=btn._gem_ctx)
+            wid_add_btn._gem_ctx = Bunch(wid_name=wid_name,
+                                         _parent_ctx=btn._gem_ctx)
             wid_add_btn.on_click(model_add_cb)
 
             wid_close_btn = widgets.Button(description='Close', margin="8px")
@@ -132,13 +139,14 @@ class Models(Dictable):
             wid_btnbox = widgets.HBox(children=[wid_add_btn, wid_close_btn])
 
             wid_box = widgets.Box(children=[wid_title, wid_name, wid_btnbox],
-                              border_style="solid", border_width="1px",
-                              border_radius="8px", padding="8px",
-                              width="400px")
+                                  border_style="solid", border_width="1px",
+                                  border_radius="8px", padding="8px",
+                                  width="400px")
 
             btn._gem_ctx.wid_mgmt.children = [wid_box]
 
-        self.wid_add_btn = widgets.Button(description='Add model', margin="8px")
+        self.wid_add_btn = widgets.Button(description='Add model',
+                                          margin="8px")
         self.wid_add_btn._gem_ctx = self
         self.wid_add_btn.on_click(models_add_cb)
 
@@ -148,12 +156,12 @@ class Models(Dictable):
             border_style="solid", border_width="1px", padding="8px",
             border_radius="4px")
 
-
     def widget_update(self):
         wid_models_cont_old = self.wid_models_cont
 
         children_new = [mod.widget_get() for mod in self.models]
-        wid_models_cont_new = widgets.Accordion(children=children_new, width=800)
+        wid_models_cont_new = widgets.Accordion(children=children_new,
+                                                width=800)
 
         for i, mod in enumerate(self.models):
             wid_models_cont_new.set_title(i, mod.title)
@@ -169,7 +177,8 @@ class Models(Dictable):
         def selected_index_cb(msg):
             self.current = self.model_get(msg['new']).title
 
-        wid_models_cont_new.observe(selected_index_cb, names=["selected_index"])
+        wid_models_cont_new.observe(selected_index_cb,
+                                    names=["selected_index"])
 
         self.wid_proxy.child = wid_models_cont_new
         self.wid_models_cont = wid_models_cont_new
@@ -189,10 +198,9 @@ class Models(Dictable):
         model.close()
         del model
 
-
     def model_find(self, title):
         for i, mod in enumerate(self.models):
-            # print "[%s] [%s]" % (res.key_get(), name)
+            # print("[%s] [%s]" % (res.key_get(), name))
             if mod.title == title:
                 return i
         return -1

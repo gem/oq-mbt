@@ -2,6 +2,7 @@ from serial import Dictable
 from IPython.display import display, Javascript
 import json
 
+
 def cells_cleanall():
     display(Javascript("""
       {
@@ -28,7 +29,7 @@ def cells_insert_at_bottom(type, content):
     }
     """ % (type, json.dumps(content))))
 
-            
+
 class Cell(Dictable):
     __public__ = ["type", "content"]
 
@@ -36,7 +37,7 @@ class Cell(Dictable):
         self.type = type
         self.content = content
 
-        
+
 class Cells(Dictable):
     __public__ = ["cells"]
 
@@ -45,7 +46,6 @@ class Cells(Dictable):
             self.cells = []
         else:
             self.cells = cells
-
 
     def load(self):
         cells_cleanall()

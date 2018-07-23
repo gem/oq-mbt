@@ -11,10 +11,11 @@ from urllib import quote_plus
 from resources import Resources
 from models import Models
 
+
 class Project(Dictable):
     __public__ = ["resources", "models", "cells"]
 
-    def __init__(self, resources, models, cells = None):
+    def __init__(self, resources, models, cells=None):
         self.wid_prj_label = widgets.HTML(value="Project: ",
                                           font_weight="bold")
         #
@@ -98,7 +99,6 @@ class Project(Dictable):
 
         return (prj, msg)
 
-
     def save(self):
         filename = os.path.join(self.folder, 'project.json')
 
@@ -112,7 +112,6 @@ class Project(Dictable):
             title, _ = self.title_get()
             f.write(str(title))
 
-
     @classmethod
     def current_get(cls):
         with open(os.path.join(mbt_comm.OQ_MBT_HOME, 'CURRENT_PRJ'), 'r') as f:
@@ -124,15 +123,15 @@ class Project(Dictable):
 
     def clean(self):
         # resources
-        #self.res_contbox.children = []
+        # self.res_contbox.children = []
 
-        #for item in self.resources:
-        #    del item
-        #self.resources = []
-        # print "TODO clean resources"
+        # for item in self.resources:
+        #     del item
+        # self.resources = []
+        # print("TODO clean resources")
 
         # models
-        # print "TODO clean models"
+        # print("TODO clean models")
         # wid_new_acc = widgets.Accordion(children=[], width=800)
 
         # self.models_contbox.children = [wid_new_acc]
@@ -165,7 +164,7 @@ class Project(Dictable):
 
     def objpath(self, objname, is_leaf=True):
         if is_leaf:
-            return (mbt_comm.OQ_MBT_HOME, os.path.join(quote_plus(self.title),
-                                                       'data', quote_plus(objname)))
+            return (mbt_comm.OQ_MBT_HOME, os.path.join(
+                quote_plus(self.title), 'data', quote_plus(objname)))
         else:
             return os.path.join(quote_plus(self.title), quote_plus(objname))

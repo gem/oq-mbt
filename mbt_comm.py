@@ -14,6 +14,7 @@ OQ_MBT_SFX = '_mbt'
 # message text widget handle
 g_message = None
 
+
 class StdoutToNull(object):
     def __init__(self, is_silent=True):
         self.is_silent = is_silent
@@ -31,6 +32,7 @@ class StdoutToNull(object):
             return
         sys.stdout = self.origin
         self.stdout.close()
+
 
 class Bunch(object):
     def __init__(self, **kw):
@@ -111,7 +113,8 @@ def init():
                     var ret = [];
                     var ct = cells.length;
                     for (var i = 1 ; i < ct ; i++) {
-                        ret.push({type: cells[i].cell_type, content: cells[i].get_text()});
+                        ret.push({type: cells[i].cell_type,\
+ content: cells[i].get_text()});
                     }
                     comm.send(ret);
                 });

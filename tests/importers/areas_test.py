@@ -1,9 +1,10 @@
 import os
 import unittest
-import numpy
+# import numpy
 
 from mbt.importers.areas import areas_to_oqt_sources
-from mbt.utils import get_lons_lats_from_line
+# from mbt.utils import get_lons_lats_from_line
+
 
 class TestAreasImport(unittest.TestCase):
 
@@ -15,7 +16,7 @@ class TestAreasImport(unittest.TestCase):
         # Check the content of the source list
         self.assertEqual(len(srcdict), 1)
         keys = srcdict.keys()
-        # Check source 
+        # Check source
         src = srcdict[keys[0]]
         self.assertEqual(src.source_id, '1')
         # Check name
@@ -41,5 +42,3 @@ class TestAreasImport(unittest.TestCase):
         self.assertEqual(90., src.dip1)
         # Hypocentral depth
         self.assertEqual(5., src.hd1)
-
-

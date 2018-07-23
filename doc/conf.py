@@ -151,6 +151,3 @@ texinfo_documents = [
      author, 'ModelBuildingToolkit', 'One line description of project.',
      'Miscellaneous'),
 ]
-
-
-

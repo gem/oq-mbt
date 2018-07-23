@@ -1,15 +1,18 @@
 import json
-import pprint
+# import pprint
 
 _Metacls__registry = {}
 
+
 class Metacls(type):
     __registry = {}
+
     def __new__(mcs, name, bases, dict):
         global __registry
         ret = type.__new__(mcs, name, bases, dict)
         __registry[name] = ret
         return ret
+
 
 class Dictable(object):
     __metaclass__ = Metacls
@@ -17,13 +20,14 @@ class Dictable(object):
     @staticmethod
     def from_dict(dct):
         cls = _Metacls__registry[dct['__class__']]
-        
-        # print "from_dict: %s" % cls.__name__
+
+        # print("from_dict: %s" % cls.__name__)
         if '__public__' not in vars(cls):
             raise ValueError('for Dictable instance a __public__ '
                              'attribute must be defined')
         args = []
-        # print "  class and __public__, proceed with subclass [%s]" % dct['__class__']
+        # print("  class and __public__, \
+        # proceed with subclass [%s]" % dct['__class__'])
         for val in cls.__public__:
             if val in dct:
                 if isinstance(dct[val], dict) and '__class__' in dct[val]:
@@ -31,8 +35,8 @@ class Dictable(object):
                 else:
                     args.append(cls.deserialize(dct[val]))
 
-        # print "ARGS: ", cls.__name__
-        # print args
+        # print("ARGS: ", cls.__name__)
+        # print(args)
         return cls(*args)
 
     def to_dict(self):
@@ -69,7 +73,7 @@ class Dictable(object):
     def deserialize(dct):
         ret = None
         if isinstance(dct, dict):
-            # print "  dict found"
+            # print("  dict found")
             if '__class__' in dct:
                 return Dictable.from_dict(dct)
             else:
@@ -77,12 +81,12 @@ class Dictable(object):
                 for key in dct:
                     ret[key] = Dictable.deserialize(dct[key])
         elif isinstance(dct, list):
-            # print "  list found"
+            # print("  list found")
             ret = []
             for i, value in enumerate(dct):
-                # print "    Index %d" % i
-                # print "    value %s" % value
-                # print "    deser [%s]" % Dictable.deserialize(value)
+                # print("    Index %d" % i)
+                # print("    value %s" % value)
+                # print("    deser [%s]" % Dictable.deserialize(value))
                 ret.append(Dictable.deserialize(value))
         else:
             ret = dct
@@ -95,7 +99,7 @@ if __name__ == '__main__':
         __public__ = ['a', 'b']
 
         def __init__(self, a, b):
-            # print "One::__init__"
+            # print("One::__init__")
             if not isinstance(b, list):
                 raise TypeError
             self.a = a
@@ -105,21 +109,18 @@ if __name__ == '__main__':
             return ({'__class__': self.__class__.__name__,
                      'a': self.a, 'b': self.b})
 
-
     class Two(Dictable):
         __public__ = ['c', 'd']
 
         def __init__(self, c, d):
-            # print "Two::__init__"
+            # print("Two::__init__")
             if not isinstance(d, list):
                 raise TypeError
             self.c = c
             self.d = d
 
-
-
     class Glob(Dictable):
-        __public__ = [ 'x', 'y', 'z' ]
+        __public__ = ['x', 'y', 'z']
 
         def __init__(self, x, y, z):
             if not isinstance(x, One):
@@ -130,7 +131,6 @@ if __name__ == '__main__':
             self.y = y
             self.z = z
 
-
     def main():
         a = {'__class__': 'Glob',
              'x': {'__class__': 'One', 'a': 71, 'b': ['xxx', 'yyy']},
@@ -140,6 +140,6 @@ if __name__ == '__main__':
              }
 
         g_o = Glob.from_dict(a)
-        print json.dumps(g_o.to_dict(), sort_keys=True)
+        print(json.dumps(g_o.to_dict(), sort_keys=True))
 
     main()

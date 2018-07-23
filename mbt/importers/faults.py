@@ -1,4 +1,3 @@
-
 import os
 import re
 
@@ -24,42 +23,42 @@ TYPES = {
          'rake': 'float',
          'tectonic_region_type': 'str',
          'upper_depth': 'float',
-         'rupture_aspect_ratio' : 'float',
-         'sliprate' : 'float',
+         'rupture_aspect_ratio': 'float',
+         'sliprate': 'float',
         }
 
-for idx in range(0,6):
+for idx in range(0, 6):
     TYPES['hd%d' % (idx)] = 'float'
     TYPES['hdweight%d' % (idx)] = 'float'
 
-for idx in range(0,6):
+for idx in range(0, 6):
     TYPES['dip%d' % (idx)] = 'float'
     TYPES['rake%d' % (idx)] = 'float'
     TYPES['strike%d' % (idx)] = 'float'
     TYPES['npweight%d' % (idx)] = 'float'
 
 MAPPING_OQ = {
-              'a_val': 'a_val',
-              'b_val': 'b_val',
-              'id': 'identifier',
-              'name': 'name',
-              'trt': 'tectonic_region_type',
-              'max_mag': 'max_mag',
-              'min_mag': 'min_mag',
-              'msr': 'magnitude_scaling_relationship',
-              'rar': 'rupture_aspect_ratio',
-              'rake': 'rake',
-              'usd': 'upper_depth',
-              'lsd': 'lower_depth',
-              'dip': 'dip',
-              'sliprate': 'sliprate',
-             }
+    'a_val': 'a_val',
+    'b_val': 'b_val',
+    'id': 'identifier',
+    'name': 'name',
+    'trt': 'tectonic_region_type',
+    'max_mag': 'max_mag',
+    'min_mag': 'min_mag',
+    'msr': 'magnitude_scaling_relationship',
+    'rar': 'rupture_aspect_ratio',
+    'rake': 'rake',
+    'usd': 'upper_depth',
+    'lsd': 'lower_depth',
+    'dip': 'dip',
+    'sliprate': 'sliprate',
+}
 
-for idx in range(0,6):
+for idx in range(0, 6):
     MAPPING_OQ['hd%d' % (idx)] = 'hd%d' % (idx)
     MAPPING_OQ['hdweight%d' % (idx)] = 'hdweight%d' % (idx)
 
-for idx in range(0,6):
+for idx in range(0, 6):
     MAPPING_OQ['dip%d' % (idx)] = 'dip%d' % (idx)
     MAPPING_OQ['rake%d' % (idx)] = 'rake%d' % (idx)
     MAPPING_OQ['strike%d' % (idx)] = 'strike%d' % (idx)
@@ -67,21 +66,22 @@ for idx in range(0,6):
 
 # key is the name of the field is the shapefile value is the
 # corresponding attribute name in the mbt
-MAPPING_FMG = {'identifier': 'ID',
-               'name': 'NAME',
-               'dip': 'DIP',
-               'rake': 'RAKE',
-               'upper_depth': 'DMIN',
-               'lower_depth': 'DMAX',
-               'recurrence': 'RECURRENCE',
-               'sliprate': 'Sliprate',
-               'slip_max': 'Slip_Max',
-               'slip_min': 'Slip_Min',
-               'aseismic': 'COEF',
-               'mmax': 'MMAX',
-               'ri': 'RECURRENCE',
-               'ccoeff': 'COEF'
-              }
+MAPPING_FMG = {
+    'identifier': 'ID',
+    'name': 'NAME',
+    'dip': 'DIP',
+    'rake': 'RAKE',
+    'upper_depth': 'DMIN',
+    'lower_depth': 'DMAX',
+    'recurrence': 'RECURRENCE',
+    'sliprate': 'Sliprate',
+    'slip_max': 'Slip_Max',
+    'slip_min': 'Slip_Min',
+    'aseismic': 'COEF',
+    'mmax': 'MMAX',
+    'ri': 'RECURRENCE',
+    'ccoeff': 'COEF'
+}
 
 
 def get_value(key, value):
@@ -98,7 +98,7 @@ def get_value(key, value):
         # Check dip value
         if key == 'dip':
             if value > 90 or value < 0:
-                print ('dip outside admitted range')
+                print('dip outside admitted range')
         return value
     elif TYPES[key] == 'int':
         return int(value)
@@ -132,7 +132,7 @@ def get_oq_shp_faults(shapefile_filename, log=False):
     fieldnames = set()
     for i in range(layerDefinition.GetFieldCount()):
         fieldName = layerDefinition.GetFieldDefn(i).GetName()
-        print (fieldName)
+        print(fieldName)
         if fieldName in mapping and mapping[fieldName] in admitted:
             fieldnames.add(fieldName)
 
@@ -145,8 +145,8 @@ def get_oq_shp_faults(shapefile_filename, log=False):
         geom = feature.GetGeometryRef()
         geom_wkt = geom.ExportToWkt()
         if re.search('^MULTILINESTRING', geom_wkt):
-            print ('multilinestring skipping')
-            print ('   ', feature.GetField('name'))
+            print('multilinestring skipping')
+            print('   ', feature.GetField('name'))
             continue
         else:
             line = wkt.loads(geom.ExportToWkt())
@@ -163,11 +163,11 @@ def get_oq_shp_faults(shapefile_filename, log=False):
         else:
             raise ValueError('Unsupported ID type')
 
-	# Create a new source and set the geometry
+        # Create a new source and set the geometry
         src = OQtSource(sid, 'SimpleFaultSource')
         src.trace = Line(get_point_list(x, y))
 
-	# Get attributes
+        # Get attributes
         for key in fieldnames:
             value = get_value(mapping[key], feature.GetField(key))
             setattr(src, mapping[key], value)
@@ -175,11 +175,12 @@ def get_oq_shp_faults(shapefile_filename, log=False):
         if not id_set & set([sid]):
             sources[sid] = src
             id_set.add(sid)
-        #else:
+        # else:
         #    raise ValueError('Sources with non unique ID %s' % sid)
 
     dataSource.Destroy()
     return {key: sources[key] for key in sorted(sources)}
+
 
 def get_fmg_faults(shapefile_filename, mapping=None, log=False):
     """
@@ -214,15 +215,15 @@ def get_fmg_faults(shapefile_filename, mapping=None, log=False):
         geom_wkt = geom.ExportToWkt()
         if (re.search('^MULTILINESTRING', geom_wkt) or dip < 0.1 or
                 feature.GetField("TYPE") == 'SUB'):
-            print ('skipping')
-            print ('   ', feature.GetField(mapping['name']))
+            print('skipping')
+            print('   ', feature.GetField(mapping['name']))
         else:
             line = wkt.loads(geom.ExportToWkt())
             x, y = line.coords.xy
             if dip > 90 or dip < 0:
-                print ('dip outside admitted range')
-                print ('   ', feature.GetField(mapping['dip']))
-                print ('   ', feature.GetField(mapping['name']))
+                print('dip outside admitted range')
+                print('   ', feature.GetField(mapping['dip']))
+                print('   ', feature.GetField(mapping['name']))
 
             tmp = feature.GetField(mapping['identifier'])
             if isinstance(tmp, str):

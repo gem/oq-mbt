@@ -44,16 +44,18 @@ class NewProjectMenu(object):
         self.metys = metys
         message_set('')
         self.wid_text = widgets.Text(description='Name: ', margin="8px")
-        self.wid_create_btn = widgets.Button(description='Create', margin="8px")
+        self.wid_create_btn = widgets.Button(description='Create',
+                                             margin="8px")
         self.wid_create_btn._gem_ctx = self
         self.wid_create_btn.on_click(self._create_cb)
 
         self.wid_close_btn = widgets.Button(description='Close', margin="8px")
         self.wid_close_btn._gem_ctx = self
         self.wid_close_btn.on_click(self._close_cb)
-        self.wid_box = widgets.Box(children=[self.wid_text, self.wid_create_btn, self.wid_close_btn],
-                               border_style="solid", border_width="1px",
-                               border_radius="8px", width="400px")
+        self.wid_box = widgets.Box(
+            children=[self.wid_text, self.wid_create_btn, self.wid_close_btn],
+            border_style="solid", border_width="1px",
+            border_radius="8px", width="400px")
 
     def widget_get(self):
         return self.wid_box
@@ -77,7 +79,7 @@ class LoadProjectMenu(object):
 
     @staticmethod
     def _close_cb(btn):
-        # print "close_cb"
+        # print("close_cb")
         btn._gem_ctx.metys.menubox_set(())
         del btn._gem_ctx
 
@@ -105,17 +107,16 @@ class LoadProjectMenu(object):
             margin="8px"
         )
 
-        self.wid_box = widgets.Box(children=[self.wid_ddown, self.wid_load_btn, self.wid_close_btn],
-                               border_style="solid", border_width="1px",
-                               border_radius="8px", width="400px")
+        self.wid_box = widgets.Box(
+            children=[self.wid_ddown, self.wid_load_btn, self.wid_close_btn],
+            border_style="solid", border_width="1px",
+            border_radius="8px", width="400px")
 
     def widget_get(self):
         return self.wid_box
 
 
-
 class Metys():
-
     def __init__(self):
         global g_prj
 
@@ -123,7 +124,8 @@ class Metys():
 
         self.wid_menubox = widgets.Box(children=[])
 
-        self.wid_new_prj_btn = widgets.Button(description='New Project', margin="4px")
+        self.wid_new_prj_btn = widgets.Button(
+            description='New Project', margin="4px")
         self.wid_new_prj_btn._gem_ctx = self
 
         def new_prj_cb(btn):
@@ -131,8 +133,8 @@ class Metys():
             btn._gem_ctx.menubox_set((new_prj.widget_get(),))
         self.wid_new_prj_btn.on_click(new_prj_cb)
 
-        self.wid_load_prj_btn = widgets.Button(description='Load Project',
-                                       margin="4px")
+        self.wid_load_prj_btn = widgets.Button(
+            description='Load Project', margin="4px")
         self.wid_load_prj_btn._gem_ctx = self
 
         def load_prj_cb(btn):
@@ -141,12 +143,11 @@ class Metys():
         self.wid_load_prj_btn._gem_ctx = self
         self.wid_load_prj_btn.on_click(load_prj_cb)
 
-        self.wid_save_prj_btn = widgets.Button(description='Save Project',
-                                       margin="4px")
+        self.wid_save_prj_btn = widgets.Button(
+            description='Save Project', margin="4px")
         self._gem_ctx = self
 
         def save_prj_cb(btn):
-
 
             def on_msg(msg):
                 cells = []
@@ -154,21 +155,24 @@ class Metys():
                     cells.append(Cell(cell_in['type'], cell_in['content']))
                 g_prj.cells_add(cells)
                 if g_prj.save() is True:
-                    message_set("'%s' project saved correctly" % g_prj.title_get()[0])
+                    message_set("'%s' project saved correctly" %
+                                g_prj.title_get()[0])
                 else:
-                    message_set("'%s' project save failed" % g_prj.title_get()[0])
+                    message_set("'%s' project save failed" %
+                                g_prj.title_get()[0])
                 c.close([])
 
-            c = Comm(target_name='oq_getcells_target', target_module='oq_getcells_module',
-                     data={'some': 'data'})
+            c = Comm(target_name='oq_getcells_target',
+                     target_module='oq_getcells_module', data={'some': 'data'})
             c.on_msg(on_msg)
 
             c.send(['require_cells'])
 
         self.wid_save_prj_btn.on_click(save_prj_cb)
 
-        self.wid_box = widgets.HBox(children=[self.wid_new_prj_btn, self.wid_load_prj_btn,
-                                              self.wid_save_prj_btn])
+        self.wid_box = widgets.HBox(
+            children=[self.wid_new_prj_btn, self.wid_load_prj_btn,
+                      self.wid_save_prj_btn])
 
         self.wid_vbox = widgets.VBox(children=[self.wid_box, self.wid_menubox])
 
@@ -182,7 +186,8 @@ class Metys():
         self.wid_menubox.children = new_items
 
     def primary(self):
-        display(HTML('''<link rel="stylesheet" href="mbt.css" type="text/css">'''))
+        display(HTML(
+            '''<link rel="stylesheet" href="mbt.css" type="text/css">'''))
 
         display(HTML('''<script>
         code_show=true;
@@ -208,7 +213,8 @@ class Metys():
             self.menubox_set((load_prj.widget_get(),))
             load_prj.wid_ddown.value = 'SouthEast China_mbt'
 
-            load_prj.wid_load_btn._click_handlers.callbacks[0](load_prj.wid_load_btn)
+            load_prj.wid_load_btn._click_handlers.callbacks[0](
+                load_prj.wid_load_btn)
 
     @classmethod
     def secondary(cls):
@@ -223,12 +229,11 @@ class Metys():
             # the primary metys page isn't
             prj_name = Project.current_get()
             if prj_name is None:
-                print "No current project recognized, run primary page, load a project and than retry here"
+                print("No current project recognized, run primary page,"
+                      " load a project and than retry here")
                 return False
 
             g_prj = Project.load(prj_name + mbt_comm.OQ_MBT_SFX, False)
         else:
             with open("/tmp/secondary.log", "a") as log:
                 log.write("g_prj is not None\n")
-
-

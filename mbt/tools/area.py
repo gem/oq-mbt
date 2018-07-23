@@ -14,9 +14,9 @@ from openquake.hazardlib.geo.polygon import Polygon
 
 def src_oqt_to_hmtk(src):
     return mtkAreaSource(
-            identifier=src.source_id,
-            name=src.name,
-            geometry=src.polygon)
+        identifier=src.source_id,
+        name=src.name,
+        geometry=src.polygon)
 
 
 def create_catalogue(sources, catalogue, polygon=None, print_log=False):
@@ -42,22 +42,22 @@ def create_catalogue(sources, catalogue, polygon=None, print_log=False):
         # Check if the area source has a geometry
         if 'polygon' in src.__dict__:
             pass
-#       elif src_id in model.nrml_sources:
-#            src.polygon = model.nrml_sources[src_id].polygon
-#            src.name = model.nrml_sources[src_id].name
-#            src.source_id = model.nrml_sources[src_id].source_id
+        # elif src_id in model.nrml_sources:
+        #     src.polygon = model.nrml_sources[src_id].polygon
+        #     src.name = model.nrml_sources[src_id].name
+        #     src.source_id = model.nrml_sources[src_id].source_id
         else:
-            print ('The source does not have a geometry assigned')
+            print('The source does not have a geometry assigned')
             return None
     elif polygon is not None:
-            assert isinstance(polygon, Polygon)
-            src_id = 'user_defined'
-            src = OQtSource('id', 'AreaSource')
-            src.name = 'dummy'
-            src.polygon = polygon
+        assert isinstance(polygon, Polygon)
+        src_id = 'user_defined'
+        src = OQtSource('id', 'AreaSource')
+        src.name = 'dummy'
+        src.polygon = polygon
     else:
-            msg = 'Either a polygon or a list of sources must be defined'
-            raise ValueError(msg)
+        msg = 'Either a polygon or a list of sources must be defined'
+        raise ValueError(msg)
 
     # This sets the limits of the area covered by the polygon
     limits = [numpy.min(src.polygon.lons),
@@ -73,12 +73,15 @@ def create_catalogue(sources, catalogue, polygon=None, print_log=False):
     selectorA = CatalogueSelector(tmpcat, create_copy=False)
     # This filters out the eqks outside the area source
     src_hmtk.select_catalogue(selectorA)
-    # Create the composite catalogue as a copy of the sub-catalogue for the first source
-    labels = ['%s' % src_id for i in range(0, len(src_hmtk.catalogue.data['magnitude']))]
+    # Create the composite catalogue as a copy of the sub-catalogue for
+    # the first source
+    labels = ['%s' % src_id for i in range(0, len(
+        src_hmtk.catalogue.data['magnitude']))]
     src_hmtk.catalogue.data['comment'] = labels
     fcatal = deepcopy(src_hmtk.catalogue)
     if print_log:
-        print ('# eqks for source', src_id, ':', len(src_hmtk.catalogue.data['magnitude']))
+        print('# eqks for source', src_id, ':',
+              len(src_hmtk.catalogue.data['magnitude']))
     # Complete the composite subcatalogue
     """
     for src_id in area_source_ids_list[1:]:
@@ -86,68 +89,70 @@ def create_catalogue(sources, catalogue, polygon=None, print_log=False):
         src = model.sources[src_id]
         src_hmtk = src_oqt_to_hmtk(src)
         # Merge the source-subcatalogue to the composite one
-        # print 'merging eqks for source:', src_id, '# eqks:', len(src_hmtk.catalogue.data['magnitude'])
-        labels = ['%s' % src_id for i in range(0, len(src_hmtk.catalogue.data['magnitude']))]
+        # print('merging eqks for source:', src_id, '# eqks:',\
+ len(src_hmtk.catalogue.data['magnitude']))
+        labels = ['%s' % src_id for i in range(0, len(\
+src_hmtk.catalogue.data['magnitude']))]
         src_hmtk.catalogue.data['comment'] = labels
         fcatal.concatenate(src.catalogue)
     """
     if print_log:
-        print ('Total number of earthquakes selected ',
-               fcatal.get_number_events())
+        print('Total number of earthquakes selected ',
+              fcatal.get_number_events())
     return fcatal
 
 
 def create_gr_table(model):
-        # Set table
-        p = PrettyTable(["ID", "a_gr", "b_gr"])
-        p.align["Source ID"] = 'l'
-        p.align["a_gr"] = 'r'
-        p.align["b_gr"] = 'r'
-        #
-        for key in sorted(model.sources):
-            src = model.sources[key]
-            if src.source_type == 'AreaSource':
-                alab = ''
-                blab = ''
-                if 'a_gr' in src:
-                    alab = '%8.5f' % (src.a_gr)
-                if 'b_gr' in src:
-                    blab = '%6.3f' % (src.b_gr)
-                p.add_row([key, alab, blab])
+    # Set table
+    p = PrettyTable(["ID", "a_gr", "b_gr"])
+    p.align["Source ID"] = 'l'
+    p.align["a_gr"] = 'r'
+    p.align["b_gr"] = 'r'
+    #
+    for key in sorted(model.sources):
+        src = model.sources[key]
+        if src.source_type == 'AreaSource':
+            alab = ''
+            blab = ''
+            if 'a_gr' in src.__dict__:
+                alab = '%8.5f' % (src.a_gr)
+            if 'b_gr' in src.__dict__:
+                blab = '%6.3f' % (src.b_gr)
+            p.add_row([key, alab, blab])
         return p
 
 
 def create_mmax_table(model):
-        # Set table
-        p = PrettyTable(["ID", "mmax obs", "mmax assigned", "mo strain"])
-        p.align["Source ID"] = 'l'
-        p.align["mmax obs"] = 'r'
-        p.align["mmax assigned"] = 'r'
-        p.align["mo strain"] = 'r'
-        #
-        for key in sorted(model.sources):
-            src = model.sources[key]
-            if src.source_type == 'AreaSource':
-                alab = ''
-                blab = ''
-                clab = ''
-                if src.__dict__.has_key('mmax_obs'):
-                    alab = '%6.2f' % (src.mmax_obs)
-                if src.__dict__.has_key('mmax_expected'):
-                    blab = '%6.2f' % (src.mmax_expected)
-                if src.__dict__.has_key('mo_strain'):
-                    clab = '%6.2e' % (src.mo_strain)
-                p.add_row([key, alab, blab, clab])
-        return p
+    # Set table
+    p = PrettyTable(["ID", "mmax obs", "mmax assigned", "mo strain"])
+    p.align["Source ID"] = 'l'
+    p.align["mmax obs"] = 'r'
+    p.align["mmax assigned"] = 'r'
+    p.align["mo strain"] = 'r'
+    #
+    for key in sorted(model.sources):
+        src = model.sources[key]
+        if src.source_type == 'AreaSource':
+            alab = ''
+            blab = ''
+            clab = ''
+            if 'mmax_obs' in src.__dict__:
+                alab = '%6.2f' % (src.mmax_obs)
+            if 'mmax_expected' in src.__dict__:
+                blab = '%6.2f' % (src.mmax_expected)
+            if 'mo_strain' in src.__dict__:
+                clab = '%6.2e' % (src.mo_strain)
+            p.add_row([key, alab, blab, clab])
+    return p
 
 
 def plot_area_source_polygons(model, bmap):
-        """
-        :parameter bmap:
-                A :class:Basemap instance
-        """
-        for key in sorted(model.sources):
-            src = model.sources[key]
-            if src.source_type == 'AreaSource':
-                        x, y = bmap(src.polygon.lons, src.polygon.lats)
-                        bmap.plot(x, y, '-b')
+    """
+    :parameter bmap:
+        A :class:Basemap instance
+    """
+    for key in sorted(model.sources):
+        src = model.sources[key]
+        if src.source_type == 'AreaSource':
+            x, y = bmap(src.polygon.lons, src.polygon.lats)
+            bmap.plot(x, y, '-b')

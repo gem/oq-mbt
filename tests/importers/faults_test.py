@@ -5,6 +5,7 @@ import numpy
 from mbt.importers.faults import get_oq_shp_faults, get_fmg_faults
 from mbt.utils import get_lons_lats_from_line
 
+
 class TestFaultImport(unittest.TestCase):
 
     def test_import_oq_with_slip(self):
@@ -13,10 +14,9 @@ class TestFaultImport(unittest.TestCase):
         filename = os.path.join(os.path.dirname(__file__), path)
         srcdict = get_oq_shp_faults(filename)
         keys = srcdict.keys()
-        # Check sliprate value 
+        # Check sliprate value
         src = srcdict[keys[0]]
         self.assertEqual(src.sliprate, 1.23)
-
 
     def test_import_oq(self):
         # Read the shapefile
@@ -26,16 +26,16 @@ class TestFaultImport(unittest.TestCase):
         keys = srcdict.keys()
         # Check the content of the source list
         self.assertEqual(len(keys), 1)
-        # Check source 
+        # Check source
         src = srcdict[keys[0]]
         self.assertEqual(src.source_id, 'sf3')
         # Check longitudes
         lons, lats = get_lons_lats_from_line(src.trace)
         expected = numpy.array([1.0, 1.4, 1.7])
-        numpy.testing.assert_array_equal(numpy.array(lons), expected) 
+        numpy.testing.assert_array_equal(numpy.array(lons), expected)
         # Check latitudes
         expected = numpy.array([-0.2, 0.0, 0.0])
-        numpy.testing.assert_array_equal(numpy.array(lats), expected) 
+        numpy.testing.assert_array_equal(numpy.array(lats), expected)
         # Check dip
         self.assertEqual(30., src.dip)
         # Check rake
@@ -46,7 +46,6 @@ class TestFaultImport(unittest.TestCase):
         # Magnitude-scaling relationship
         self.assertEqual('WC1994', src.magnitude_scaling_relationship)
 
-
     def test_import_fmg(self):
         # Read the shapefile
         path = './data/shapefiles/fmg/sample_faults_fmg_format.shp'
@@ -54,7 +53,7 @@ class TestFaultImport(unittest.TestCase):
         srcdict = get_fmg_faults(filename)
         keys = srcdict.keys()
         # Check the content of the source list
-        print len(keys)
+        print(len(keys))
         self.assertEqual(len(keys), 7)
         # Check source
         src = srcdict['sf137']

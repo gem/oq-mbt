@@ -1,4 +1,3 @@
-
 from openquake.hazardlib.geo.point import Point
 
 
@@ -17,7 +16,7 @@ def get_point_list(lons, lats):
     """
     :parameter lons:
     :parameter lats:
-    	A :class:list of :class:openquake.hazardlib.geo.point.Point
+    :class:list of :class:openquake.hazardlib.geo.point.Point
     :returns:
         Returns a list of :class:` openquake.hazardlib.geo.point.Point`
         instances
